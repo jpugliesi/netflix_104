@@ -1,4 +1,5 @@
-project_pugliesi
-================
+# CS 104 Project Repository
 
-Private programming assignment repository
+- **Name**: Student Name
+- **USC ID**: 1234567890
+- **Email**: ttrojan@usc.edu
