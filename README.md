@@ -1,5 +1,5 @@
 # CS 104 Project Repository
 
-- **Name**: Student Name
-- **USC ID**: 1234567890
-- **Email**: ttrojan@usc.edu
+- **Name**: John Pugliesi
+- **USC ID**: 2623486095
+- **Email**: pugliesi@usc.edu
