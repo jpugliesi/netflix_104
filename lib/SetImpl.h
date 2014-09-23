@@ -24,7 +24,7 @@ Set<T>::~Set(){
 template <class T>
 Set<T>& Set<T>::operator=(const Set<T>& other){
 
-  delete this->internalStorage;
+  
   this->internalStorage = other.internalStorage;
   return *this;
 
