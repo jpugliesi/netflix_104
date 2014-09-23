@@ -17,6 +17,8 @@ int main(){
     std::cout << "S2 contains " << i << ": " << s2.contains(i) << std::endl;
   }
 
+  s1 = s2;
+
   for(int i = 0; i < 20; i++){
     std::cout << "S1 contains " << i << ": " << s1.contains(i) << std::endl;
   }
