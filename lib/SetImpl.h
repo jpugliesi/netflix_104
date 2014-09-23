@@ -24,7 +24,7 @@ Set<T>::~Set(){
 template <class T>
 Set<T>& Set<T>::operator=(const Set<T>& other){
 
-  
+  if (this == &other) return *this; 
   this->internalStorage = other.internalStorage;
   return *this;
 
