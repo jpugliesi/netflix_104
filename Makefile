@@ -1,7 +1,7 @@
-Sources= test.cpp
+Sources= main.cpp
 Executable=project
 
-CFlags=-c -Wall -g -Iinc
+CFlags= -g -c
 LDFlags=
 ObjectDir=obj/
 SourceDir=src/
