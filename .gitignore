@@ -20,6 +20,7 @@
 *.out
 *.app
 bin/
+obj/
 
 # Vim files
 *.swp
