@@ -18,12 +18,18 @@ CExecutable=$(addprefix $(BinDir),$(Executable))
 
 all: $(CSources) $(CExecutable)
 
-$(CExecutable): $(CObjects)
+$(CExecutable): $(CObjects) $(BinDir)
 	$(CC) $(LDFlags) $(CObjects) -o $@
 
-$(ObjectDir)%.o: $(SourceDir)%.cpp
+$(ObjectDir)%.o: $(SourceDir)%.cpp $(ObjectDir)
 	$(CC) $(CFlags) $< -o $@
+
+$(ObjectDir):
+	mkdir obj
+
+$(BinDir):
+	mkdir bin
 
 .PHONY: clean
 clean:
-	rm -f $(CExecutable) $(ObjectDir)*
+	rm -rf $(ObjectDir) $(BinDir)
