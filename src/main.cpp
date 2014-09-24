@@ -56,9 +56,17 @@ int main(){
     } catch (NoSuchElementException &e){
       std::cout << e.what() << std::endl;
     }
-
   }
 
-
+  m1.first();
+  while(true){
+    std::cout << m1.getCurrentKey() << m1.getCurrentValue() << std::endl;
+    try{
+      m1.next();
+    } catch (NoSuchElementException &e){
+      std::cerr << e.what() << std::endl;
+      break;
+    }
+  }
   return 0;
 }

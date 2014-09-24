@@ -8,6 +8,7 @@ Map<keyType, valueType>::Map(){
   head = NULL;
   tail = NULL;
   map_size = 0;
+  currentItem = head;
 }
 
 /* Deep Copy Constructor - creates a deep copy of parameter array
@@ -171,3 +172,30 @@ MapItem<keyType, valueType>* Map<keyType, valueType>::getMapItem(keyType key, bo
   
 }
 
+template<class keyType, class valueType>
+void Map<keyType, valueType>::first(){
+
+  currentItem = head;
+
+}
+
+template<class keyType, class valueType>
+void Map<keyType, valueType>::next(){
+
+  if (currentItem->next != NULL){
+    currentItem = currentItem->next;
+    return;
+  }
+  throw NoSuchElementException();
+
+}
+
+template<class keyType, class valueType>
+const keyType & Map<keyType, valueType>::getCurrentKey (){
+  return currentItem->key;
+}
+
+template<class keyType, class valueType>
+const valueType & Map<keyType, valueType>::getCurrentValue (){
+  return currentItem->value;
+}

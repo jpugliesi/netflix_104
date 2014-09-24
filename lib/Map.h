@@ -37,10 +37,18 @@ class Map
         If the key existed in the map, success should be set to true.
         If the key has no association, it should set success to false. */
 
+    const keyType & getCurrentKey ();
+    const valueType & getCurrentValue ();
+
     void merge (const Map<keyType, valueType> & other);
      /* Adds all the key-value associations of other to the current map.
         If both maps (this and other) contain an association for the same
         key, then the one of this is used. */
+
+    /* Traversal Methods */
+
+    void first();
+    void next();
 
   private:
      /* The head and tail of the linked list you're using to store
@@ -51,9 +59,9 @@ class Map
      int map_size;
 
      MapItem<keyType, valueType> * getMapItem(keyType key, bool & success) const;
+     
+     MapItem<keyType, valueType> * currentItem;
 
-     /* If you like, you can add further data fields and private
-        helper methods. */
 };
 
 #include "MapImpl.h"
