@@ -140,6 +140,86 @@ int main(){
   std::cout << "The Copy's size: " << theCopy2.size() << std::endl;
 
 
+  std::cout << "Now Sets. The Original contains:" << std::endl;
+  Set<int> theOriginalSet;
+  for(int i = 0; i < 10; i++){
+    theOriginalSet.add(i);
+    std::cout << "Set contains: " << theOriginalSet.contains(i) << std::endl;
+  }
+  std::cout << "The Original's final size: " << theOriginalSet.size() << std::endl;
+
+  
+  std::cout << "Do the copy. The Copy contains:" << std::endl;
+  Set<int> theCopySet(theOriginalSet);
+  for(int i = 0; i < 10; i++){
+    std::cout << "Copy Set contains: " << theCopySet.contains(i) << std::endl;
+  }
+  std::cout << "The copy's final size: " << theCopySet.size() << std::endl;
+
+  std::cout << std::endl << "Empty copy tests " << std::endl;
+  Set<int> theOriginalSet2;
+  std::cout << "The Original Set's size: " << theOriginalSet2.size() << std::endl;
+  Set<int> theCopySet2(theOriginalSet2);
+  std::cout << "The Copy Set's size: " << theCopySet2.size() << std::endl;
+
+
+
+  std::cout << std::endl << "Union and Intersection Tests" << std::endl;
+  std::cout << "------------------------------" << std::endl << std::endl;
+
+  std::cout << "Start out with two sets that have union and intersection:" << std::endl;
+
+  Set<int> set1, set2;
+  for(int i = 0; i < 5; i++){
+    set1.add(i);
+    std::cout << "Set 1 contains: " << i << std::endl;
+  }
+  for(int i = 3; i < 10; i++){
+    set2.add(i);
+    std::cout << "Set 2 contains: " << i << std::endl;
+  }
+
+  Set<int> unionSet, intersectionSet;
+  unionSet = set1.setUnion(set2);
+  intersectionSet = set1.setIntersection(set2);
+  std::cout << "The Union of the sets is: (should be 0-9)" << std::endl;
+  try{
+    unionSet.first();
+  } catch(NoSuchElementException &e){
+    std::cout << e.what() << std::endl;
+  }
+  while(true){
+    std::cout << unionSet.getCurrent() << " ";
+    try{
+      unionSet.next();
+    } catch (NoSuchElementException &e){
+      // NO more
+      break;
+    }
+  }
+  std::cout << std::endl;
+
+  std::cout << "The Intersection of the sets is: (should be 3, 4)" << std::endl;
+  try{
+    intersectionSet.first();
+  } catch(NoSuchElementException &e){
+    std::cout << e.what() << std::endl;
+  }
+  while(true){
+    std::cout << intersectionSet.getCurrent() << " ";
+    try{
+      intersectionSet.next();
+    } catch (NoSuchElementException &e){
+      // NO more
+      break;
+    }
+  } 
+  std::cout << std::endl;
+  
+
+
+
+
   
   return 0;
 }

@@ -14,18 +14,7 @@ template <class T>
 Set<T>::Set(const Set<T> & other){
 
   //Deep copy.
-  other.internalStorage.first();
-  while(true){
-    //Prevent adding reference to other Set's key
-    T k = other.getCurrentKey();
-    this->internalStorage.add(k);
-    try{
-      other.internalStorage.next();
-    } catch (NoSuchElementException &e){
-      //Reached the end of the other Set
-      break;
-    }
-  }
+  this->internalStorage = other.internalStorage;
   
 }
 
@@ -71,7 +60,7 @@ bool Set<T>::contains(T item) const {
   try{
     internalStorage.get(item);
   } catch (NoSuchElementException &e){
-    std::cerr << e.what() << std::endl;
+    // element is not in the set
     return false;
   }
   return true;
@@ -81,6 +70,42 @@ bool Set<T>::contains(T item) const {
 template <class T>
 void Set<T>::merge(const Set<T> & other){
   internalStorage.merge(other.internalStorage);
+}
+
+/************** Union and Intersection ***************/
+template <class T>
+Set<T> Set<T>::setUnion(const Set<T> & other) const{
+  Set<T> unionSet(other);
+  unionSet.merge(*this);
+  return unionSet;
+
+}
+
+template <class T>
+Set<T> Set<T>::setIntersection(const Set<T> & other) const{
+
+  Set<T> thisCopy(*this);
+  Set<T> intersectionSet;
+  try{
+    thisCopy.first();
+    while(true){
+      T element = thisCopy.getCurrent();
+      if(other.contains(element)){
+        intersectionSet.add(element);
+      }
+      try{
+        thisCopy.next();
+      } catch (NoSuchElementException &e){
+        //End of elements
+        break;
+      }
+    }
+  } catch (NoSuchElementException &e){
+    // No Elements in the Set
+  }
+
+  return intersectionSet;
+  
 }
 
 /************** Iterator Methods ***************/

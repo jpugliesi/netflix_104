@@ -43,7 +43,7 @@ class Set
     /* Iterator functions */
     void first();
     void next();
-    const T & getCurrent ();
+    const T & getCurrent();
 
   private:
     Map<T, T> internalStorage;
