@@ -18,10 +18,10 @@ Map<keyType, valueType>::Map(){
 template<class keyType, class valueType>
 Map<keyType, valueType>::Map(const Map<keyType, valueType> & other){
 
-  this->head = other.head;
-  this->tail = other.tail;
-  this->map_size = other.map_size;
-
+  this->head = NULL;
+  this->tail = NULL;
+  map_size = 0;
+  
   for(MapItem<keyType, valueType>* item = other.head; item != NULL; item = item->next){
     this->add(item->key, item->value);
   }
@@ -175,8 +175,14 @@ MapItem<keyType, valueType>* Map<keyType, valueType>::getMapItem(keyType key, bo
 template<class keyType, class valueType>
 void Map<keyType, valueType>::first(){
 
-  currentItem = head;
-
+  if (this->size() > 0){
+    //The Map isn't empty
+    currentItem = head;
+    return;
+  }
+  //If the map is empty, throw an exception
+  throw NoSuchElementException();
+  
 }
 
 template<class keyType, class valueType>
@@ -192,10 +198,18 @@ void Map<keyType, valueType>::next(){
 
 template<class keyType, class valueType>
 const keyType & Map<keyType, valueType>::getCurrentKey (){
-  return currentItem->key;
+  if (currentItem != NULL){
+    return currentItem->key;
+  }
+  throw NoSuchElementException();
+
 }
 
 template<class keyType, class valueType>
 const valueType & Map<keyType, valueType>::getCurrentValue (){
-  return currentItem->value;
+  if (currentItem != NULL){
+    return currentItem->value;
+  }
+  throw NoSuchElementException();
+  
 }

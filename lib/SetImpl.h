@@ -14,6 +14,18 @@ template <class T>
 Set<T>::Set(const Set<T> & other){
 
   //Deep copy.
+  other.internalStorage.first();
+  while(true){
+    //Prevent adding reference to other Set's key
+    T k = other.getCurrentKey();
+    this->internalStorage.add(k);
+    try{
+      other.internalStorage.next();
+    } catch (NoSuchElementException &e){
+      //Reached the end of the other Set
+      break;
+    }
+  }
   
 }
 
@@ -68,6 +80,36 @@ bool Set<T>::contains(T item) const {
 
 template <class T>
 void Set<T>::merge(const Set<T> & other){
-
   internalStorage.merge(other.internalStorage);
+}
+
+/************** Iterator Methods ***************/
+
+/*
+ * Set the internal Map's iterator to its first element
+ * If the Set (and thus the Map) is empty, the Map first() method
+ *  will throw a NoSuchElement Exception
+ */
+template <class T>
+void Set<T>::first(){
+  this->internalStorage.first();
+}
+
+/*
+ * Advance the internal Map's iterator to its next element
+ * If there is no next element, the Map next() method
+ *   throw a NoSuchElement Exception
+ */
+template <class T>
+void Set<T>::next(){
+  this->internalStorage.next();
+}
+
+
+/*
+ * Get the current iterator element, from the internalStorage Map
+ */
+template <class T>
+const T & Set<T>::getCurrent(){
+  return internalStorage.getCurrentKey();
 }

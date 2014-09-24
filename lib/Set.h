@@ -33,6 +33,18 @@ class Set
         However, will not create duplicates, i.e., it ignores elements
         already in the set. */
 
+    /* Union and Intersection Methods */
+    Set<T> setUnion (const Set<T> & other) const;
+    // Returns the union of this and other. Does not alter this.
+
+    Set<T> setIntersection (const Set<T> & other) const;
+    // Returns the intersection of this and other. Does not alter this.
+
+    /* Iterator functions */
+    void first();
+    void next();
+    const T & getCurrent ();
+
   private:
     Map<T, T> internalStorage;
      /* You should use a Map (your own implementation) to store your set.
