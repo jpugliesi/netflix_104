@@ -1,5 +1,7 @@
-Sources= main.cpp Movie.cpp
+Sources= test.cpp Movie.cpp User.cpp
 Executable=project
+TExecutable=test
+TestObject=test.o
 MainObject=main.o
 
 CFlags= -g -c
@@ -11,16 +13,21 @@ BinDir=bin/
 CC=g++
 RM=rm
 
-#!!!!!DO NOT EDIT ANYTHING UNDER THIS LINE!!!!!
 Objects := $(Sources:.cpp=.o)
 CSources=$(addprefix $(SourceDir),$(Sources))
 CObjects=$(addprefix $(ObjectDir),$(Objects))
-CExecutable=$(addprefix $(BinDir),$(Executable))
+MainExecutable=$(addprefix $(BinDir),$(Executable))
+TestExecutable=$(addprefix $(BinDir),$(TExecutable))
 
-all: $(CSources) $(CExecutable)
+all: $(CSources) $(MainExecutable) $(TestExecutable)
 
-$(CExecutable): $(CObjects) $(BinDir)
-	$(CC) $(LDFlags) $(ObjectDir)$(MainObject) -o $@
+#This should be changed to link the $(MainObject) Basically useless until the movie app is implemented
+$(MainExecutable): $(CObjects) $(BinDir)
+	$(CC) $(LDFlags) $(ObjectDir)$(TestObject) -o $@
+
+$(TestExecutable): $(CObjects) $(BinDir)
+	$(CC) $(LDFlags) $(ObjectDir)$(TestObject) -o $@
+
 
 $(ObjectDir)%.o: $(SourceDir)%.cpp $(ObjectDir)
 	$(CC) $(CFlags) $< -o $@
