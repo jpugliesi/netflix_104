@@ -1,5 +1,6 @@
-Sources= main.cpp
+Sources= main.cpp Movie.cpp
 Executable=project
+MainObject=main.o
 
 CFlags= -g -c
 LDFlags=
@@ -19,7 +20,7 @@ CExecutable=$(addprefix $(BinDir),$(Executable))
 all: $(CSources) $(CExecutable)
 
 $(CExecutable): $(CObjects) $(BinDir)
-	$(CC) $(LDFlags) $(CObjects) -o $@
+	$(CC) $(LDFlags) $(ObjectDir)$(MainObject) -o $@
 
 $(ObjectDir)%.o: $(SourceDir)%.cpp $(ObjectDir)
 	$(CC) $(CFlags) $< -o $@
