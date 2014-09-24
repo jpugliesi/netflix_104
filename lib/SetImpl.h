@@ -13,7 +13,7 @@ Set<T>::Set(){
 template <class T>
 Set<T>::Set(const Set<T> & other){
 
-  //Deepc copy.
+  //Deep copy.
   
 }
 
