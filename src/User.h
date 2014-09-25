@@ -21,6 +21,7 @@ class User {
   private:
     std::string name;
     std::string id;
+    
 };
 
 #endif
