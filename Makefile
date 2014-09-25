@@ -3,18 +3,19 @@ Executable=project
 TExecutable=test
 TestObject=test.o
 MainObject=main.o
+Headers=**/*.h
 
 CFlags= -g -c
 LDFlags=
 ObjectDir=obj/
-SourceDir=src/
+LibDir=lib/
 BinDir=bin/
 
 CC=g++
 RM=rm
 
 Objects := $(Sources:.cpp=.o)
-CSources=$(addprefix $(SourceDir),$(Sources))
+CSources=$(addprefix $(LibDir),$(Sources))
 CObjects=$(addprefix $(ObjectDir),$(Objects))
 MainExecutable=$(addprefix $(BinDir),$(Executable))
 TestExecutable=$(addprefix $(BinDir),$(TExecutable))
@@ -29,7 +30,7 @@ $(TestExecutable): $(CObjects) $(BinDir)
 	$(CC) $(LDFlags) $(ObjectDir)$(TestObject) -o $@
 
 
-$(ObjectDir)%.o: $(SourceDir)%.cpp $(ObjectDir)
+$(ObjectDir)%.o: $(LibDir)%.cpp $(Headers) $(ObjectDir)
 	$(CC) $(CFlags) $< -o $@
 
 $(ObjectDir):

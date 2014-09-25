@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string>
-#include "../lib/Set.h"
-#include "../lib/Map.h"
+#include "Set.h"
+#include "Map.h"
 #include "Movie.cpp"
-#include "../lib/NoSuchElementException.h"
+#include "User.cpp"
+#include "NoSuchElementException.h"
 
 int main(){
 

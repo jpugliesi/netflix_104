@@ -2,7 +2,7 @@
 #define MOVIE_H
 
 #include <string>
-#include "../lib/Set.h"
+#include "Set.h"
 
 class Movie {
   public: 
