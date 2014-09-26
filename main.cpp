@@ -60,6 +60,7 @@ int main(int argc, char ** argv){
   }*/
   
   //clean up!
+  //delete all of the allocated User objects
   try{
     users.first();
     while(true){
@@ -70,6 +71,19 @@ int main(int argc, char ** argv){
   } catch (NoSuchElementException &e){
     //went through all elements
   }
+
+  //delete all of the allocated Movie objects
+  try{
+    movies.first();
+    while(true){
+      delete users.getCurrentValue();
+      movies.next();
+    }
+
+  } catch (NoSuchElementException &e){
+    //went through all elements
+  }
+
   return 0;
 
 }
