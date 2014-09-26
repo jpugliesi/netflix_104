@@ -17,9 +17,21 @@ int main(int argc, char ** argv){
   }
 
   //Important Variables
-  Map<std::string, User*> users; //
+  
+  // A Map of all of the application's users
+  //  It will be filled on each run of the program, by reading through the appropriate 
+  //  users data file
+  Map<std::string, User*> users;
+  
+  // A Map of all of the application's movies
+  //  It will be filled on each run of the program, by reading through the appropriate 
+  //  users data file
   Map<std::string, Movie*> movies;
+
+  // Keywords for all movies in the application
   Map<std::string, Set<Movie*> > movies_by_keyword;
+
+  
 
   
   /*if(initialize()){
