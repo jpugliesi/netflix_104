@@ -120,6 +120,8 @@ void Map<keyType, valueType>::remove(keyType key){
     }
     if(tempItem->next != NULL){
       tempItem->next->prev = tempItem->prev;
+    }else{
+      tail = tempItem->prev;
     }
     this->map_size--;
 
