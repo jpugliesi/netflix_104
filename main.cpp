@@ -59,6 +59,17 @@ int main(int argc, char ** argv){
     
   }*/
   
+  //clean up!
+  try{
+    users.first();
+    while(true){
+      delete users.getCurrentValue();
+      users.next();
+    }
+
+  } catch (NoSuchElementException &e){
+    //went through all elements
+  }
   return 0;
 
 }
