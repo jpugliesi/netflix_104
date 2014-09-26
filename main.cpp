@@ -70,7 +70,7 @@ bool initializeData(std::string input_file,
 
   //close it!!
   //Open the main data file
-  std::ifstream main_data_file(input_file);
+  std::ifstream main_data_file(input_file.c_str());
 
   if(main_data_file.is_open()){
     std::string user_data, movie_data;
@@ -116,7 +116,7 @@ bool initializeData(std::string input_file,
  */
 bool initializeUserData(std::string user_data_file, Map<std::string, User*> & users){
 
-  std::ifstream user_data(user_data_file);
+  std::ifstream user_data(user_data_file.c_str());
 
   if(user_data.is_open()){
     std::string line = "";
