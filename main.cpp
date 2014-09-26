@@ -8,10 +8,6 @@
 #include "lib/User.cpp"
 #include "lib/NoSuchElementException.h"
 
-Map<std::string, User*> users;
-Map<std::string, Movie*> movies;
-Map<std::string, Set<Movie*> movies_by_keyword;
-
 int main(int argc, char ** argv){
 
   //Check if user provides us with the main data file
@@ -19,8 +15,16 @@ int main(int argc, char ** argv){
     std::cout << "USAGE: " << argv[0] << " <MAIN_DATA_FILE>" << std::endl;
     return 1;
   }
+
+  //Important Variables
+  Map<std::string, User*> users; //
+  Map<std::string, Movie*> movies;
+  Map<std::string, Set<Movie*> movies_by_keyword;
+
   
-  
+  if(initialize()){
+    
+  }
   
   return 0;
 
