@@ -76,7 +76,7 @@ int main(int argc, char ** argv){
   try{
     movies.first();
     while(true){
-      delete users.getCurrentValue();
+      delete movies.getCurrentValue();
       movies.next();
     }
 
@@ -98,6 +98,7 @@ bool initializeData(std::string input_file,
   std::ifstream main_data_file(input_file.c_str());
 
   if(main_data_file.is_open()){
+  
     std::string user_data, movie_data;
 
     //Save file names from the main data file
@@ -108,11 +109,14 @@ bool initializeData(std::string input_file,
     std::cout << user_data << std::endl << movie_data << std::endl;
 
     if(initializeUserData(user_data, users) && initializeMovieData(movie_data, movies, movies_by_keyword)){
+
       //Both files are properly set up, so return true
+
+      //Print out all of the users (for debugging)
       try{
         users.first();
         while(true){
-          std::cout << users.getCurrentValue()->getName() << std::endl;
+          std::cout << users.getCurrentKey() << ": " << users.getCurrentValue()->getName() << std::endl;
           try{
             users.next();
           } catch (NoSuchElementException &e){
@@ -123,10 +127,29 @@ bool initializeData(std::string input_file,
       } catch (NoSuchElementException &e){
         std::cerr << "User map is empty" << std::endl;
       }
+
+      try{
+        movies.first();
+        while(true){
+          std::cout << movies.getCurrentKey() << std::endl;
+          try{
+            movies.next();
+          } catch (NoSuchElementException &e){
+            // no more elements
+            break;
+          }
+        }
+      } catch (NoSuchElementException &e){
+        std::cerr << "User map is empty" << std::endl;
+      }
+      
     }
+    
   } else {
+
     std::cerr << "The provided data file doesn't appear to exist. Try another one." << std::endl;
     return 0;
+    
   }
 
   main_data_file.close();
@@ -154,6 +177,7 @@ bool initializeUserData(std::string user_data_file, Map<std::string, User*> & us
       std::string command, parameters;
       if(!parseCommand(line, command, parameters)){
         //Something went wrong parsing the command
+        user_data.close();
         return 0;
       } else {
         //call the appropriate action for the command
@@ -170,8 +194,11 @@ bool initializeUserData(std::string user_data_file, Map<std::string, User*> & us
   } else {
     std::cerr << "It looks like the file doesn't exist. Please be sure to specify the entire file's path \
                   in the main data file (i.e. data/users.dat)" << std::endl;
+    user_data.close();
     return 0;
   }
+
+  user_data.close();
   
   return 1;
   
@@ -187,6 +214,44 @@ bool initializeUserData(std::string user_data_file, Map<std::string, User*> & us
 bool initializeMovieData(std::string movie_data_file, 
                          Map<std::string, Movie*> & movies, 
                         Map<std::string, Set<Movie*> > & movies_by_keyword){
+
+  std::ifstream movie_data(movie_data_file.c_str());
+
+  if(movie_data.is_open()){
+    std::string line = "";
+
+    //iterate through all of the file's lines
+    Movie * new_movie;
+    std::string name;
+    std::vector<std::string> keywords;
+    while(std::getline(movie_data, line)){
+      //iterate over all lines in the file, tokenizing them
+      std::string command, parameters;
+      if(!parseCommand(line, command, parameters)){
+        //Something went wrong parsing the command
+        movie_data.close();
+        return 0;
+      } else {
+        //call the appropriate action for the command
+        if(command == "BEGIN"){
+          name = parameters;
+        } else if (command == "KEYWORD:"){
+          keywords.push_back(parameters);
+        } else if (command == "END"){
+          new_movie = new Movie(name);
+          movies.add(new_movie->getTitle(), new_movie);
+        }
+      }
+    }
+  } else {
+    std::cerr << "It looks like the file doesn't exist. Please be sure to specify the entire file's path \
+                  in the main data file (i.e. data/movies.dat)" << std::endl;
+    movie_data.close();
+    return 0;
+  }
+
+  movie_data.close();
+
 
   return 1;
 
