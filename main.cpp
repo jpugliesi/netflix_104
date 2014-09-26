@@ -19,12 +19,12 @@ int main(int argc, char ** argv){
   //Important Variables
   Map<std::string, User*> users; //
   Map<std::string, Movie*> movies;
-  Map<std::string, Set<Movie*> movies_by_keyword;
+  Map<std::string, Set<Movie*> > movies_by_keyword;
 
   
-  if(initialize()){
+  /*if(initialize()){
     
-  }
+  }*/
   
   return 0;
 
