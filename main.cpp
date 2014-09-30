@@ -31,6 +31,10 @@ int getMenuInput();
 int getMovieInput();
 int getInput();
 
+void searchMoviesPrompt(Map<std::string, Movie*> & movies);
+void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*> > & movies_by_keyword);
+
+
 /*** Global file variable names ***/
 
 std::string _user_data_file;      
@@ -81,8 +85,10 @@ int main(int argc, char ** argv){
                     switch(choice){
 
                       case 1: std::cout << "Search for movie by title!" << std::endl;
+                              searchMoviesPrompt(movies);
                               break;
                       case 2: std::cout << "Search for movie by keyword" << std::endl;
+                              searchMoviesByKewordPrompt(movies, movies_by_keyword);
                               break;
                       case 3: break;
                       default: break;
@@ -286,7 +292,7 @@ bool initializeMovieData(std::string movie_data_file,
           keywords.push_back(parameters);
         } else if (command == "END"){
           new_movie = new Movie(name);
-          movies.add(new_movie->getTitle(), new_movie);
+          movies.add(new_movie->getLowerTitle(), new_movie);
         }
       }
     }
@@ -361,9 +367,6 @@ void createNewUser(Map<std::string, User*> & users){
     std::cout << "Enter a user ID: ";
     std::cin >> username;
 
-    std::cin.clear();
-    std::cin.ignore(10000, '\n');
-
     try{
       users.get(username);
     } catch (NoSuchElementException &e){
@@ -374,22 +377,17 @@ void createNewUser(Map<std::string, User*> & users){
     std::cout << "ID already Exists." << std::endl;
   } while(true);
 
-  std::cin.clear();
-  std::cin.ignore(10000, '\n');
-
   return;
 
 }
 
 void addNewUser(Map<std::string, User*> & users, std::string username){
-
-  std::cin.clear();
-  std::cin.ignore(10000, '\n');
-  
+ 
   std::string name = "";
   std::cout << "Enter a Name: ";
+
   std::getline(std::cin, name);
-  
+ 
   User * newUser = new User(username, name);
   users.add(username, newUser);
   //Add to users file as well
@@ -410,6 +408,29 @@ void addNewUser(Map<std::string, User*> & users, std::string username){
   return;
  
 }
+
+/*************** Movie Functions ****************/
+/************************************************/
+
+void searchMoviesPrompt(Map<std::string, Movie*> & movies){
+
+  std::string movie;
+  std::cout << "Enter a movie title: " << std::endl;
+  std::cin.clear();
+  std::cin.ignore(10000, '\n');
+
+  //Search for movie in the movies Map
+  std::getline(std::cin, movie);
+  try{
+    movies.get(movie);
+  } catch (NoSuchElementException &e){
+
+  }
+
+}
+void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*> > & movies_by_keyword){
+}
+
 
 
 /*************** Utility Functions **************/
@@ -476,12 +497,11 @@ int getInput(){
   if (std::cin.fail() || x > 3 || x < 1){
 
     std::cin.clear();
-    std::cin.ignore(10000, '\n'); //clear inputs up to 10,000 characters, or first newline
-    std::cout << "Invalid Input. Enter a value 1-3: " << std::endl; //prompt user again if the user screwed up
     x = -1; //jump to while statement
   }
   //a good character entered
 
+  std::cin.clear();
   std::cin.ignore(100000, '\n'); //clear the stream
   
   return x;
