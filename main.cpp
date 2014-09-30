@@ -420,6 +420,7 @@ void addNewUser(Map<std::string, User*> & users, std::string username){
   user_file << name_value;
   user_file << "END" << "\n";
 
+  user_file.flush();
   user_file.close();
 
   return;
