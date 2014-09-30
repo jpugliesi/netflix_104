@@ -33,7 +33,7 @@ int getInput();
 
 void searchMoviesPrompt(Map<std::string, Movie*> & movies);
 void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*> > & movies_by_keyword);
-void printMovie(Movie* movie);
+void printMovie(Movie* movie, bool print_keywords);
 
 
 /*** Global file variable names ***/
@@ -85,11 +85,9 @@ int main(int argc, char ** argv){
                     
                     switch(choice){
 
-                      case 1: std::cout << "Search for movie by title!" << std::endl;
-                              searchMoviesPrompt(movies);
+                      case 1: searchMoviesPrompt(movies);
                               break;
-                      case 2: std::cout << "Search for movie by keyword" << std::endl;
-                              searchMoviesByKewordPrompt(movies, movies_by_keyword);
+                      case 2: searchMoviesByKewordPrompt(movies, movies_by_keyword);
                               break;
                       case 3: break;
                       default: break;
@@ -196,7 +194,7 @@ bool initializeData(std::string input_file,
       } catch (NoSuchElementException &e){
         std::cerr << "User map is empty" << std::endl;
       }
-      
+
     }
     
   } else {
@@ -295,7 +293,25 @@ bool initializeMovieData(std::string movie_data_file,
           new_movie = new Movie(name);
           movies.add(new_movie->getLowerTitle(), new_movie);
           for(int i = 0; i < keywords.size(); i++){
-            new_movie->addKeyword(keywords[i]);
+            std::string word = keywords[i];
+            //Transform keyword to lowercase for easy comparison
+            for(int i = 0; word[i]; i++) word[i] = tolower(word[i]);
+            //Add keyword to a movie
+            new_movie->addKeyword(word);
+            //Add movies to keywords (in the movies_by_keywords set)
+            Set<Movie*> word_movie_set;
+            word_movie_set.add(new_movie);
+            //check if movies_by_keyword map already contains the keyword
+            try{
+              Set<Movie*> existing_movies_set = movies_by_keyword.get(word);
+              //keyword already exists. Merge new movie set with old one and store back in keywords map
+              Set<Movie*> combined_movies = existing_movies_set.setUnion(word_movie_set);
+              movies_by_keyword.remove(word);
+              movies_by_keyword.add(word, combined_movies);
+            } catch (NoSuchElementException &e){
+              //keyword Doesn't exist in the map. Add word/Movie association to the map
+              movies_by_keyword.add(word, word_movie_set);
+            }
           }          
         }
       }
@@ -426,26 +442,64 @@ void searchMoviesPrompt(Map<std::string, Movie*> & movies){
   try{
     for(int i = 0; movie[i]; i++) movie[i] = tolower(movie[i]); 
     Movie * search_movie = movies.get(movie);
-    printMovie(search_movie);
+    printMovie(search_movie, true);
   } catch (NoSuchElementException &e){
     //movie DNE
+    std::cout << "Movie Not Found." << std::endl;
   }
 
 }
 void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*> > & movies_by_keyword){
+
+  std::string keyword;
+  std::cout << "Enter a keyword: " << std::endl;
+
+  //search for movies that contain the keyword, or the title of the movie
+  std::getline(std::cin, keyword);
+  bool found_movie_title = false;
+  try{
+    for(int i = 0; keyword[i]; i++) keyword[i] = tolower(keyword[i]); 
+    //Find movies where title == keyword
+    try{
+      Movie * search_movie = movies.get(keyword);
+      found_movie_title = true;
+      printMovie(search_movie, false);
+    } catch (NoSuchElementException &e){
+      //keyword is not a title
+    }
+
+    //Find keywords that match
+    Set<Movie*> search_keyword = movies_by_keyword.get(keyword);
+    try{
+      search_keyword.first();
+      while(true){
+        printMovie(search_keyword.getCurrent(), false);
+        search_keyword.next();
+      }
+    } catch (NoSuchElementException &e){
+      //No more movies in the set.
+    }
+
+  } catch (NoSuchElementException &e){
+    //keyword DNE
+    if(!found_movie_title) std::cout << "No Match." << std::endl;
+  }
+
 }
 
-void printMovie(Movie * movie){
+void printMovie(Movie * movie, bool print_keywords){
   std::cout << movie->getTitle() << std::endl;
-  try{
-    Set<std::string> keywords = movie->getAllKeywords();
-    keywords.first();
-    while(true){
-      std::cout << keywords.getCurrent() << std::endl;
-      keywords.next();
+  if(print_keywords){
+    try{
+      Set<std::string> keywords = movie->getAllKeywords();
+      keywords.first();
+      while(true){
+        std::cout << keywords.getCurrent() << std::endl;
+        keywords.next();
+      }
+    } catch (NoSuchElementException &e){
+      //No keywords
     }
-  } catch (NoSuchElementException &e){
-    //No keywords
   }
 }
     
