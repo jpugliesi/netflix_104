@@ -29,7 +29,7 @@ void addNewUser(Map<std::string, User*> & users, std::string username);
 
 int getMenuInput();
 int getMovieInput();
-int getInput();
+int getInput(int start_range, int end_range);
 
 void searchMoviesPrompt(Map<std::string, Movie*> & movies);
 void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*> > & movies_by_keyword);
@@ -469,11 +469,22 @@ void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::stri
     Set<Movie*> search_keyword = movies_by_keyword.get(keyword);
     try{
       search_keyword.first();
-      while(true){
-        printMovie(search_keyword.getCurrent(), false);
+      std::cout << search_keyword.size() << " matches found" << std::endl;
+      int choice;
+      do{
+        printMovie(search_keyword.getCurrent(), true);
+
         search_keyword.next();
-      }
+        std::cout << "1. Next Movie" << std::endl;
+        std::cout << "2. Return to menu" << std::endl;
+        choice = getInput(1, 2);
+      } while (choice == 1);
     } catch (NoSuchElementException &e){
+      int choice;
+      do{
+        std::cout << "1. Return to Menu" << std::endl;
+        choice = getInput(1,1);
+      } while (choice != 1);
       //No more movies in the set.
     }
 
@@ -535,7 +546,7 @@ int getMenuInput(){
     std::cout << "2. Create new user" << std::endl;
     std::cout << "3. Quit" << std::endl;
 
-    choice = getInput();
+    choice = getInput(1,3);
   } while(choice == -1);
 
   return choice;
@@ -551,19 +562,19 @@ int getMovieInput(){
     std::cout << "2. Search for a movie by keyword" << std::endl;
     std::cout << "3. Logout" << std::endl;
 
-    choice = getInput();
+    choice = getInput(1,3);
   } while(choice == -1);
 
   return choice;
 }
 
-int getInput(){
+int getInput(int start_range, int end_range){
 
   int x;
 
   std::cin >> x;
 
-  if (std::cin.fail() || x > 3 || x < 1){
+  if (std::cin.fail() || x > end_range || x < start_range){
 
     std::cin.clear();
     x = -1; //jump to while statement
