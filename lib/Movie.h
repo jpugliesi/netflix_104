@@ -14,6 +14,8 @@ class Movie {
 
     std::string getTitle () const;   // returns the title of the movie
 
+    std::string getLowerTitle () const;   // returns the lowercase title of the movie
+
     void addKeyword (std::string keyword); 
       /* Adds the (free-form) keyword to this movie.
          If the exact same keyword (up to capitalization) was already
@@ -25,6 +27,7 @@ class Movie {
   private:
     Set<std::string> keywords;
     std::string title;
+    std::string title_lower;
 };
 
 #endif

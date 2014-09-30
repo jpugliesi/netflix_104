@@ -4,6 +4,8 @@
 // constructor for a movie with the given title
 Movie::Movie(std::string title){
   this->title = title;
+  title_lower = title;
+  for(int i = 0; title_lower[i]; i++) title_lower[i] = tolower(title_lower[i]);
 }
 
 // copy constructor
@@ -21,6 +23,11 @@ Movie::~Movie(){
 // returns the title of the movie
 std::string Movie::getTitle() const{
   return title;
+}
+
+// returns lowercase title
+std::string Movie::getLowerTitle() const{
+  return title_lower;
 }
 
 /* Adds the (free-form) keyword to this movie.
