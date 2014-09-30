@@ -66,6 +66,7 @@ int main(int argc, char ** argv){
     //Launch the interactive experience
     int choice;
     do{
+      choice = 3;
       choice = getMenuInput();
       
       switch(choice){
