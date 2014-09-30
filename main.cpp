@@ -28,6 +28,7 @@ void createNewUser(Map<std::string, User*> & users);
 void addNewUser(Map<std::string, User*> & users, std::string username);
 
 int getMenuInput();
+int getMovieInput();
 int getInput();
 
 /*** Global file variable names ***/
@@ -71,9 +72,25 @@ int main(int argc, char ** argv){
       
       switch(choice){
 
-        case 1: std::cout << "Logging In" << std::endl;
-                if(loginUser(users)){
+        case 1: if(loginUser(users)){
                   //movie prompts
+                  int choice;
+                  do{
+                    choice = getMovieInput();
+                    
+                    switch(choice){
+
+                      case 1: std::cout << "Search for movie by title!" << std::endl;
+                              break;
+                      case 2: std::cout << "Search for movie by keyword" << std::endl;
+                              break;
+                      case 3: break;
+                      default: break;
+                      
+                    }
+                
+                  } while(choice != 3);
+                  
                 }
                 break;
         case 2: std::cout << "Creating a new user" << std::endl;
@@ -427,6 +444,22 @@ int getMenuInput(){
     std::cout << "1. Log in" << std::endl;
     std::cout << "2. Create new user" << std::endl;
     std::cout << "3. Quit" << std::endl;
+
+    choice = getInput();
+  } while(choice == -1);
+
+  return choice;
+}
+
+int getMovieInput(){
+
+  int choice;
+  do
+  {
+    
+    std::cout << "1. Search for a movie by title" << std::endl;
+    std::cout << "2. Search for a movie by keyword" << std::endl;
+    std::cout << "3. Logout" << std::endl;
 
     choice = getInput();
   } while(choice == -1);
