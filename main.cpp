@@ -313,6 +313,8 @@ bool initializeMovieData(std::string movie_data_file,
               movies_by_keyword.add(word, word_movie_set);
             }
           }          
+          //clear the keywords vector to not add duplicate keywords
+          keywords.clear();
         }
       }
     }
