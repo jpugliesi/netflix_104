@@ -23,6 +23,18 @@ bool initializeMovieData(std::string movie_data_file,
 bool tokenizeLine(std::string line, std::vector<std::string> & words);
 bool parseCommand(std::string line, std::string & command, std::string & parameter);
 
+bool loginUser(Map<std::string, User*> & users);
+void createNewUser(Map<std::string, User*> & users);
+void addNewUser(Map<std::string, User*> & users, std::string username);
+
+int getMenuInput();
+int getInput();
+
+/*** Global file variable names ***/
+
+std::string _user_data_file;      
+std::string _movie_data_file;
+
 int main(int argc, char ** argv){
 
   //Check if user provides us with the main data file
@@ -52,14 +64,30 @@ int main(int argc, char ** argv){
   
     //The files were read properly.
     //Launch the interactive experience
+    int choice;
+    do{
+      choice = getMenuInput();
+      
+      switch(choice){
+
+        case 1: std::cout << "Logging In" << std::endl;
+                if(loginUser(users)){
+                  //movie prompts
+                }
+                break;
+        case 2: std::cout << "Creating a new user" << std::endl;
+                createNewUser(users);
+                break;
+        case 3: break;
+        default: break;
+        
+      }
+  
+    } while(choice != 3);
     
   }
-
-  /*if(initialize()){
-    
-  }*/
   
-  //clean up!
+  /******* clean up! *******/
   //delete all of the allocated User objects
   try{
     users.first();
@@ -106,12 +134,13 @@ bool initializeData(std::string input_file,
     std::getline(main_data_file, movie_data);
 
     //Output the names for testing
-    std::cout << user_data << std::endl << movie_data << std::endl;
+    //std::cout << user_data << std::endl << movie_data << std::endl;
 
     if(initializeUserData(user_data, users) && initializeMovieData(movie_data, movies, movies_by_keyword)){
 
       //Both files are properly set up, so return true
-
+      _user_data_file = user_data;
+      _movie_data_file = movie_data;
       //Print out all of the users (for debugging)
       try{
         users.first();
@@ -282,6 +311,90 @@ bool parseCommand(std::string line, std::string & command, std::string & paramet
   
 }
 
+/*************** Log In Functions ***************/
+/************************************************/
+
+
+bool loginUser(Map<std::string, User*> & users){
+
+  std::string username;
+
+  std::cout << "ID: ";
+  std::cin >> username;
+
+  std::cin.clear();
+  std::cin.ignore(10000, '\n');
+
+  try{
+    users.get(username);
+  } catch(NoSuchElementException &e){
+    std::cout << "Invalid ID." << std::endl;
+    return false;
+  }
+  std::cout << "Logged in" << std::endl;
+  return true;
+
+}
+
+void createNewUser(Map<std::string, User*> & users){
+
+  do{
+    std::string username, name;
+    std::cout << "Enter a user ID: ";
+    std::cin >> username;
+
+    std::cin.clear();
+    std::cin.ignore(10000, '\n');
+
+    try{
+      users.get(username);
+    } catch (NoSuchElementException &e){
+      //Add New User
+      addNewUser(users, username);
+      return;
+    }
+    std::cout << "ID already Exists." << std::endl;
+  } while(true);
+
+  std::cin.clear();
+  std::cin.ignore(10000, '\n');
+
+  return;
+
+}
+
+void addNewUser(Map<std::string, User*> & users, std::string username){
+
+  std::cin.clear();
+  std::cin.ignore(10000, '\n');
+  
+  std::string name = "";
+  std::cout << "Enter a Name: ";
+  std::getline(std::cin, name);
+  
+  User * newUser = new User(username, name);
+  users.add(username, newUser);
+  //Add to users file as well
+  std::fstream user_file(_user_data_file, std::fstream::app);
+  std::string id_header = "BEGIN " + username + "\n";
+  std::string name_value = "NAME: " + name + "\n";
+
+  user_file << id_header;
+  user_file << name_value;
+  user_file << "END";
+
+  user_file.close();
+
+  std::cin.clear();
+  std::cin.ignore(10000, '\n');
+
+  return;
+ 
+}
+
+
+/*************** Utility Functions **************/
+/************************************************/
 // Splits a line up by its words, adding the words to the referenced words vector
 bool tokenizeLine(std::string line, std::vector<std::string> & words){
   std::stringstream ss;
@@ -302,3 +415,41 @@ bool tokenizeLine(std::string line, std::vector<std::string> & words){
   ss.str("");
   return 1;
 }
+
+int getMenuInput(){
+
+  int choice;
+  do
+  {
+    
+    std::cout << "1. Log in" << std::endl;
+    std::cout << "2. Create new user" << std::endl;
+    std::cout << "3. Quit" << std::endl;
+
+    choice = getInput();
+  } while(choice == -1);
+
+  return choice;
+}
+
+int getInput(){
+
+  int x;
+
+  std::cin >> x;
+
+  if (std::cin.fail() || x > 3 || x < 1){
+
+    std::cin.clear();
+    std::cin.ignore(10000, '\n'); //clear inputs up to 10,000 characters, or first newline
+    std::cout << "Invalid Input. Enter a value 1-3: " << std::endl; //prompt user again if the user screwed up
+    x = -1; //jump to while statement
+  }
+  //a good character entered
+
+  std::cin.ignore(100000, '\n'); //clear the stream
+  
+  return x;
+}
+
+
