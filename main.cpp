@@ -366,10 +366,8 @@ bool loginUser(Map<std::string, User*> & users){
   std::string username;
 
   std::cout << "ID: ";
-  std::cin >> username;
-
-  std::cin.clear();
-  std::cin.ignore(10000, '\n');
+  std::getline(std::cin, username);
+  std::cin.sync();
 
   try{
     users.get(username);
@@ -385,9 +383,9 @@ bool loginUser(Map<std::string, User*> & users){
 void createNewUser(Map<std::string, User*> & users){
 
   do{
-    std::string username, name;
+    std::string username, name, dummy;
     std::cout << "Enter a user ID: ";
-    std::cin >> username;
+    std::getline(std::cin, username);
 
     try{
       users.get(username);
@@ -404,8 +402,8 @@ void createNewUser(Map<std::string, User*> & users){
 }
 
 void addNewUser(Map<std::string, User*> & users, std::string username){
- 
-  std::string name = "";
+
+  std::string name;
   std::cout << "Enter a Name: ";
 
   std::getline(std::cin, name);
@@ -420,12 +418,9 @@ void addNewUser(Map<std::string, User*> & users, std::string username){
   //Add User to Data file
   user_file << id_header;
   user_file << name_value;
-  user_file << "END";
+  user_file << "END" << "\n";
 
   user_file.close();
-
-  std::cin.clear();
-  std::cin.ignore(10000, '\n');
 
   return;
  
