@@ -33,6 +33,7 @@ int getInput();
 
 void searchMoviesPrompt(Map<std::string, Movie*> & movies);
 void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*> > & movies_by_keyword);
+void printMovie(Movie* movie);
 
 
 /*** Global file variable names ***/
@@ -293,6 +294,9 @@ bool initializeMovieData(std::string movie_data_file,
         } else if (command == "END"){
           new_movie = new Movie(name);
           movies.add(new_movie->getLowerTitle(), new_movie);
+          for(int i = 0; i < keywords.size(); i++){
+            new_movie->addKeyword(keywords[i]);
+          }          
         }
       }
     }
@@ -416,21 +420,35 @@ void searchMoviesPrompt(Map<std::string, Movie*> & movies){
 
   std::string movie;
   std::cout << "Enter a movie title: " << std::endl;
-  std::cin.clear();
-  std::cin.ignore(10000, '\n');
 
   //Search for movie in the movies Map
   std::getline(std::cin, movie);
   try{
-    movies.get(movie);
+    for(int i = 0; movie[i]; i++) movie[i] = tolower(movie[i]); 
+    Movie * search_movie = movies.get(movie);
+    printMovie(search_movie);
   } catch (NoSuchElementException &e){
-
+    //movie DNE
   }
 
 }
 void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*> > & movies_by_keyword){
 }
 
+void printMovie(Movie * movie){
+  std::cout << movie->getTitle() << std::endl;
+  try{
+    Set<std::string> keywords = movie->getAllKeywords();
+    keywords.first();
+    while(true){
+      std::cout << keywords.getCurrent() << std::endl;
+      keywords.next();
+    }
+  } catch (NoSuchElementException &e){
+    //No keywords
+  }
+}
+    
 
 
 /*************** Utility Functions **************/
