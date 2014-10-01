@@ -412,7 +412,7 @@ void addNewUser(Map<std::string, User*> & users, std::string username){
   User * newUser = new User(username, name);
   users.add(username, newUser);
   //Add to users file as well
-  std::fstream user_file(_user_data_file.c_str(), std::fstream::app);
+  std::fstream user_file(_user_data_file.c_str(), std::fstream::app | std::fstream::out);
   std::string id_header = "BEGIN " + username + "\n";
   std::string name_value = "NAME: " + name + "\n";
 
