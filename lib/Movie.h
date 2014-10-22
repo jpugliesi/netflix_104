@@ -21,11 +21,11 @@ class Movie {
          If the exact same keyword (up to capitalization) was already
          associated with the movie, then the keyword is not added again. */
 
-    Set<std::string> getAllKeywords () const;
+    Set<std::string>* getAllKeywords () const;
       /* Returns a set of all keywords associated with the movie. */
 
   private:
-    Set<std::string> keywords;
+    Set<std::string>* keywords;
     std::string title;
     std::string title_lower;
 };
