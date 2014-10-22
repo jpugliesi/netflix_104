@@ -164,36 +164,6 @@ bool initializeData(std::string input_file,
       //Both files are properly set up, so return true
       _user_data_file = user_data;
       _movie_data_file = movie_data;
-      //Print out all of the users (for debugging)
-      try{
-        users.first();
-        while(true){
-          std::cout << users.getCurrentKey() << ": " << users.getCurrentValue()->getName() << std::endl;
-          try{
-            users.next();
-          } catch (NoSuchElementException &e){
-            // no more elements
-            break;
-          }
-        }
-      } catch (NoSuchElementException &e){
-        std::cerr << "User map is empty" << std::endl;
-      }
-
-      try{
-        movies.first();
-        while(true){
-          std::cout << movies.getCurrentKey() << std::endl;
-          try{
-            movies.next();
-          } catch (NoSuchElementException &e){
-            // no more elements
-            break;
-          }
-        }
-      } catch (NoSuchElementException &e){
-        std::cerr << "User map is empty" << std::endl;
-      }
 
     }
     
