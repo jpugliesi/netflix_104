@@ -12,13 +12,13 @@
 bool initializeData(std::string input_file, 
                     Map<std::string, User*> & users, 
                     Map<std::string, Movie*> & movies, 
-                    Map<std::string, Set<Movie*> > & movies_by_keyword);
+                    Map<std::string, Set<Movie*>* > & movies_by_keyword);
 
 bool initializeUserData(std::string user_data_file, Map<std::string, User*> & users);
 
 bool initializeMovieData(std::string movie_data_file, 
                          Map<std::string, Movie*> & movies, 
-                        Map<std::string, Set<Movie*> > & movies_by_keyword);
+                        Map<std::string, Set<Movie*>* > & movies_by_keyword);
 
 bool tokenizeLine(std::string line, std::vector<std::string> & words);
 bool parseCommand(std::string line, std::string & command, std::string & parameter);
@@ -32,7 +32,7 @@ int getMovieInput();
 int getInput(int start_range, int end_range);
 
 void searchMoviesPrompt(Map<std::string, Movie*> & movies);
-void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*> > & movies_by_keyword);
+void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*>* > & movies_by_keyword);
 void printMovie(Movie* movie, bool print_keywords);
 
 
@@ -62,7 +62,7 @@ int main(int argc, char ** argv){
   Map<std::string, Movie*> movies;
 
   // Keywords for all movies in the application
-  Map<std::string, Set<Movie*> > movies_by_keyword;
+  Map<std::string, Set<Movie*>* > movies_by_keyword;
 
   std::string input_file = argv[1];
 
@@ -142,7 +142,7 @@ int main(int argc, char ** argv){
 bool initializeData(std::string input_file, 
                     Map<std::string, User*> & users, 
                     Map<std::string, Movie*> & movies, 
-                    Map<std::string, Set<Movie*> > & movies_by_keyword){
+                    Map<std::string, Set<Movie*>* > & movies_by_keyword){
 
   //close it!!
   //Open the main data file
@@ -236,7 +236,7 @@ bool initializeUserData(std::string user_data_file, Map<std::string, User*> & us
  */
 bool initializeMovieData(std::string movie_data_file, 
                          Map<std::string, Movie*> & movies, 
-                        Map<std::string, Set<Movie*> > & movies_by_keyword){
+                        Map<std::string, Set<Movie*>* > & movies_by_keyword){
 
   std::ifstream movie_data(movie_data_file.c_str());
 
@@ -270,13 +270,14 @@ bool initializeMovieData(std::string movie_data_file,
             //Add keyword to a movie
             new_movie->addKeyword(word);
             //Add movies to keywords (in the movies_by_keywords set)
-            Set<Movie*> word_movie_set;
-            word_movie_set.add(new_movie);
+            Set<Movie*>* word_movie_set = new Set<Movie*>;
+            word_movie_set->add(new_movie);
             //check if movies_by_keyword map already contains the keyword
             try{
-              Set<Movie*> existing_movies_set = movies_by_keyword.get(word);
+              Set<Movie*>* existing_movies_set = movies_by_keyword.get(word);
               //keyword already exists. Merge new movie set with old one and store back in keywords map
-              Set<Movie*> combined_movies = existing_movies_set.setUnion(word_movie_set);
+              //Set<Movie*>* combined_movies = existing_movies_set->setUnion(*word_movie_set);
+              Set<Movie*>* combined_movies = new Set<Movie*>(existing_movies_set->setUnion(*word_movie_set));
               movies_by_keyword.remove(word);
               movies_by_keyword.add(word, combined_movies);
             } catch (NoSuchElementException &e){
@@ -417,7 +418,7 @@ void searchMoviesPrompt(Map<std::string, Movie*> & movies){
   }
 
 }
-void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*> > & movies_by_keyword){
+void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*>* > & movies_by_keyword){
 
   std::string keyword;
   std::cout << "Enter a keyword: " << std::endl;
@@ -437,15 +438,15 @@ void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::stri
     }
 
     //Find keywords that match
-    Set<Movie*> search_keyword = movies_by_keyword.get(keyword);
+    Set<Movie*>* search_keyword = movies_by_keyword.get(keyword);
     try{
-      search_keyword.first();
-      std::cout << search_keyword.size() << " matches found" << std::endl;
+      search_keyword->first();
+      std::cout << search_keyword->size() << " matches found" << std::endl;
       int choice;
       do{
-        printMovie(search_keyword.getCurrent(), true);
+        printMovie(search_keyword->getCurrent(), true);
 
-        search_keyword.next();
+        search_keyword->next();
         std::cout << "1. Next Movie" << std::endl;
         std::cout << "2. Return to menu" << std::endl;
         choice = getInput(1, 2);
