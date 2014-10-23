@@ -238,17 +238,17 @@ int main(){
   movie.addKeyword("Awesome");
 
   std::cout << "Here are " << movie.getTitle() << "'s keywords: " << std::endl;
-  Set<std::string>* theKeywords = movie.getAllKeywords();
+  Set<std::string> theKeywords = movie.getAllKeywords();
   try{
-    theKeywords->first();
+    theKeywords.first();
   } catch (NoSuchElementException &e){
     std::cerr << e.what() << std::endl;
     std::cerr << "Aparently No keywords for this movie... But there should be!" << std::endl;
   }
   while(true){
-    std::cout << "\t" << theKeywords->getCurrent() << std::endl;
+    std::cout << "\t" << theKeywords.getCurrent() << std::endl;
     try{
-      theKeywords->next();
+      theKeywords.next();
     } catch (NoSuchElementException &e){
       //No more keywords
       break;

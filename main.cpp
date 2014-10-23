@@ -471,11 +471,11 @@ void printMovie(Movie * movie, bool print_keywords){
   std::cout << movie->getTitle() << std::endl;
   if(print_keywords){
     try{
-      Set<std::string>* keywords = movie->getAllKeywords();
-      keywords->first();
+      Set<std::string> keywords = movie->getAllKeywords();
+      keywords.first();
       while(true){
-        std::cout << keywords->getCurrent() << std::endl;
-        keywords->next();
+        std::cout << keywords.getCurrent() << std::endl;
+        keywords.next();
       }
     } catch (NoSuchElementException &e){
       //No keywords
