@@ -1,6 +1,8 @@
 #ifndef _MAP_H
 #define _MAP_H
 
+#include "Pair.h"
+
 template <class keyType, class valueType>
 struct MapItem
 {
@@ -49,6 +51,48 @@ class Map
 
     void first();
     void next();
+
+    class Iterator {
+         /* add any constructors that you feel will be helpful,
+            and choose whether to make them public or private. */
+
+      public:
+        
+        friend class Map<keyType, valueType>;
+
+        Pair<keyType, valueType> operator* () const;
+        // return the current (key, value) pair the iterator is at
+
+        Map<keyType,valueType>::Iterator operator++ ();
+        // advances the iterator (pre-increment)
+
+        Map<keyType,valueType>::Iterator operator= (const Map<keyType,valueType>::Iterator & other);
+        // assigns the other iterator to this iterator and returns this
+
+        bool operator== (const Map<keyType,valueType>::Iterator & other) const;
+        // returns whether this iterator is equal to the other iterator
+
+        bool operator!= (const Map<keyType,valueType>::Iterator & other) const;
+        // returns whether this iterator is not equal to the other iterator
+
+        /* Optionally, if you think that it makes your code easier to write,
+            you may also overload other operators: */
+
+      private:
+        
+        Iterator(const Map<keyType, valueType>* whom, MapItem<keyType, valueType>* item);
+        Pair<keyType, valueType>* currentPair;
+        MapItem<keyType, valueType>* currentItem;
+        const Map<keyType, valueType>* whoIBelongTo;
+        
+    };
+
+     Map<keyType,valueType>::Iterator begin () const;
+       // returns an iterator initialized to the first element
+
+     Map<keyType,valueType>::Iterator end () const;
+       /* returns an iterator initialized past the last element,
+          to designate that the end of the map has been reached. */
 
   private:
      /* The head and tail of the linked list you're using to store

@@ -254,6 +254,31 @@ int main(){
       break;
     }
   }
+  
+  std::cout << std::endl << "New Iterator Tests" << std::endl;
+  std::cout << "------------------------------" << std::endl << std::endl;
+  Map<std::string, int> roomates;
+  std::string john = "John", brandon = "Brandon", thomas = "Thomas", spencer = "Spencer",
+              johnny = "Johnny", austin = "Austin";
+  roomates.add(john, 1);
+  roomates.add(brandon, 2);
+  roomates.add(thomas, 3);
+  roomates.add(spencer, 4);
+  roomates.add(johnny, 5);
+  roomates.add(austin, 6);
+
+  std::cout << std::endl << "Added" << std::endl;
+  
+  Map<std::string, int>::Iterator lli = roomates.begin();
+
+  Map<std::string, int>::Iterator end = roomates.end();
+  while(lli != end){
+
+    std::cout << (*lli).first << " " << (*lli).second << std::endl;
+    ++lli;
+
+  }
+
 
   std::cout << std::endl << "Unit Tests Finished" << std::endl;
   

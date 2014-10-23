@@ -174,6 +174,8 @@ MapItem<keyType, valueType>* Map<keyType, valueType>::getMapItem(keyType key, bo
   
 }
 
+//ghetto iterator
+
 template<class keyType, class valueType>
 void Map<keyType, valueType>::first(){
 
@@ -214,4 +216,85 @@ const valueType & Map<keyType, valueType>::getCurrentValue (){
   }
   throw NoSuchElementException();
   
+}
+
+//Real Iterator
+template<class keyType, class valueType>
+Map<keyType, valueType>::Iterator::Iterator(const Map<keyType, valueType>* whom, MapItem<keyType, valueType>* item){
+
+  currentItem = item;
+  if (currentItem != NULL){
+    currentPair = new Pair<keyType, valueType>(currentItem->key, currentItem->value);
+  } else {
+    currentPair = NULL;
+  }
+  whoIBelongTo = whom;
+
+}
+
+// return the current (key, value) pair the iterator is at
+template<class keyType, class valueType>
+Pair<keyType, valueType> Map<keyType, valueType>::Iterator::operator* () const{
+
+  return *currentPair;
+  
+}
+
+// advances the iterator (pre-increment)
+template<class keyType, class valueType>
+typename Map<keyType,valueType>::Iterator Map<keyType, valueType>::Iterator::operator++ (){
+
+  currentItem = currentItem->next;
+  if (currentItem != NULL){
+    currentPair->first = currentItem->key;
+    currentPair->second = currentItem->value;
+  } else {
+    currentPair = NULL;
+  }
+  return *this;
+
+}
+
+// assigns the other iterator to this iterator and returns this
+template<class keyType, class valueType>
+typename Map<keyType,valueType>::Iterator Map<keyType, valueType>::Iterator::operator= (const Map<keyType,valueType>::Iterator & other){
+
+  currentItem = other.currentItem;
+  currentPair = other.currentPair;
+  whoIBelongTo = other.whoIBelongTo;
+  
+  return *this;
+  
+}
+
+// returns whether this iterator is equal to the other iterator
+template<class keyType, class valueType>
+bool Map<keyType, valueType>::Iterator::operator== (const typename Map<keyType,valueType>::Iterator & other) const{
+
+  return ((currentItem == other.currentItem) && (whoIBelongTo == other.whoIBelongTo));
+
+}
+
+template<class keyType, class valueType>
+bool Map<keyType, valueType>::Iterator::operator!= (const typename Map<keyType,valueType>::Iterator & other) const{
+
+  return !(*this == other);
+
+}
+
+// returns an iterator initialized to the first element
+template<class keyType, class valueType>
+typename Map<keyType,valueType>::Iterator Map<keyType,valueType>::begin () const{
+
+  return Map<keyType, valueType>::Iterator(this, head);
+
+}
+
+/* returns an iterator initialized past the last element,
+to designate that the end of the map has been reached. */
+template<class keyType, class valueType>
+typename Map<keyType,valueType>::Iterator Map<keyType,valueType>::end () const{
+
+  return Map<keyType, valueType>::Iterator(this, NULL);
+
 }
