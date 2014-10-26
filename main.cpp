@@ -112,27 +112,20 @@ int main(int argc, char ** argv){
   
   /******* clean up! *******/
   //delete all of the allocated User objects
-  try{
-    users.first();
-    while(true){
-      delete users.getCurrentValue();
-      users.next();
-    }
-
-  } catch (NoSuchElementException &e){
-    //went through all elements
+  Map<std::string, User*>::Iterator usersIt;
+  for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){
+    delete (*usersIt).second;
   }
 
   //delete all of the allocated Movie objects
-  try{
-    movies.first();
-    while(true){
-      delete movies.getCurrentValue();
-      movies.next();
-    }
+  Map<std::string, Movie*>::Iterator moviesIt;
+  for(moviesIt = movies.begin(); moviesIt != movies.end(); ++moviesIt){
+    delete (*moviesIt).second;
+  }
 
-  } catch (NoSuchElementException &e){
-    //went through all elements
+  Map<std::string, Set<Movie*>* >::Iterator keywordsIt;
+  for(keywordsIt = movies_by_keyword.begin(); keywordsIt != movies_by_keyword.end(); ++keywordsIt){
+    delete (*keywordsIt).second;
   }
 
   return 0;

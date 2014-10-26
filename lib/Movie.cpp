@@ -17,7 +17,7 @@ Movie::Movie(const Movie & other){
 }
 
 //Deconstructor
-Movie::~Movie(){
+Movie::~Movie(){ 
 }
 
 // returns the title of the movie
