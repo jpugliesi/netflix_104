@@ -175,8 +175,12 @@ typename Set<T>::Iterator Set<T>::Iterator::operator++(){
 
   //Note that this doesn't account for where mIt != mItend
   ++mIt;
-  Pair<T, T> tmp = *mIt;
-  currentElement = tmp.first;
+  try{
+    Pair<T, T> tmp = *mIt;
+    currentElement = tmp.first;
+  } catch (NoSuchElementException &e){
+    //error, user should not be iterating like this 
+  }  
   return *this;  
 }
 
