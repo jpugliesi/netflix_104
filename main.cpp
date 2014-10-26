@@ -435,27 +435,28 @@ void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::stri
 
     //Find keywords that match
     Set<Movie*>* search_keyword = movies_by_keyword.get(keyword);
-    try{
-      search_keyword->first();
+    
+    Set<Movie*>::Iterator keywordIt;
+
+      keywordIt = search_keyword->begin();
       std::cout << search_keyword->size() << " matches found" << std::endl;
       int choice;
       do{
-        printMovie(search_keyword->getCurrent(), true);
+        printMovie((*keywordIt), true);
 
-        search_keyword->next();
-        std::cout << "1. Next Movie" << std::endl;
-        std::cout << "2. Return to menu" << std::endl;
-        choice = getInput(1, 2);
-      } while (choice == 1);
-    } catch (NoSuchElementException &e){
-      int choice;
+        ++keywordIt;
+        if (keywordIt != search_keyword->end()){
+          std::cout << "1. Next Movie" << std::endl;
+          std::cout << "2. Return to menu" << std::endl;
+          choice = getInput(1, 2);
+        } else break;
+      } while (keywordIt != search_keyword->end() && choice == 1);
+      
       do{
         std::cout << "1. Return to Menu" << std::endl;
         choice = getInput(1,1);
       } while (choice != 1);
-      //No more movies in the set.
-    }
-
+    
   } catch (NoSuchElementException &e){
     //keyword DNE
     if(!found_movie_title) std::cout << "No Match." << std::endl;
@@ -466,15 +467,10 @@ void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::stri
 void printMovie(Movie * movie, bool print_keywords){
   std::cout << movie->getTitle() << std::endl;
   if(print_keywords){
-    try{
-      Set<std::string> keywords = movie->getAllKeywords();
-      keywords.first();
-      while(true){
-        std::cout << keywords.getCurrent() << std::endl;
-        keywords.next();
-      }
-    } catch (NoSuchElementException &e){
-      //No keywords
+    Set<std::string> keywords = movie->getAllKeywords();
+    Set<std::string>::Iterator keywordsIt;
+    for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
+      std::cout << (*keywordsIt) << std::endl;
     }
   }
 }
