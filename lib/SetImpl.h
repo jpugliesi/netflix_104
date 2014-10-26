@@ -138,3 +138,86 @@ template <class T>
 const T & Set<T>::getCurrent(){
   return internalStorage.getCurrentKey();
 }
+
+/************** NEW Iterator Methods ***************/
+template<class T>
+Set<T>::Iterator::Iterator(const Set<T>* whom, bool begin){
+
+  whoIBelongTo = whom;
+  if (begin){
+    mIt = whom->internalStorage.begin();
+  } else {
+    mIt = whom->internalStorage.end();
+  }
+  mItend = whom->internalStorage.end();
+  
+  if(mIt != mItend){
+    Pair<T, T> tmp = *mIt;
+    currentElement = tmp.first;
+  }  
+}
+
+template<class T>
+Set<T>::Iterator::Iterator(){
+
+  whoIBelongTo = NULL;
+
+}
+template<class T>
+T Set<T>::Iterator::operator*() const{
+
+  return currentElement;
+
+}
+
+template<class T>
+typename Set<T>::Iterator Set<T>::Iterator::operator++(){
+
+  //Note that this doesn't account for where mIt != mItend
+  ++mIt;
+  Pair<T, T> tmp = *mIt;
+  currentElement = tmp.first;
+  return *this;
+  
+}
+
+template<class T>
+typename Set<T>::Iterator Set<T>::Iterator::operator=(const Set<T>::Iterator & other){
+
+  currentElement = other.currentElement;
+  mIt = other.mIt;
+  mItend = other.mItend;
+  whoIBelongTo = other.whoIBelongTo;
+
+  return *this;
+
+}
+
+template<class T>
+bool Set<T>::Iterator::operator==(const typename Set<T>::Iterator & other) const{
+
+  return (mIt == other.mIt && whoIBelongTo == other.whoIBelongTo);
+
+}
+
+template<class T>
+bool Set<T>::Iterator::operator!=(const typename Set<T>::Iterator & other) const{
+
+  return !(*this == other);
+
+}
+
+template<class T>
+typename Set<T>::Iterator Set<T>::begin() const{
+
+  return Set<T>::Iterator(this, true);
+
+}
+
+template<class T>
+typename Set<T>::Iterator Set<T>::end() const{
+
+  return Set<T>::Iterator(this, false);
+
+}
+

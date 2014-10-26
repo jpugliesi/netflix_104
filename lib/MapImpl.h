@@ -8,7 +8,7 @@ Map<keyType, valueType>::Map(){
   head = NULL;
   tail = NULL;
   map_size = 0;
-  currentItem = head;
+  currentItemO = head;
 }
 
 /* Deep Copy Constructor - creates a deep copy of parameter array
@@ -181,7 +181,7 @@ void Map<keyType, valueType>::first(){
 
   if (this->size() > 0){
     //The Map isn't empty
-    currentItem = head;
+    currentItemO = head;
     return;
   }
   //If the map is empty, throw an exception
@@ -192,8 +192,8 @@ void Map<keyType, valueType>::first(){
 template<class keyType, class valueType>
 void Map<keyType, valueType>::next(){
 
-  if (currentItem->next != NULL){
-    currentItem = currentItem->next;
+  if (currentItemO->next != NULL){
+    currentItemO = currentItemO->next;
     return;
   }
   throw NoSuchElementException();
@@ -202,8 +202,8 @@ void Map<keyType, valueType>::next(){
 
 template<class keyType, class valueType>
 const keyType & Map<keyType, valueType>::getCurrentKey (){
-  if (currentItem != NULL){
-    return currentItem->key;
+  if (currentItemO != NULL){
+    return currentItemO->key;
   }
   throw NoSuchElementException();
 
@@ -211,8 +211,8 @@ const keyType & Map<keyType, valueType>::getCurrentKey (){
 
 template<class keyType, class valueType>
 const valueType & Map<keyType, valueType>::getCurrentValue (){
-  if (currentItem != NULL){
-    return currentItem->value;
+  if (currentItemO != NULL){
+    return currentItemO->value;
   }
   throw NoSuchElementException();
   
@@ -232,11 +232,25 @@ Map<keyType, valueType>::Iterator::Iterator(const Map<keyType, valueType>* whom,
 
 }
 
+//Generic Constructor for Map Iterator
+//Defaults to NULL, head
+template<class keyType, class valueType>
+Map<keyType, valueType>::Iterator::Iterator(){
+  currentItem = NULL;
+  currentPair = NULL;
+  whoIBelongTo = NULL;
+}
+
 // return the current (key, value) pair the iterator is at
 template<class keyType, class valueType>
 Pair<keyType, valueType> Map<keyType, valueType>::Iterator::operator* () const{
 
-  return *currentPair;
+  if (currentPair != NULL){
+    return *currentPair;
+  } else {
+    //Prevent returning a NULL pair value
+    throw NoSuchElementException();
+  }
   
 }
 

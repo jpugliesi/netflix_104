@@ -257,28 +257,75 @@ int main(){
   
   std::cout << std::endl << "New Iterator Tests" << std::endl;
   std::cout << "------------------------------" << std::endl << std::endl;
-  Map<std::string, int> roomates;
-  std::string john = "John", brandon = "Brandon", thomas = "Thomas", spencer = "Spencer",
-              johnny = "Johnny", austin = "Austin";
-  roomates.add(john, 1);
-  roomates.add(brandon, 2);
-  roomates.add(thomas, 3);
-  roomates.add(spencer, 4);
-  roomates.add(johnny, 5);
-  roomates.add(austin, 6);
+  std::cout << "Creating map" << std::endl;
 
-  std::cout << std::endl << "Added" << std::endl;
-  
-  Map<std::string, int>::Iterator lli = roomates.begin();
+  Map<int, std::string> mapA;
 
-  Map<std::string, int>::Iterator end = roomates.end();
-  while(lli != end){
+  std::cout << "Creating map iterators" << std::endl;
 
-    std::cout << (*lli).first << " " << (*lli).second << std::endl;
-    ++lli;
+  Map<int, std::string>::Iterator itA, itB;
 
+  std::cout << "Inserting 0 to 5 into mapA" << std::endl;
+
+  mapA.add(0, "zero");
+  mapA.add(1, "one");
+  mapA.add(2, "two");
+  mapA.add(3, "three");
+  mapA.add(4, "four");
+  mapA.add(5, "five");
+
+  std::cout << "Printing out the contents of mapA" << std::endl;
+
+  for(itA = mapA.begin(); itA != mapA.end(); ++itA) {
+    std::cout << "Key: " << (*itA).first << ", Value: " << (*itA).second << std::endl;
   }
 
+  std::cout << "Removing 3 from mapA" << std::endl;
+
+  mapA.remove(3);
+
+  std::cout << "Starting the iterator at the second item in the set" << std::endl;
+
+  itA = mapA.begin();
+  itB = itA;
+  for(++itB; itB != mapA.end(); ++itB) {
+    std::cout << "Key: " << (*itB).first << ", Value: " << (*itB).second << std::endl;
+  }
+
+  std::cout << "Creating map" << std::endl;
+
+  Set<int> setA;
+
+  std::cout << "Creating map iterators" << std::endl;
+
+  Set<int>::Iterator itC, itD;
+
+  std::cout << "Inserting 0 to 5 into setA" << std::endl;
+
+  setA.add(0);
+  setA.add(1);
+  setA.add(2);
+  setA.add(3);
+  setA.add(4);
+  setA.add(5);
+
+  std::cout << "Printing out the contents of setA" << std::endl;
+  
+  for(itC = setA.begin(); itC != setA.end(); ++itC) {
+    std::cout << "Key: " << (*itC) << ", Value: " << (*itC) << std::endl;
+  }
+
+  std::cout << "Removing 3 from setA" << std::endl;
+
+  setA.remove(3);
+
+  std::cout << "Starting the iterator at the second item in the set" << std::endl;
+
+  itC = setA.begin();
+  itD = itC;
+  for(++itD; itD != setA.end(); ++itD) {
+    std::cout << "Key: " << (*itD) << ", Value: " << (*itD) << std::endl;
+  }
 
   std::cout << std::endl << "Unit Tests Finished" << std::endl;
   

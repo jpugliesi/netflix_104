@@ -2,6 +2,7 @@
 #define SET_H
 
 #include "Map.h"
+#include "Pair.h"
 
 template <class T>
 class Set
@@ -44,6 +45,51 @@ class Set
     void first();
     void next();
     const T & getCurrent();
+
+    class Iterator {
+      
+      private:
+        Iterator(const Set<T>* whom, bool begin);
+        T currentElement;
+        typename Map<T, T>::Iterator mIt;
+        typename Map<T, T>::Iterator mItend;
+        const Set<T>* whoIBelongTo;
+        
+      public:
+        friend class Set<T>;
+
+        Iterator();
+
+        T operator* () const;
+        // return the item the iterator is at
+
+        Set<T>::Iterator operator++ ();
+        // advances the iterator (pre-increment)
+
+        Set<T>::Iterator operator= (const Set<T>::Iterator & other);
+        // assigns the other iterator to this iterator and returns this
+
+        bool operator== (const Set<T>::Iterator & other) const;
+        // returns whether this iterator is equal to the other iterator
+
+        bool operator!= (const Set<T>::Iterator & other) const;
+        // returns whether this iterator is not equal to the other iterator
+
+        /* Optionally, if you think that it makes your code easier to write,
+           you may also overload other operators: */
+
+        /* You may define a public copy constructor and/or default constructor
+           if you think it would be helpful. */
+     };
+
+     Set<T>::Iterator begin () const;
+     // returns an iterator initialized to the first element
+
+     Set<T>::Iterator end () const;
+     /* returns an iterator initialized past the last element,
+        to designate that the end of the map has been reached. */
+
+  
 
   private:
     Map<T, T> internalStorage;
