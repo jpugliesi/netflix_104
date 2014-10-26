@@ -262,20 +262,21 @@ bool initializeMovieData(std::string movie_data_file,
             for(int i = 0; word[i]; i++) word[i] = tolower(word[i]);
             //Add keyword to a movie
             new_movie->addKeyword(word);
-            //Add movies to keywords (in the movies_by_keywords set)
-            Set<Movie*>* word_movie_set = new Set<Movie*>;
-            word_movie_set->add(new_movie);
-            //check if movies_by_keyword map already contains the keyword
+            
             try{
               Set<Movie*>* existing_movies_set = movies_by_keyword.get(word);
               //keyword already exists. Merge new movie set with old one and store back in keywords map
               //Set<Movie*>* combined_movies = existing_movies_set->setUnion(*word_movie_set);
-              Set<Movie*>* combined_movies = new Set<Movie*>(existing_movies_set->setUnion(*word_movie_set));
-              delete word_movie_set;
+              Set<Movie*>* combined_movies = new Set<Movie*>(*existing_movies_set);
+              combined_movies->add(new_movie);
               movies_by_keyword.remove(word);
               movies_by_keyword.add(word, combined_movies);
             } catch (NoSuchElementException &e){
               //keyword Doesn't exist in the map. Add word/Movie association to the map
+              //Add movies to keywords (in the movies_by_keywords set)
+              Set<Movie*>* word_movie_set = new Set<Movie*>;
+              word_movie_set->add(new_movie);
+              //check if movies_by_keyword map already contains the keyword
               movies_by_keyword.add(word, word_movie_set);
             }
           }          
