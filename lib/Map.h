@@ -63,6 +63,8 @@ class Map
       public:
         
         friend class Map<keyType, valueType>;
+        
+        Iterator();
 
         Pair<keyType, valueType> operator* () const;
         // return the current (key, value) pair the iterator is at
@@ -101,7 +103,7 @@ class Map
 
      MapItem<keyType, valueType> * getMapItem(keyType key, bool & success) const;
      
-     MapItem<keyType, valueType> * currentItem;
+     MapItem<keyType, valueType> * currentItemO;
 
 };
 
