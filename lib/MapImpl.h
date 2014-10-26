@@ -245,9 +245,9 @@ template<class keyType, class valueType>
 typename Map<keyType,valueType>::Iterator Map<keyType, valueType>::Iterator::operator++ (){
 
   currentItem = currentItem->next;
+  delete currentPair;
   if (currentItem != NULL){
-    currentPair->first = currentItem->key;
-    currentPair->second = currentItem->value;
+    currentPair = new Pair<keyType, valueType>(currentItem->key, currentItem->value);
   } else {
     currentPair = NULL;
   }

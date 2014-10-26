@@ -53,8 +53,12 @@ class Map
     void next();
 
     class Iterator {
-         /* add any constructors that you feel will be helpful,
-            and choose whether to make them public or private. */
+      private:
+        
+        Iterator(const Map<keyType, valueType>* whom, MapItem<keyType, valueType>* item);
+        Pair<keyType, valueType>* currentPair;
+        MapItem<keyType, valueType>* currentItem;
+        const Map<keyType, valueType>* whoIBelongTo;   
 
       public:
         
@@ -78,13 +82,6 @@ class Map
         /* Optionally, if you think that it makes your code easier to write,
             you may also overload other operators: */
 
-      private:
-        
-        Iterator(const Map<keyType, valueType>* whom, MapItem<keyType, valueType>* item);
-        Pair<keyType, valueType>* currentPair;
-        MapItem<keyType, valueType>* currentItem;
-        const Map<keyType, valueType>* whoIBelongTo;
-        
     };
 
      Map<keyType,valueType>::Iterator begin () const;
