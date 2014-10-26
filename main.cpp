@@ -271,6 +271,7 @@ bool initializeMovieData(std::string movie_data_file,
               //keyword already exists. Merge new movie set with old one and store back in keywords map
               //Set<Movie*>* combined_movies = existing_movies_set->setUnion(*word_movie_set);
               Set<Movie*>* combined_movies = new Set<Movie*>(existing_movies_set->setUnion(*word_movie_set));
+              delete word_movie_set;
               movies_by_keyword.remove(word);
               movies_by_keyword.add(word, combined_movies);
             } catch (NoSuchElementException &e){
