@@ -177,8 +177,7 @@ typename Set<T>::Iterator Set<T>::Iterator::operator++(){
   ++mIt;
   Pair<T, T> tmp = *mIt;
   currentElement = tmp.first;
-  return *this;
-  
+  return *this;  
 }
 
 template<class T>
