@@ -29,8 +29,8 @@ protected:
 	{
 		// Code here will be called immediately after the constructor (right
 		// before each test).
-		a = new std::vector<int>();
-    sorted = new std::vector<int>();
+		a = new std::vector<int>(100);
+    sorted = new std::vector<int>(100);
 		for(int i = s; i > 0; ++i){
       a->push_back(i);
       sorted->push_back(100-i);
