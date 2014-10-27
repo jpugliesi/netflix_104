@@ -13,7 +13,7 @@ else
     endif
 endif
 
-Sources= test.cpp Movie.cpp User.cpp
+Sources=Movie.cpp User.cpp test.cpp
 Main=main.cpp
 Executable=project
 TExecutable=test

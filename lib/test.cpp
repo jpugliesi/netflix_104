@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include "Set.h"
+#include "MergeSort.h"
 #include "Map.h"
 #include "Movie.cpp"
 #include "User.cpp"
@@ -328,6 +330,17 @@ int main(){
   }
 
   std::cout << std::endl << "Unit Tests Finished" << std::endl;
+
+  std::cout << std::endl << "MergeSort Tests" << std::endl;
+  std::cout << "------------------------------" << std::endl << std::endl;
+
+  std::vector<int> items;
+  for(int i = 10; i > 0; i--) items.push_back(i);
+  std::vector<int> sorted;
+  sorted = MergeSort::sort(items);
+  for(int i = 0; i < sorted.size(); i++){
+    std::cout << sorted.at(i);
+  }
   
   return 0;
 }
