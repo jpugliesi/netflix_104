@@ -29,11 +29,11 @@ protected:
 	{
 		// Code here will be called immediately after the constructor (right
 		// before each test).
-		a = new vector<int>();
-    sorted = new vector<int>();
+		a = new std::vector<int>();
+    sorted = new std::vector<int>();
 		for(int i = s; i > 0; ++i){
-      a->push(i);
-      sorted->push(100-i);
+      a->push_back(i);
+      sorted->push_back(100-i);
     }
 
 	}
@@ -42,20 +42,21 @@ protected:
 	{
 		// Code here will be called immediately after each test (right
 		// before the destructor).
-		delete a;
+		delete [] a;
+    delete [] sorted;
 		a = NULL;
 	}
 
 	// Objects declared here can be used by all tests in the test case.
 	//DoublingArrayList<int> * a;
-  vector<int>* a;
-  vector<int>* sorted;
+  std::vector<int>* a;
+  std::vector<int>* sorted;
 	int s;
 };
 
 TEST_F(MergeSortTests, Sort)
 {
-  MergeSort::sort(a);
-	for(int i = 0; i < s; ++i) EXPECT_EQ(i, a->get(i));
+  std::vector<int> result = MergeSort::sort(*a);
+	for(int i = 0; i < 100; ++i) EXPECT_EQ(1, result.at(i));
 }
 //put the rest of your test cases here!

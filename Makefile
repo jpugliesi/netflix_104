@@ -1,3 +1,18 @@
+# Detecting OS
+UNAME_S=$(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    CC=g++-4.8
+    GTEST_LL=-I /usr/local/opt/gtest/include/ -lgtest_main -lpthread
+else
+    ifeq ($(UNAME_S),Darwin)
+        CC=g++
+        GTEST_LL=-I /usr/local/opt/gtest/include/ -L /usr/local/opt/gtest/lib/ -lgtest_main -lgtest -lpthread
+    else
+        CC=g++
+        GTEST_LL=-I /usr/local/opt/gtest/include/ -L /usr/local/lib/ -lgtest_main -lgtest -lpthread
+    endif
+endif
+
 Sources= test.cpp Movie.cpp User.cpp
 Main=main.cpp
 Executable=project
@@ -54,7 +69,7 @@ $(ObjectDir)%.test.o: $(TestDir)%.cpp $(LibDir)* $(BinDir).dirstamp
 	$(CC) $(GTEST_CPPFLAGS) $(GTEST_LL) -c $< -o $@
 
 $(BinDir)MergeSortTests: $(TEST_CASES) $(LibDir)
-	$(CC) $(GTEST_CPPFLAGS) $(ObjectDir)$^ $(GTEST_LL) -o $@
+	$(CC) $(GTEST_CPPFLAGS) $(TEST_CASES) $(GTEST_LL) -o $@
 
 # Rule to ensure the $(BinDir) directory exist or it'll create it.
 $(BinDir).dirstamp:

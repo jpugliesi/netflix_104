@@ -1,24 +1,27 @@
 #ifndef MERGESORT_H
 #define MERGESORT_H
-
+#include <vector>
+#include <cmath>
 class MergeSort {
   public:
     template <class T>
-    static vector<T> sort (vector<T> a) {
-      MergeSort(a, 0, a.size());
+    static std::vector<T> sort(std::vector<T> a) {
+      mergeSort(a, 0, a.size());
       return a;
     }
   private:
-    void MergeSort(vector<T> & a, int l, int r){
+    template<class T>
+    static void mergeSort(std::vector<T> & a, int l, int r){
       if (l<r) {
-        int m = floor((l+r)/2);
-        MergeSort(a, l, m);
-        MergeSort(a, m+1, r);
+        int m = std::floor((l+r)/2);
+        mergeSort(a, l, m);
+        mergeSort(a, m+1, r);
         Merge(a, l, r, m); // this is a separate function given below
       }
     }
 
-    void Merge (vector<T> & a, int l, int r, int m)
+    template<class T>
+    static void Merge (std::vector<T> & a, int l, int r, int m)
     {
       T temp[r+1-l];
       // trace through the two subarrays, copying into a temporary one
