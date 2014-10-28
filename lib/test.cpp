@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "Movie.cpp"
 #include "User.cpp"
+#include "Queue.h"
 #include "NoSuchElementException.h"
 
 int main(){
