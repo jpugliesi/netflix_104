@@ -3,6 +3,7 @@
 
 #include "Map.h"
 #include "Pair.h"
+#include <vector>
 
 template <class T>
 class Set
@@ -92,6 +93,8 @@ class Set
   
 
   private:
+    bool containsV (const std::vector<int> & array, int target) const;
+    int binarySearch (const std::vector<int> & array, int target, int lo, int hi) const;
     Map<T, T> internalStorage;
      /* You should use a Map (your own implementation) to store your set.
         It is part of your assignment to figure out what types you 
