@@ -70,7 +70,7 @@ bool Set<T>::contains(T item) const {
 
 //Requires a sorted array and a target value
 template <class T>
-bool Set<T>::containsV(const std::vector<int> & array, int target) const{
+bool Set<T>::containsV(const std::vector<T> & array, T target) const{
 
   if(binarySearch(array, target, 0, array.size()) != -1){
 
@@ -83,7 +83,7 @@ bool Set<T>::containsV(const std::vector<int> & array, int target) const{
 }
 
 template <class T>
-int Set<T>::binarySearch(const std::vector<int> & array, int target, int lo, int hi) const{
+int Set<T>::binarySearch(const std::vector<T> & array, T target, int lo, int hi) const{
 
   if(hi < lo){
 
