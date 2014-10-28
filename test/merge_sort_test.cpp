@@ -54,3 +54,37 @@ TEST_F(MergeSortTests, Sort)
 	for(int i = 0; i < 6; ++i) EXPECT_EQ(i, result.at(i));
 }
 //put the rest of your test cases here!
+
+TEST_F(MergeSortTests, BasicCase){
+
+  std::vector<int> v;
+  v.push_back(1);
+  v.push_back(5);
+  v.push_back(3);
+  v.push_back(2);
+  v.push_back(4);
+  std::vector<int> v_sorted = MergeSort::sort(v);
+  for(int i = 0; i < v.size(); i++) {
+    EXPECT_EQ(v_sorted.at(i), i + 1);
+  }
+
+}
+
+TEST_F(MergeSortTests, BackwardsTest){
+
+  std::vector<int> v;
+  v.push_back(5);
+  v.push_back(4);
+  v.push_back(3);
+  v.push_back(2);
+  v.push_back(1);
+  v.push_back(0);
+
+  std::vector<int> v_sorted = MergeSort::sort(v);
+  for(int i = 0; i < v.size(); i++){
+    EXPECT_EQ(v_sorted.at(i), i);
+  }
+
+}
+
+
