@@ -7,6 +7,8 @@
 #include "lib/Map.h"
 #include "lib/Movie.cpp"
 #include "lib/User.cpp"
+#include "lib/Queue.h"
+#include "lib/Pair.h"
 #include "lib/NoSuchElementException.h"
 
 bool initializeData(std::string input_file, 
@@ -26,6 +28,8 @@ bool parseCommand(std::string line, std::string & command, std::string & paramet
 bool loginUser(Map<std::string, User*> & users, User* current_user);
 void createNewUser(Map<std::string, User*> & users);
 void addNewUser(Map<std::string, User*> & users, std::string username);
+
+void writeUsersToFile(Map<std::string, User*> & users);
 
 int getMenuInput();
 int getMovieInput();
@@ -109,6 +113,9 @@ int main(int argc, char ** argv){
     } while(choice != 3);
     
   }
+
+  //Write data to respective files
+  writeUsersToFile(users);
   
   /******* clean up! *******/
   //delete all of the allocated User objects
@@ -386,7 +393,7 @@ void addNewUser(Map<std::string, User*> & users, std::string username){
   User * newUser = new User(username, name);
   users.add(username, newUser);
   //Add to users file as well
-  std::fstream user_file(_user_data_file.c_str(), std::fstream::app | std::fstream::out);
+  /*std::fstream user_file(_user_data_file.c_str(), std::fstream::app | std::fstream::out);
   std::string id_header = "BEGIN " + username + "\n";
   std::string name_value = "NAME: " + name + "\n";
 
@@ -395,10 +402,33 @@ void addNewUser(Map<std::string, User*> & users, std::string username){
   user_file << name_value;
   user_file << "END" << "\n";
 
-  user_file.close();
+  user_file.close();*/
 
   return;
  
+}
+
+void writeUsersToFile(Map<std::string, User*> & users){
+  
+  std::fstream user_file(_user_data_file.c_str(), std::fstream::out);
+
+  Map<std::string, User*>::Iterator userIt;
+  for(userIt = users.begin(); userIt != users.end(); ++userIt){
+  
+    Pair<std::string, User*> a_user = (*userIt);
+    std::string username = a_user.first;
+    std::string name = a_user.second->getName();
+    std::string id_header = "BEGIN " + username + "\n";
+    std::string name_value = "NAME: " + name + "\n";
+
+    //Add User to Data file
+    user_file << id_header;
+    user_file << name_value;
+    user_file << "END" << "\n";
+  }
+
+  user_file.close();
+
 }
 
 /*************** Movie Functions ****************/
