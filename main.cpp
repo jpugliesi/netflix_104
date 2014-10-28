@@ -23,7 +23,7 @@ bool initializeMovieData(std::string movie_data_file,
 bool tokenizeLine(std::string line, std::vector<std::string> & words);
 bool parseCommand(std::string line, std::string & command, std::string & parameter);
 
-bool loginUser(Map<std::string, User*> & users);
+bool loginUser(Map<std::string, User*> & users, User* current_user);
 void createNewUser(Map<std::string, User*> & users);
 void addNewUser(Map<std::string, User*> & users, std::string username);
 
@@ -55,7 +55,7 @@ int main(int argc, char ** argv){
   //  It will be filled on each run of the program, by reading through the appropriate 
   //  users data file
   Map<std::string, User*> users;
-  
+  User* current_user;  
   // A Map of all of the application's movies
   //  It will be filled on each run of the program, by reading through the appropriate 
   //  users data file
@@ -77,7 +77,7 @@ int main(int argc, char ** argv){
       
       switch(choice){
 
-        case 1: if(loginUser(users)){
+        case 1: if(loginUser(users, current_user)){
                   //movie prompts
                   int choice;
                   do{
@@ -329,7 +329,7 @@ bool parseCommand(std::string line, std::string & command, std::string & paramet
 /************************************************/
 
 
-bool loginUser(Map<std::string, User*> & users){
+bool loginUser(Map<std::string, User*> & users, User* current_user){
 
   std::string username;
 
@@ -338,12 +338,19 @@ bool loginUser(Map<std::string, User*> & users){
   std::cin.sync();
 
   try{
-    users.get(username);
+    current_user = users.get(username);
   } catch(NoSuchElementException &e){
     std::cout << "Invalid ID." << std::endl;
     return false;
   }
+  
   std::cout << "Logged in" << std::endl;
+  Movie* current_movie = current_user->currentMovie();
+  if(current_movie != NULL){
+    std::cout << "Currently checked out: " << current_user->currentMovie()->getTitle() << std::endl;
+  } else {
+    std::cout << "No movie currently checked out" << std::endl;
+  }
   return true;
 
 }
