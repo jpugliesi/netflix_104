@@ -16,7 +16,9 @@ bool initializeData(std::string input_file,
                     Map<std::string, Movie*> & movies, 
                     Map<std::string, Set<Movie*>* > & movies_by_keyword);
 
-bool initializeUserData(std::string user_data_file, Map<std::string, User*> & users);
+bool initializeUserData(std::string user_data_file, 
+                        Map<std::string, User*> & users,
+                        Map<std::string, Movie*> & movies);
 
 bool initializeMovieData(std::string movie_data_file, 
                          Map<std::string, Movie*> & movies, 
@@ -167,8 +169,9 @@ bool initializeData(std::string input_file,
 
     //Output the names for testing
     //std::cout << user_data << std::endl << movie_data << std::endl;
-
-    if(initializeUserData(user_data, users) && initializeMovieData(movie_data, movies, movies_by_keyword)){
+    bool moviesInitialized = initializeMovieData(movie_data, movies, movies_by_keyword);
+    bool usersInitialized = initializeUserData(user_data, users, movies);
+    if(moviesInitialized && usersInitialized){
 
       //Both files are properly set up, so return true
       _user_data_file = user_data;
@@ -194,7 +197,9 @@ bool initializeData(std::string input_file,
  * PRECONDITION: there is a user data file with correctly formatted information, and an empty users Map
  * POSTCONDITION: The user data file information is added to the users Map
  */
-bool initializeUserData(std::string user_data_file, Map<std::string, User*> & users){
+bool initializeUserData(std::string user_data_file, 
+                        Map<std::string, User*> & users, 
+                        Map<std::string, Movie*> & movies){
 
   std::ifstream user_data(user_data_file.c_str());
 
@@ -203,7 +208,10 @@ bool initializeUserData(std::string user_data_file, Map<std::string, User*> & us
 
     //iterate through all of the file's lines
     User * new_user;
+    Movie* currentMovie;
     std::string id, name;
+    bool isQueue = false;
+    Queue<Movie*> movies_to_add;
     while(std::getline(user_data, line)){
       //iterate over all lines in the file, tokenizing them
       std::string command, parameters;
@@ -213,13 +221,47 @@ bool initializeUserData(std::string user_data_file, Map<std::string, User*> & us
         return 0;
       } else {
         //call the appropriate action for the command
-        if(command == "BEGIN"){
-          id = parameters;
-        } else if (command == "NAME:"){
-          name = parameters;
-        } else if (command == "END"){
-          new_user = new User(id, name);
-          users.add(new_user->getID(), new_user);
+        if(!isQueue){
+          if(command == "BEGIN"){
+            if (parameters == "QUEUE"){
+              isQueue = true;
+            } else {
+              id = parameters;
+            }
+          } else if (command == "NAME:"){
+            name = parameters;
+          } else if (command == "END"){
+            new_user = new User(id, name);
+            Queue<Movie*>* queue = new_user->movieQueue();
+            while(!movies_to_add.isEmpty()){
+              queue->enqueue(movies_to_add.peekFront());
+              movies_to_add.dequeue();
+            }
+            users.add(new_user->getID(), new_user);
+          }
+        } else {
+          
+          if (command == "MOVIE:"){
+            try{
+              std::cout << "Current movie: " << parameters << std::endl;
+              for(int i = 0; parameters[i]; i++) parameters[i] = tolower(parameters[i]);
+              currentMovie = movies.get(parameters);
+            } catch(NoSuchElementException &e){
+              std::cout << "That movie doesn't exist" << std::endl;
+              return 0;
+            }
+          } else if(command != "END"){
+            std::string a_movie;
+            a_movie = command + " " + parameters;
+            for(int i = 0; a_movie[i]; i++) a_movie[i] = tolower(a_movie[i]);
+            try{
+              movies_to_add.enqueue(movies.get(a_movie));
+            } catch(NoSuchElementException &e){
+              std::cout << "That movie doesn't exist" << std::endl;
+            }
+          } else {
+            isQueue = false;
+          }
         }
       }
     }
@@ -430,10 +472,27 @@ void writeUsersToFile(Map<std::string, User*> & users){
     std::string name = a_user.second->getName();
     std::string id_header = "BEGIN " + username + "\n";
     std::string name_value = "NAME: " + name + "\n";
+    std::string current_movie;
+    if(a_user.second->currentMovie() != NULL){
+      current_movie = "MOVIE: " + a_user.second->currentMovie()->getTitle() + "\n";
+    }
+
+    Queue<Movie*>* queue = a_user.second->movieQueue();
+    std::string queue_movie;
 
     //Add User to Data file
     user_file << id_header;
     user_file << name_value;
+    if(a_user.second->currentMovie() != NULL){
+      user_file << current_movie;
+    }
+    user_file << "BEGIN QUEUE \n";
+    while(!queue->isEmpty()){
+      queue_movie = queue->peekFront()->getTitle() + "\n";
+      queue->dequeue();
+      user_file << queue_movie;
+    }
+    user_file << "END QUEUE \n";
     user_file << "END" << "\n";
   }
 
