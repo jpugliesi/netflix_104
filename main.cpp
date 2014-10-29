@@ -107,7 +107,7 @@ int main(int argc, char ** argv){
                       
                     }
                 
-                  } while(choice != 3);
+                  } while(choice != 5);
                   
                 }
                 break;
