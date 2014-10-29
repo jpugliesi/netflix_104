@@ -1,6 +1,6 @@
 template<class ItemType>
 Node<ItemType>::Node(){
-  this->item = NULL;
+  this->item = 0;
   next = 0;
 }
 
