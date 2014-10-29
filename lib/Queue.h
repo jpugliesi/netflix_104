@@ -6,6 +6,8 @@ class Queue {
   public:
     Queue();
     ~Queue();
+
+    Queue(const Queue<T> & other);
     
     void enqueue (const T & item);
       /* adds the item to the end of the queue.

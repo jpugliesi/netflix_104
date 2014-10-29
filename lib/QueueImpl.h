@@ -8,6 +8,19 @@ Queue<T>::Queue(){
 }
 
 template <class T>
+Queue<T>::Queue(const Queue<T> & other){
+  head = NULL;
+  tail = NULL;
+
+  Node<T>* tmp = other.head;
+  while(tmp != 0){
+    this->enqueue(tmp->getItem());
+    tmp = tmp->getNext();
+  }
+  size = other.size;
+}
+
+template <class T>
 Queue<T>::~Queue(){
 
   while(head != 0){
