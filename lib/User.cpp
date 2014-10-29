@@ -6,16 +6,20 @@ User::User(std::string ID, std::string name){
   this->name = name;
   this->id = ID;
   this->current_movie = NULL;
+  this->movie_queue = new Queue<Movie*>();
 }
 
 // copy constructor  
 User::User(const User & other){
   this->name = other.getName();
   this->id = other.getID();
+  this->current_movie = NULL;
+  this->movie_queue = new Queue<Movie*>();
 }
 
 //destructor
 User::~User(){
+  delete movie_queue;
 }
 
 // returns the ID associated with this user
@@ -30,7 +34,7 @@ std::string User::getName() const{
 
 Queue<Movie*> * User::movieQueue () {
 
-  return &movie_queue;
+  return movie_queue;
 
 }
 /* returns a pointer to the user's movie queue.

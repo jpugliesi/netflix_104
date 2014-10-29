@@ -25,7 +25,7 @@ bool initializeMovieData(std::string movie_data_file,
 bool tokenizeLine(std::string line, std::vector<std::string> & words);
 bool parseCommand(std::string line, std::string & command, std::string & parameter);
 
-bool loginUser(Map<std::string, User*> & users, User* current_user);
+bool loginUser(Map<std::string, User*> & users, User* & current_user);
 void createNewUser(Map<std::string, User*> & users);
 void addNewUser(Map<std::string, User*> & users, std::string username);
 
@@ -36,7 +36,7 @@ int getMovieInput();
 int getInput(int start_range, int end_range);
 
 void searchMoviesPrompt(Map<std::string, Movie*> & movies);
-void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*>* > & movies_by_keyword);
+void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*>* > & movies_by_keyword, User* & current_user);
 void printMovie(Movie* movie, bool print_keywords);
 
 
@@ -59,7 +59,7 @@ int main(int argc, char ** argv){
   //  It will be filled on each run of the program, by reading through the appropriate 
   //  users data file
   Map<std::string, User*> users;
-  User* current_user;  
+  User* current_user = NULL;  
   // A Map of all of the application's movies
   //  It will be filled on each run of the program, by reading through the appropriate 
   //  users data file
@@ -91,9 +91,13 @@ int main(int argc, char ** argv){
 
                       case 1: searchMoviesPrompt(movies);
                               break;
-                      case 2: searchMoviesByKewordPrompt(movies, movies_by_keyword);
+                      case 2: searchMoviesByKewordPrompt(movies, movies_by_keyword, current_user);
                               break;
-                      case 3: break;
+                      case 3: //return current movie
+                              break;
+                      case 4: //View Queue
+                              break;
+                      case 5: break;
                       default: break;
                       
                     }
@@ -336,7 +340,7 @@ bool parseCommand(std::string line, std::string & command, std::string & paramet
 /************************************************/
 
 
-bool loginUser(Map<std::string, User*> & users, User* current_user){
+bool loginUser(Map<std::string, User*> & users, User* & current_user){
 
   std::string username;
 
@@ -348,6 +352,7 @@ bool loginUser(Map<std::string, User*> & users, User* current_user){
     current_user = users.get(username);
   } catch(NoSuchElementException &e){
     std::cout << "Invalid ID." << std::endl;
+    current_user = NULL;
     return false;
   }
   
@@ -451,7 +456,9 @@ void searchMoviesPrompt(Map<std::string, Movie*> & movies){
   }
 
 }
-void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*>* > & movies_by_keyword){
+void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, 
+                                Map<std::string, Set<Movie*>* > & movies_by_keyword,
+                                User* & current_user){
 
   std::string keyword;
   std::cout << "Enter a keyword: " << std::endl;
@@ -478,21 +485,92 @@ void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::stri
       keywordIt = search_keyword->begin();
       std::cout << search_keyword->size() << " matches found" << std::endl;
       int choice;
-      do{
+
+      //iterate through the movies and print them out, along with options
+      while(keywordIt != search_keyword->end()){
+
+        printMovie((*keywordIt), true);
+
+        std::cout << "1. Next Movie" << std::endl;
+        std::cout << "2. Add Movie to Queue" << std::endl;
+        std::cout << "3. Return to menu" << std::endl;
+        choice = getInput(1, 3);
+        if (choice == 2){
+          //Add the movie to the user's queue
+          Queue<Movie*>* users_queue = current_user->movieQueue();
+          users_queue->enqueue((*keywordIt));
+          std::cout << "Added " << (*keywordIt)->getTitle() << " to your Queue" << std::endl;
+
+        } else if(choice == 1) {
+          Set<Movie*>::Iterator compIt;
+          ++keywordIt;
+          compIt = keywordIt;
+          ++compIt;
+
+          //if the movie after the next is the last movie, only display 2 options
+          if (compIt == search_keyword->end()) break;
+          continue;
+        } else if(choice == 3){
+          break;
+        }
+        
+      }
+      
+      if(choice != 3){
+      
+        choice = 0;
+        do{
+          //print the movie
+          printMovie((*keywordIt), true);
+          
+          std::cout << "1. Add Movie to Queue" << std::endl;
+          std::cout << "2. Return to Menu" << std::endl;
+          choice = getInput(1,2);
+
+          if (choice == 1){
+            //Add the movie to the user's queue
+            Queue<Movie*>* users_queue = current_user->movieQueue();
+            users_queue->enqueue((*keywordIt));
+            std::cout << "Added " << (*keywordIt)->getTitle() << " to your Queue" << std::endl;
+          }
+        } while (choice != 2);
+        
+      }
+
+      /*do{
         printMovie((*keywordIt), true);
 
         ++keywordIt;
         if (keywordIt != search_keyword->end()){
           std::cout << "1. Next Movie" << std::endl;
-          std::cout << "2. Return to menu" << std::endl;
-          choice = getInput(1, 2);
+          std::cout << "2. Add Movie to Queue" << std::endl;
+          std::cout << "3. Return to menu" << std::endl;
+          choice = getInput(1, 3);
+
+          if (choice == 2){
+            //Add the movie to the user's queue
+            Queue<Movie*>* users_queue = current_user->movieQueue();
+            std::cout << users_queue << std::endl;
+            //std::cout << "Empty?: " << users_queue->isEmpty() << std::endl;
+            //users_queue->enqueue((*keywordIt));
+            
+          }
         } else break;
-      } while (keywordIt != search_keyword->end() && choice == 1);
+
+        
+      } while (keywordIt != search_keyword->end() && choice != 3);
       
       do{
-        std::cout << "1. Return to Menu" << std::endl;
-        choice = getInput(1,1);
-      } while (choice != 1);
+        std::cout << "1. Add Movie to Queue" << std::endl;
+        std::cout << "2. Return to Menu" << std::endl;
+        choice = getInput(1,2);
+
+        if (choice == 1){
+          //Add the movie to the user's queue
+          Queue<Movie*>* users_queue = current_user->movieQueue();
+          users_queue->enqueue((*keywordIt));
+        }
+      } while (choice != 2);*/
     
   } catch (NoSuchElementException &e){
     //keyword DNE
@@ -561,9 +639,11 @@ int getMovieInput(){
     
     std::cout << "1. Search for a movie by title" << std::endl;
     std::cout << "2. Search for a movie by keyword" << std::endl;
-    std::cout << "3. Logout" << std::endl;
+    std::cout << "3. Return the Current Movie" << std::endl;
+    std::cout << "4. View Queue" << std::endl;
+    std::cout << "5. Logout" << std::endl;
 
-    choice = getInput(1,3);
+    choice = getInput(1,5);
   } while(choice == -1);
 
   return choice;

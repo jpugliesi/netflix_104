@@ -41,7 +41,7 @@ class User {
          Returns NULL if the user has no movie checked out. */
 
   private:
-    Queue<Movie*> movie_queue;
+    Queue<Movie*>* movie_queue;
     Movie* current_movie;
     std::string name;
     std::string id;
