@@ -2,114 +2,92 @@
 
 template <class T>
 std::vector<T> MergeSort::sort(std::vector<T> a) {
+
   return mergesort(a);
+  
 }
 
 template<class T>
-std::vector<T> MergeSort::mergesort(std::vector<T>& vec)
-{
-    // Termination condition: List is completely sorted if it
-    // only contains a single element.
-    if(vec.size() == 1)
-    {
-        return vec;
+/*
+ *  The mergesort function
+ *  Takes in a vector mergeVector, and returns the sorted vector
+ */
+std::vector<T> MergeSort::mergesort(std::vector<T> & mergeVector){
+
+    if(mergeVector.size() == 1){
+
+        return mergeVector;
+        
     }
+    //find midpoint to split upon using vector iterators!
+    typename std::vector<T>::iterator mid = mergeVector.begin()+(mergeVector.size()/2);
  
-    // Determine the location of the middle element in the vector
-    typename std::vector<T>::iterator middle = vec.begin() + (vec.size() / 2);
+    /*
+     *  Create vector l for the left half of the original vector
+     */
+    std::vector<T> l(mergeVector.begin(), mid);
+    
+    /*
+     *  Create vector r for the right half of the original vector
+     */
+    std::vector<T> r(mid, mergeVector.end());
  
-    std::vector<T> left(vec.begin(), middle);
-    std::vector<T> right(middle, vec.end());
- 
-    // Perform a merge sort on the two smaller vectors
-    left = mergesort(left);
-    right = mergesort(right);
- 
-    return merge(vec,left, right);
+    // merge the vectors
+    l = mergesort(l);
+    r = mergesort(r);
+
+    // return the merged vectors
+    return merge(mergeVector, l, r);
+    
 }
 
 template <class T>
-std::vector<T> MergeSort::merge(std::vector<T> &vec,const std::vector<T>& left, const std::vector<T>& right)
-{
-    // Fill the resultant vector with sorted results from both vectors
-    std::vector<T> result;
-    unsigned left_it = 0, right_it = 0;
+/*
+ *  The merge function
+ *  the helper function for the mergesort function
+ *  Merge's two SORTED vectors together and returns the resultant vector (which is sorted too)
+ */
+std::vector<T> MergeSort::merge(std::vector<T> & mergeVector, const std::vector<T> & l, const std::vector<T> & right){
+
+    int left_iterator = 0;
+    int right_iterator = 0;
+    std::vector<T> outputVector;
  
-    while(left_it < left.size() && right_it < right.size())
-    {
-        // If the left value is smaller than the right it goes next
-        // To the resultant vector
-        if(left[left_it] < right[right_it])
-        {
-            result.push_back(left[left_it]);
-            left_it++;
+    while(right_iterator < right.size() && left_iterator < l.size()){
+        
+        if (l[left_iterator] < right[right_iterator]){
+            
+            //push back the left vector's value since it is smaller
+            outputVector.push_back( l[left_iterator] );
+            left_iterator++;
+            
+        } else {
+            
+            //push back the right vector's value if it's smaller
+            outputVector.push_back( right[right_iterator] );
+            right_iterator++;
+
         }
-        else
-        {
-            result.push_back(right[right_it]);
-            right_it++;
-        }
     }
  
-    // Push the remaining data from both vectors onto the resultant
-    while(left_it < left.size())
-    {
-        result.push_back(left[left_it]);
-        left_it++;
+    // Push back the rest of the elements, it should be sorted because of our comparisons above
+    while(left_iterator < l.size()){
+
+        outputVector.push_back(l[left_iterator]);
+        left_iterator++;
+
     }
  
-    while(right_it < right.size())
-    {
-        result.push_back(right[right_it]);
-        right_it++;
+    while(right_iterator < right.size()){
+
+        outputVector.push_back(right[right_iterator]);
+        right_iterator++;
+        
     }
-  //show merge process..
-  /*int i;
-  for(i=0;i<result.size();i++)
-  {                                
-    std::cout<<result[i]<<" ";
-  }
-  // break each line for display purposes..
-  std::cout<<"***********"<<std::endl;*/
+
+    //set the mergeVector to the merged output vector
+	  mergeVector = outputVector;				
+    
+	return mergeVector;
   
-  //take a source vector and parse the result to it. then return it.  
-	vec = result;				
-	return vec;
 }
-/*template <class T>
-void MergeSort::mergesort(std::vector<T> & a, int l, int r){
-  if (l<r) {
-    std::cout << "merging" << std::endl;
-    T m = std::floor((l+r)/2);
-    mergesort(a, l, m);
-    mergesort(a, m+1, r);
-    merge(a, l, r, m); // this is a separate function given below
-  }
-}
-
-template <class T>
-void MergeSort::merge(std::vector<T> & a, int l, int r, int m)
-{
-  std::vector<T> temp(r+1-l);
-  // trace through the two subarrays, copying To a temporary one
-  T i = l, j = m+1, k = 0;
-  while (i <= m || j <= r)  // at least one subarray contains another element
-  {
-    // next smallest element in left subarray
-    if (i <= m && (j > r || a.at(i) < a.at(j)))
-    {
-      temp.at(k) = a.at(i);
-      i++;
-      k++;
-    } else { 
-      temp.at(k) = a.at(j);
-      j++;
-      k++;
-    }
-    // next smallest element in right subarray
-  }
-  // now copy over the merged array To the original
-  for (k = 0; k < r+1-l; k ++){
-    a.at(k+l) = temp.at(k);
-  }
-}*/

@@ -28,3 +28,10 @@ The executable for the compiled application is located in the bin folder. To run
 bin/project data/data.dat
 ```
 where data/data.dat is the main data file parameter upon which to run the movie application
+
+# Running the Tests
+
+The GTests can be run with the command:
+```
+make tests
+```
