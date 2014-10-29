@@ -33,10 +33,13 @@ void writeUsersToFile(Map<std::string, User*> & users);
 
 int getMenuInput();
 int getMovieInput();
+int getQueueInput();
 int getInput(int start_range, int end_range);
 
 void searchMoviesPrompt(Map<std::string, Movie*> & movies);
 void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies, Map<std::string, Set<Movie*>* > & movies_by_keyword, User* & current_user);
+void modifyQueuePrompt(User* & current_user);
+
 void printMovie(Movie* movie, bool print_keywords);
 
 
@@ -94,8 +97,10 @@ int main(int argc, char ** argv){
                       case 2: searchMoviesByKewordPrompt(movies, movies_by_keyword, current_user);
                               break;
                       case 3: //return current movie
+                              current_user->returnMovie();
                               break;
                       case 4: //View Queue
+                              modifyQueuePrompt(current_user);
                               break;
                       case 5: break;
                       default: break;
@@ -579,8 +584,62 @@ void searchMoviesByKewordPrompt(Map<std::string, Movie*> & movies,
 
 }
 
+//Prompt for working with the user's queue
+void modifyQueuePrompt(User* & current_user){
+
+  Queue<Movie*>* users_queue = current_user->movieQueue();
+    
+  int choice = 0;
+  while (choice != 4){
+    
+    if (!users_queue->isEmpty()){
+      std::cout << users_queue->peekFront()->getTitle() << std::endl;
+    } else {
+      std::cout << "Movie queue empty" << std::endl;
+    }
+
+    choice = getQueueInput();
+
+      if (choice == 1){
+        //Order movie at top of queue
+        if (current_user->currentMovie() == NULL && !(users_queue->isEmpty())){
+          current_user->rentMovie(users_queue->peekFront());
+          users_queue->dequeue();
+          std::cout << "Ordered " << current_user->currentMovie()->getTitle() << std::endl;
+        } else if(users_queue->isEmpty()){
+          std::cout << "No movies in your Queue" << std::endl;
+        } else {
+          std::cout << "You cannot order a new movie until you return the current one" << std::endl;
+        }
+        return;
+      } else if(choice == 2){
+        //Remove movie from queue
+        try{
+          users_queue->dequeue();
+        } catch (EmptyQueueException &e){
+          std::cout << "Your queue is empty" << std::endl;
+        } 
+      } else if(choice == 3){
+        //Move movie back to queue
+        if(!users_queue->isEmpty()){
+          Movie* movie = users_queue->peekFront();
+          users_queue->dequeue();
+          users_queue->enqueue(movie);
+        } else {
+          std::cout << "Your queue is empty" << std::endl;
+        }
+      } else return;
+      
+  }
+  
+
+}
+
 void printMovie(Movie * movie, bool print_keywords){
+  //Print the title
   std::cout << movie->getTitle() << std::endl;
+
+  //if we are printing keywords, iterate through then and do so.
   if(print_keywords){
     Set<std::string> keywords = movie->getAllKeywords();
     Set<std::string>::Iterator keywordsIt;
@@ -644,6 +703,23 @@ int getMovieInput(){
     std::cout << "5. Logout" << std::endl;
 
     choice = getInput(1,5);
+  } while(choice == -1);
+
+  return choice;
+}
+
+int getQueueInput(){
+
+  int choice;
+  do
+  {
+    
+    std::cout << "1. Order Movie" << std::endl;
+    std::cout << "2. Remove Movie from Queue" << std::endl;
+    std::cout << "3. Move Movie to back of Queue" << std::endl;
+    std::cout << "4. Return to User Menu" << std::endl;
+
+    choice = getInput(1,4);
   } while(choice == -1);
 
   return choice;
