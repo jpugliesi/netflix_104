@@ -31,12 +31,17 @@ LoginWindow::LoginWindow(Netflix* & netflix){
   QObject::connect(quitButton, SIGNAL(clicked()), this, SLOT(quitButtonClicked()));
 }
 
+LoginWindow::~LoginWindow(){
+
+}
+
 void LoginWindow::loginButtonClicked(){
   
   bool success = netflix->loginUser(login->text().toStdString());
   if(success){
     //user successfully logged in. Emit signal to open MainWindow
     emit userLoggedIn(netflix);
+    this->close();
   } else {
     QMessageBox badUsernameMessage;
     badUsernameMessage.setText("That username does not exist. Please try again.");
