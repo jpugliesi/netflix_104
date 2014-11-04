@@ -22,9 +22,8 @@ class Netflix{
     bool tokenizeLine(std::string line, std::vector<std::string> & words);
     bool parseCommand(std::string line, std::string & command, std::string & parameter);
 
-    bool loginUser();
+    bool loginUser(std::string username);
     void createNewUser();
-    void addNewUser(std::string username);
 
     void writeUsersToFile();
 

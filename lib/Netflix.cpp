@@ -271,11 +271,10 @@ bool Netflix::parseCommand(std::string line, std::string & command, std::string 
 /************************************************/
 
 
-bool Netflix::loginUser(){
+bool Netflix::loginUser(std::string username){
 
   std::string username;
 
-  std::cout << "ID: ";
   std::getline(std::cin, username);
   std::cin.sync();
 
@@ -287,29 +286,22 @@ bool Netflix::loginUser(){
     return false;
   }
   
-  std::cout << "Logged in" << std::endl;
-  Movie* current_movie = current_user->currentMovie();
-  if(current_movie != NULL){
-    std::cout << "Currently checked out: " << current_user->currentMovie()->getTitle() << std::endl;
-  } else {
-    std::cout << "No movie currently checked out" << std::endl;
-  }
   return true;
 
 }
 
-void Netflix::createNewUser(){
+void Netflix::createNewUser(std::string username, std::string name){
 
   do{
-    std::string username, name, dummy;
-    std::cout << "Enter a user ID: ";
-    std::getline(std::cin, username);
-
     try{
       users.get(username);
     } catch (NoSuchElementException &e){
       //Add New User
-      addNewUser(username);
+      std::string name;
+     
+      User * newUser = new User(username, name);
+      users.add(username, newUser);
+
       return;
     }
     std::cout << "ID already Exists." << std::endl;
@@ -317,31 +309,6 @@ void Netflix::createNewUser(){
 
   return;
 
-}
-
-void Netflix::addNewUser(std::string username){
-
-  std::string name;
-  std::cout << "Enter a Name: ";
-
-  std::getline(std::cin, name);
- 
-  User * newUser = new User(username, name);
-  users.add(username, newUser);
-  //Add to users file as well
-  /*std::fstream user_file(_user_data_file.c_str(), std::fstream::app | std::fstream::out);
-  std::string id_header = "BEGIN " + username + "\n";
-  std::string name_value = "NAME: " + name + "\n";
-
-  //Add User to Data file
-  user_file << id_header;
-  user_file << name_value;
-  user_file << "END" << "\n";
-
-  user_file.close();*/
-
-  return;
- 
 }
 
 void Netflix::writeUsersToFile(){
