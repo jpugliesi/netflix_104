@@ -35,6 +35,11 @@ LoginWindow::~LoginWindow(){
 
 }
 
+void LoginWindow::openLoginWindow(){
+
+  this->show();
+}
+
 void LoginWindow::loginButtonClicked(){
   
   bool success = netflix->loginUser(login->text().toStdString());
@@ -53,5 +58,12 @@ void LoginWindow::loginButtonClicked(){
 void LoginWindow::quitButtonClicked(){
 
   emit quit();
+
+}
+
+void LoginWindow::newUserButtonClicked(){
+
+  this->hide();
+  emit createNewUser(netflix);
 
 }

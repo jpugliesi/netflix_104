@@ -26,12 +26,15 @@ class LoginWindow : public QWidget{
     LoginWindow(Netflix* & netflix);
 
   private slots:
+    void openLoginWindow();
     void loginButtonClicked();
     void quitButtonClicked();
+    void newUserButtonClicked();
 
   signals:
     void userLoggedIn(Netflix* & netflix);
     void quit();
+    void createNewUser(Netflix* & netflix);
     
 };
 
