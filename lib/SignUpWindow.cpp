@@ -29,6 +29,7 @@ SignUpWindow::SignUpWindow(){
 
   QObject::connect(confirmButton, SIGNAL(clicked()), this, SLOT(createUser()));
   QObject::connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+  QObject::connect(cancelButton, SIGNAL(clicked()), this SLOT(cancel()));
 
 }
 

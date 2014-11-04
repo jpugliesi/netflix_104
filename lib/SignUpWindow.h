@@ -37,6 +37,18 @@ class SignUpWindow : public QWidget{
   signals:
     void cancelSignUp();
 
+    Netflix* netflix;
+
+  public slots:
+    void openSignUpWindow(Netflix* &netflix);
+
+  private slots:
+    void createUser();
+    void cancel();
+
+  signals:
+    void cancelSignUp();
+
 };
 
 #endif
