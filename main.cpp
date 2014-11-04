@@ -1,6 +1,7 @@
 #include <QApplication>
 #include "LoginWindow.h"
 #include "SignUpWindow.h"
+#include "MainWindow.h"
 #include "Netflix.h"
 #include <iostream>
 #include <string>
@@ -24,6 +25,8 @@ int main(int argc, char ** argv){
 
   LoginWindow loginWindow;
   SignUpWindow sw;
+  MainWindow mw;
+  mw.show();
   sw.show();
   loginWindow.show();
 

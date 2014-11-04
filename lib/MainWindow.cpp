@@ -46,4 +46,5 @@ MainWindow::MainWindow(){
   mainLayout->addWidget(searchMovieGroup);
   mainLayout->addWidget(logoutButton);
 
+  setLayout(mainLayout);
 }
