@@ -30,7 +30,11 @@ int main(int argc, char ** argv){
   SignUpWindow sw;
   MainWindow mw;
 
+  //Upon successful login open the MainWindow
   QObject::connect(&loginWindow, SIGNAL(userLoggedIn(Netflix*&)), &mw, SLOT(openMainWindow(Netflix*&)));
+
+  //Quit if quit button clicked
+  QObject::connect(&loginWindow, SIGNAL(quit()), &app, SLOT(exit()));
   loginWindow.show();
 
   return app.exec();

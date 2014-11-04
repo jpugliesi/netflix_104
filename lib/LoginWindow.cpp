@@ -28,13 +28,12 @@ LoginWindow::LoginWindow(Netflix* & netflix){
   setLayout(mainLayout);
 
   QObject::connect(loginButton, SIGNAL(clicked()), this, SLOT(loginButtonClicked()));
+  QObject::connect(quitButton, SIGNAL(clicked()), this, SLOT(quitButtonClicked()));
 }
 
 void LoginWindow::loginButtonClicked(){
-  std::cout << "BUTTON CLICKED" << std::endl;
   
   bool success = netflix->loginUser(login->text().toStdString());
-  std::cout << "Login: " << success << std::endl;
   if(success){
     //user successfully logged in. Emit signal to open MainWindow
     emit userLoggedIn(netflix);
@@ -43,5 +42,11 @@ void LoginWindow::loginButtonClicked(){
     badUsernameMessage.setText("That username does not exist. Please try again.");
     badUsernameMessage.exec();
   }
+
+}
+
+void LoginWindow::quitButtonClicked(){
+
+  emit quit();
 
 }
