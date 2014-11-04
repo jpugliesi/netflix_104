@@ -1,7 +1,10 @@
 #ifndef SIGN_UP_WINDOW_H
 #define SIGN_UP_WINDOW_H
 
+#include <QtGui>
 class SignUpWindow : public QWidget{
+
+  Q_OBJECT
 
   public:
     SignUpWindow();

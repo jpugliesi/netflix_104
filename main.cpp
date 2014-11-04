@@ -1,5 +1,6 @@
 #include <QApplication>
 #include "LoginWindow.h"
+#include "SignUpWindow.h"
 #include "Netflix.h"
 #include <iostream>
 #include <string>
@@ -22,6 +23,8 @@ int main(int argc, char ** argv){
   QApplication app(argc, argv);
 
   LoginWindow loginWindow;
+  SignUpWindow sw;
+  sw.show();
   loginWindow.show();
 
   return app.exec();

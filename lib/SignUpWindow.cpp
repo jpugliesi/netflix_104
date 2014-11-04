@@ -6,7 +6,7 @@ SignUpWindow::SignUpWindow(){
   
   welcomeSignIn = new QLabel("Please sign up for 104Flix");
   
-  mainLayout->add(welcomeSignIn);
+  mainLayout->addWidget(welcomeSignIn);
   signUpForm = new QFormLayout();
 
   username = new QLineEdit();
@@ -23,5 +23,7 @@ SignUpWindow::SignUpWindow(){
 
   mainLayout->addLayout(signUpForm);
   mainLayout->addLayout(buttonLayout);
+
+  setLayout(mainLayout);
 
 }
