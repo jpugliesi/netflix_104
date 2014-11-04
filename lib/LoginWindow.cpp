@@ -29,10 +29,16 @@ LoginWindow::LoginWindow(Netflix* & netflix){
 
   QObject::connect(loginButton, SIGNAL(clicked()), this, SLOT(loginButtonClicked()));
   QObject::connect(quitButton, SIGNAL(clicked()), this, SLOT(quitButtonClicked()));
+  QObject::connect(newUserButton, SIGNAL(clicked()), this, SLOT(newUserButtonClicked()));
 }
 
 LoginWindow::~LoginWindow(){
 
+}
+
+void LoginWindow::openLoginWindow(){
+
+  this->show();
 }
 
 void LoginWindow::loginButtonClicked(){
@@ -53,5 +59,12 @@ void LoginWindow::loginButtonClicked(){
 void LoginWindow::quitButtonClicked(){
 
   emit quit();
+
+}
+
+void LoginWindow::newUserButtonClicked(){
+
+  this->hide();
+  emit createNewUser(netflix);
 
 }

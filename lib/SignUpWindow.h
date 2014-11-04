@@ -2,6 +2,8 @@
 #define SIGN_UP_WINDOW_H
 
 #include <QtGui>
+#include <QObject>
+#include "Netflix.h"
 class SignUpWindow : public QWidget{
 
   Q_OBJECT
@@ -20,8 +22,20 @@ class SignUpWindow : public QWidget{
     QVBoxLayout *mainLayout;
     QHBoxLayout *buttonLayout;
 
-    QPushButton *confirm;
-    QPushButton *cancel;
+    QPushButton *confirmButton;
+    QPushButton *cancelButton;
+
+    Netflix* netflix;
+
+  public slots:
+    void openSignUpWindow(Netflix* &netflix);
+
+  private slots:
+    void createUser();
+    void cancel();
+
+  signals:
+    void cancelSignUp();
 
 };
 

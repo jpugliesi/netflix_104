@@ -35,6 +35,8 @@ int main(int argc, char ** argv){
 
   //Quit if quit button clicked
   QObject::connect(&loginWindow, SIGNAL(quit()), &app, SLOT(quit()));
+  QObject::connect(&loginWindow, SIGNAL(createNewUser(Netflix*&)), &sw, SLOT(openSignUpWindow(Netflix*&)));
+  QObject::connect(&sw, SIGNAL(cancelSignUp()), &loginWindow, SLOT(openLoginWindow()));
 
   loginWindow.show();
 

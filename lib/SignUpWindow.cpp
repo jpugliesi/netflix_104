@@ -2,6 +2,7 @@
 
 SignUpWindow::SignUpWindow(){
 
+  netflix = NULL;
   mainLayout = new QVBoxLayout();
   
   welcomeSignIn = new QLabel("Please sign up for 104Flix");
@@ -16,14 +17,37 @@ SignUpWindow::SignUpWindow(){
   signUpForm->addRow("Name:", name);
   
   buttonLayout = new QHBoxLayout();
-  confirm = new QPushButton("&Confirm");
-  cancel = new QPushButton("Cancel");
-  buttonLayout->addWidget(confirm);
-  buttonLayout->addWidget(cancel);
+  confirmButton = new QPushButton("&Confirm");
+  cancelButton = new QPushButton("Cancel");
+  buttonLayout->addWidget(confirmButton);
+  buttonLayout->addWidget(cancelButton);
 
   mainLayout->addLayout(signUpForm);
   mainLayout->addLayout(buttonLayout);
 
   setLayout(mainLayout);
+
+  QObject::connect(confirmButton, SIGNAL(clicked()), this, SLOT(createUser()));
+  QObject::connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+
+}
+
+void SignUpWindow::openSignUpWindow(Netflix* &netflix){
+
+  this->netflix = netflix;
+  this->show();
+
+}
+
+void SignUpWindow::createUser(){
+
+  std::cout << "Creating a user" << std::endl;
+
+}
+
+void SignUpWindow::cancel(){
+
+  this->close();
+  emit cancelSignUp();
 
 }
