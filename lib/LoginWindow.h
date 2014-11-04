@@ -14,6 +14,10 @@ class LoginWindow : public QWidget{
     QPushButton * loginButton;
     QPushButton * newUserButton;
 
+    QLabel * welcomeLabel;
+    QLineEdit * login;
+    QFormLayout * loginRow;
+
   public:
     LoginWindow();
 
