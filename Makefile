@@ -21,7 +21,7 @@ TestObject=test.o
 MainObject=main.o
 Headers=**/*.h
 
-CFlags= -g -c
+CFlags= -g -c -Ilib/
 GTEST_CPPFLAGS = -Wall -g -I$(LibDir) -Wextra -pthread -std=gnu++0x
 LDFlags=
 ObjectDir=obj/
@@ -42,21 +42,26 @@ CObjects=$(addprefix $(ObjectDir),$(Objects))
 MainExecutable=$(addprefix $(BinDir),$(Executable))
 TestExecutable=$(addprefix $(BinDir),$(TExecutable))
 
-all: $(CSources) $(MainExecutable) $(TestExecutable)
+Netflix = Netflix.o
+
+all: $(MainExecutable) $(TestExecutable) $(CSources)
 
 #This should be changed to link the $(MainObject) Basically useless until the movie app is implemented
-$(MainExecutable): $(CObjects) $(BinDir)
-	$(CC) $(LDFlags) $(ObjectDir)$(MainObject) -o $@
+$(MainExecutable): $(CObjects) $(BinDir) $(Netflix) $(MainObject)
+	$(CC) $(LDFlags) $(ObjectDir)$(MainObject) obj/Netflix.o obj/Movie.o obj/User.o -o $@
 
 $(TestExecutable): $(CObjects) $(BinDir)
 	$(CC) $(LDFlags) $(ObjectDir)$(TestObject) -o $@
 
 
-$(ObjectDir)%.o: $(LibDir)%.cpp $(Headers) $(ObjectDir) $(MainObject) 
+$(ObjectDir)%.o: $(LibDir)%.cpp $(ObjectDir) 
 	$(CC) $(CFlags) $< -o $@
 	
-$(MainObject): $(Main)
+$(MainObject):
 	$(CC) $(CFlags) $(Main) -o $(ObjectDir)$(MainObject)
+
+$(Netflix): $(CObjects)
+	$(CC) $(CFlags) lib/Netflix.cpp -o obj/Netflix.o
 
 $(ObjectDir):
 	mkdir obj
