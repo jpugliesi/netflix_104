@@ -35,6 +35,9 @@ class MainWindow : public QWidget{
     QPushButton *searchByKeywordButton;
     QPushButton *logoutButton;
 
+  public slots:
+    void openMainWindow();
+
 
 };
 

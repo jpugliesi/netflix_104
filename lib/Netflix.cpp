@@ -9,7 +9,7 @@
 #include "Pair.h"
 #include "NoSuchElementException.h"
 
-Netflix::Netflix(){
+Netflix::Netflix(std::string input_file){
 
   current_user = NULL;
 }

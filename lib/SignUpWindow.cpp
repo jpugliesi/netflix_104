@@ -27,3 +27,9 @@ SignUpWindow::SignUpWindow(){
   setLayout(mainLayout);
 
 }
+
+void MainWindow::openMainWindow(){
+
+  this->show();
+
+}

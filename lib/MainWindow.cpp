@@ -48,3 +48,7 @@ MainWindow::MainWindow(){
 
   setLayout(mainLayout);
 }
+
+void MainWindow::openMainWindow(){
+  this->show();
+}

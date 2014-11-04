@@ -2,6 +2,7 @@
 #define LOGIN_WINDOW_H
 
 #include <QtGui>
+#include "Netflix.h"
 class LoginWindow : public QWidget{
 
   Q_OBJECT
@@ -18,9 +19,17 @@ class LoginWindow : public QWidget{
     QLineEdit * login;
     QFormLayout * loginRow;
 
-  public:
-    LoginWindow();
+    Netflix* netflix;
 
+  public:
+    LoginWindow(Netflix* & netflix);
+
+  private slots:
+    void loginButtonClicked();
+
+  signals:
+    void userLoggedIn(Netflix* netflix);
+    
 };
 
 #endif

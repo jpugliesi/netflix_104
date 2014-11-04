@@ -1,6 +1,8 @@
 #include "LoginWindow.h"
 
-LoginWindow::LoginWindow(){
+LoginWindow::LoginWindow(Netflix* & netflix){
+
+  this->netflix = netflix;
 
   mainLayout = new QVBoxLayout();
   buttonLayout = new QHBoxLayout();
@@ -23,4 +25,20 @@ LoginWindow::LoginWindow(){
   mainLayout->addLayout(buttonLayout);
 
   setLayout(mainLayout);
+
+  connect(loginButton, SIGNAL(clicked()), this, SLOT(loginButtonClicked()));
+}
+
+void LoginWindow::loginButtonClicked(){
+  
+  bool success = netflix->loginUser(login->text());
+  if(success){
+    //user successfully logged in. Emit signal to open MainWindow
+    emit userLoggedIn(netflix);
+  } else {
+    QMessageBox badUsernameMessage;
+    badUsernameMessage.setText("That username does not exist. Please try again.");
+    badUsernameMessage.exec();
+  }
+
 }
