@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
+#include <QObject>
+#include "Netflix.h"
 class MainWindow : public QWidget{
 
   Q_OBJECT
@@ -36,9 +38,7 @@ class MainWindow : public QWidget{
     QPushButton *logoutButton;
 
   public slots:
-    void openMainWindow();
-
-
+    void openMainWindow(Netflix* & netflix);
 };
 
 #endif

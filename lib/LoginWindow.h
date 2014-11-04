@@ -2,6 +2,7 @@
 #define LOGIN_WINDOW_H
 
 #include <QtGui>
+#include <QObject>
 #include "Netflix.h"
 class LoginWindow : public QWidget{
 
@@ -28,7 +29,7 @@ class LoginWindow : public QWidget{
     void loginButtonClicked();
 
   signals:
-    void userLoggedIn(Netflix* netflix);
+    void userLoggedIn(Netflix* & netflix);
     
 };
 

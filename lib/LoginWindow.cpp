@@ -1,4 +1,5 @@
 #include "LoginWindow.h"
+#include <iostream>
 
 LoginWindow::LoginWindow(Netflix* & netflix){
 
@@ -26,12 +27,14 @@ LoginWindow::LoginWindow(Netflix* & netflix){
 
   setLayout(mainLayout);
 
-  connect(loginButton, SIGNAL(clicked()), this, SLOT(loginButtonClicked()));
+  QObject::connect(loginButton, SIGNAL(clicked()), this, SLOT(loginButtonClicked()));
 }
 
 void LoginWindow::loginButtonClicked(){
+  std::cout << "BUTTON CLICKED" << std::endl;
   
-  bool success = netflix->loginUser(login->text());
+  bool success = netflix->loginUser(login->text().toStdString());
+  std::cout << "Login: " << success << std::endl;
   if(success){
     //user successfully logged in. Emit signal to open MainWindow
     emit userLoggedIn(netflix);

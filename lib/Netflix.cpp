@@ -9,7 +9,7 @@
 #include "Pair.h"
 #include "NoSuchElementException.h"
 
-Netflix::Netflix(std::string input_file){
+Netflix::Netflix(){
 
   current_user = NULL;
 }
@@ -272,9 +272,6 @@ bool Netflix::parseCommand(std::string line, std::string & command, std::string 
 
 
 bool Netflix::loginUser(std::string username){
-
-  std::getline(std::cin, username);
-  std::cin.sync();
 
   try{
     current_user = users.get(username);

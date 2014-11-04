@@ -10,7 +10,7 @@ class Netflix{
 
   public:
     
-    Netflix(std::string input_file);
+    Netflix();
     ~Netflix();
     
     bool initializeData(std::string input_file);

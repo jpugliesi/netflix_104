@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QObject>
 #include "LoginWindow.h"
 #include "SignUpWindow.h"
 #include "MainWindow.h"
@@ -29,7 +30,7 @@ int main(int argc, char ** argv){
   SignUpWindow sw;
   MainWindow mw;
 
-  connect(&loginWindow, SIGNAL(userLoggedIn()), &mw, SLOT(openMainWindow()));
+  QObject::connect(&loginWindow, SIGNAL(userLoggedIn(Netflix*&)), &mw, SLOT(openMainWindow(Netflix*&)));
   loginWindow.show();
 
   return app.exec();

@@ -49,6 +49,6 @@ MainWindow::MainWindow(){
   setLayout(mainLayout);
 }
 
-void MainWindow::openMainWindow(){
+void MainWindow::openMainWindow(Netflix* & netflix){
   this->show();
 }
