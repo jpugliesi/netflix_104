@@ -1,4 +1,6 @@
-#include "./lib/Netflix.h"
+#include <QApplication>
+#include "LoginWindow.h"
+#include "Netflix.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -17,57 +19,12 @@ int main(int argc, char ** argv){
 
   std::string input_file = argv[1];
 
-  if(netflix.initializeData(input_file)){
-  
-    //The files were read properly.
-    //Launch the interactive experience
-    int choice;
-    do{
-      choice = 3;
-      choice = netflix.getMenuInput();
-      
-      switch(choice){
+  QApplication app(argc, argv);
 
-        case 1: if(netflix.loginUser()){
-                  //movie prompts
-                  int choice;
-                  do{
-                    choice = netflix.getMovieInput();
-                    
-                    switch(choice){
+  LoginWindow loginWindow;
+  loginWindow.show();
 
-                      case 1: netflix.searchMoviesPrompt();
-                              break;
-                      case 2: netflix.searchMoviesByKewordPrompt();
-                              break;
-                      case 3: //return current movie
-                              netflix.getCurrentUser()->returnMovie();
-                              break;
-                      case 4: //View Queue
-                              netflix.modifyQueuePrompt();
-                              break;
-                      case 5: break;
-                      default: break;
-                      
-                    }
-                
-                  } while(choice != 5);
-                  
-                }
-                break;
-        case 2: std::cout << "Creating a new user" << std::endl;
-                netflix.createNewUser();
-                break;
-        case 3: break;
-        default: break;
-        
-      }
-  
-    } while(choice != 3);
-    
-  }
-
-  return 0;
+  return app.exec();
 
 }
 

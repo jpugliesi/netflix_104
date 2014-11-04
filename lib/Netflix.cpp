@@ -273,8 +273,6 @@ bool Netflix::parseCommand(std::string line, std::string & command, std::string 
 
 bool Netflix::loginUser(std::string username){
 
-  std::string username;
-
   std::getline(std::cin, username);
   std::cin.sync();
 

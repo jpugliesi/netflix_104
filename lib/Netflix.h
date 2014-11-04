@@ -23,7 +23,7 @@ class Netflix{
     bool parseCommand(std::string line, std::string & command, std::string & parameter);
 
     bool loginUser(std::string username);
-    void createNewUser();
+    void createNewUser(std::string username, std::string name);
 
     void writeUsersToFile();
 
