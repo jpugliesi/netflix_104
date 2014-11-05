@@ -285,24 +285,19 @@ bool Netflix::loginUser(std::string username){
 
 }
 
-void Netflix::createNewUser(std::string username, std::string name){
+bool Netflix::createNewUser(std::string username, std::string name){
 
-  do{
-    try{
-      users.get(username);
-    } catch (NoSuchElementException &e){
-      //Add New User
-      std::string name;
-     
-      User * newUser = new User(username, name);
-      users.add(username, newUser);
+  try{
+    users.get(username);
+  } catch (NoSuchElementException &e){
+    //Add New User
+    User * newUser = new User(username, name);
+    users.add(username, newUser);
 
-      return;
-    }
-    std::cout << "ID already Exists." << std::endl;
-  } while(true);
+    return true;
+  }
 
-  return;
+  return false;
 
 }
 

@@ -37,7 +37,12 @@ LoginWindow::~LoginWindow(){
 }
 
 void LoginWindow::openLoginWindow(){
+  this->show();
+}
 
+void LoginWindow::openLoginWindow(QString username){
+  
+  login->setText(username);
   this->show();
 }
 

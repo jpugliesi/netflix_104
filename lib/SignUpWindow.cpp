@@ -1,4 +1,5 @@
 #include "SignUpWindow.h"
+#include <string>
 
 SignUpWindow::SignUpWindow(){
 
@@ -42,6 +43,23 @@ void SignUpWindow::openSignUpWindow(Netflix* &netflix){
 void SignUpWindow::createUser(){
 
   std::cout << "Creating a user" << std::endl;
+  QString usernameText(username->text());
+  QString fullName(name->text());
+  if(netflix->createNewUser(usernameText.toStdString(), fullName.toStdString())){
+    //successfully created a user
+    QMessageBox createdMessage;
+    QString createdMessageText("New user created. Username: " + usernameText + " Name: " + fullName);
+    createdMessage.setText(createdMessageText); 
+    createdMessage.exec();
+    QString qstr(usernameText);
+    emit userCreated(qstr);
+    
+  } else {
+    //bad username/name. reprompt
+    QMessageBox badCredentials;
+    badCredentials.setText("That username already exists. Please try another.");
+    badCredentials.exec();
+  }
 
 }
 

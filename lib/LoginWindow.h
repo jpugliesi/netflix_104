@@ -28,6 +28,7 @@ class LoginWindow : public QWidget{
 
   private slots:
     void openLoginWindow();
+    void openLoginWindow(QString);
     void loginButtonClicked();
     void quitButtonClicked();
     void newUserButtonClicked();

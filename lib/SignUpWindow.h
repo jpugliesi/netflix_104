@@ -36,6 +36,7 @@ class SignUpWindow : public QWidget{
 
   signals:
     void cancelSignUp();
+    void userCreated(QString);
 };
 
 #endif
