@@ -5,14 +5,18 @@ SearchResultsWindow::SearchResultsWindow(Set<Movie*>* & searchMovies){
 
   searchSet = searchMovies;
 
-  //add keywords to the screen
-  movieIt = searchSet->begin();
-  if(movieIt != searchSet->end()){
-    Movie* firstMovie = *movieIt;
-    Set<std::string> keywords = firstMovie->getAllKeywords();
-    for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
-      labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
+  if(searchMovies != NULL){
+    //add keywords to the screen
+    movieIt = searchSet->begin();
+    if(movieIt != searchSet->end()){
+      Movie* firstMovie = *movieIt;
+      Set<std::string> keywords = firstMovie->getAllKeywords();
+      for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
+        labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
+      }
     }
+  } else {
+    labelSet.push_back(new QLabel("0 results found"));
   }
   
   mainLayout = new QVBoxLayout();
