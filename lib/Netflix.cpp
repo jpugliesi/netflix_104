@@ -377,7 +377,9 @@ Set<Movie*>* Netflix::searchMoviesByKeyword(std::string keyword){
     
     //Find keywords that match
     Set<Movie*>* search_keyword = movies_by_keyword.get(keyword);
-    Set<Movie*>* merged = new Set<Movie*>(result->setUnion(*search_keyword));
+    Set<Movie*> result_copy(*result);
+    Set<Movie*> keyword_copy(*search_keyword);
+    Set<Movie*>* merged = new Set<Movie*>(result_copy.setUnion(keyword_copy));
 
     return merged;
     
