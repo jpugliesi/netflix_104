@@ -5,7 +5,7 @@ SearchResultsWindow::SearchResultsWindow(Set<Movie*>* & searchMovies){
 
   searchSet = searchMovies;
 
-  if(searchMovies != NULL){
+  if(searchMovies != NULL && searchMovies->size() != 0){
     //add keywords to the screen
     movieIt = searchSet->begin();
     if(movieIt != searchSet->end()){
