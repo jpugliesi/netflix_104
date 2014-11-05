@@ -9,7 +9,7 @@ class SignUpWindow : public QWidget{
   Q_OBJECT
 
   public:
-    SignUpWindow();
+    SignUpWindow(Netflix* & netflix);
 
   private:
 
@@ -28,7 +28,7 @@ class SignUpWindow : public QWidget{
     Netflix* netflix;
 
   public slots:
-    void openSignUpWindow(Netflix* &netflix);
+    void openSignUpWindow();
 
   private slots:
     void createUser();

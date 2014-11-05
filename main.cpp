@@ -27,15 +27,15 @@ int main(int argc, char ** argv){
   QApplication app(argc, argv);
 
   LoginWindow loginWindow(netflix);
-  SignUpWindow sw;
-  MainWindow mw;
+  SignUpWindow sw(netflix);
+  MainWindow mw(netflix);
 
   //Upon successful login open the MainWindow
-  QObject::connect(&loginWindow, SIGNAL(userLoggedIn(Netflix*&)), &mw, SLOT(openMainWindow(Netflix*&)));
+  QObject::connect(&loginWindow, SIGNAL(userLoggedIn()), &mw, SLOT(openMainWindow()));
 
   //Quit if quit button clicked
   QObject::connect(&loginWindow, SIGNAL(quit()), &app, SLOT(quit()));
-  QObject::connect(&loginWindow, SIGNAL(createNewUser(Netflix*&)), &sw, SLOT(openSignUpWindow(Netflix*&)));
+  QObject::connect(&loginWindow, SIGNAL(createNewUser()), &sw, SLOT(openSignUpWindow()));
   QObject::connect(&sw, SIGNAL(cancelSignUp()), &loginWindow, SLOT(openLoginWindow()));
   QObject::connect(&sw, SIGNAL(userCreated(QString)), &loginWindow, SLOT(openLoginWindow(QString)));
 

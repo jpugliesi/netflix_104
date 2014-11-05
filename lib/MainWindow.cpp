@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow(){
+MainWindow::MainWindow(Netflix* & netflix){
+
+  this->netflix = netflix;
 
   mainLayout = new QVBoxLayout();
   movieVBox = new QVBoxLayout();
@@ -49,6 +51,6 @@ MainWindow::MainWindow(){
   setLayout(mainLayout);
 }
 
-void MainWindow::openMainWindow(Netflix* & netflix){
+void MainWindow::openMainWindow(){
   this->show();
 }

@@ -34,9 +34,9 @@ class LoginWindow : public QWidget{
     void newUserButtonClicked();
 
   signals:
-    void userLoggedIn(Netflix* & netflix);
+    void userLoggedIn();
     void quit();
-    void createNewUser(Netflix* & netflix);
+    void createNewUser();
     
 };
 

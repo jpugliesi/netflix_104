@@ -9,9 +9,11 @@ class MainWindow : public QWidget{
   Q_OBJECT
 
   public:
-    MainWindow();
+    MainWindow(Netflix* & netflix);
 
   private:
+
+    Netflix* netflix;
     
     QVBoxLayout *mainLayout;
     QLabel *welcomeLabel;
@@ -38,7 +40,7 @@ class MainWindow : public QWidget{
     QPushButton *logoutButton;
 
   public slots:
-    void openMainWindow(Netflix* & netflix);
+    void openMainWindow();
 };
 
 #endif

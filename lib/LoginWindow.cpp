@@ -51,7 +51,7 @@ void LoginWindow::loginButtonClicked(){
   bool success = netflix->loginUser(login->text().toStdString());
   if(success){
     //user successfully logged in. Emit signal to open MainWindow
-    emit userLoggedIn(netflix);
+    emit userLoggedIn();
     this->close();
   } else {
     QMessageBox badUsernameMessage;
@@ -70,6 +70,6 @@ void LoginWindow::quitButtonClicked(){
 void LoginWindow::newUserButtonClicked(){
 
   this->hide();
-  emit createNewUser(netflix);
+  emit createNewUser();
 
 }

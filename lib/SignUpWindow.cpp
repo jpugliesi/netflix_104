@@ -1,9 +1,9 @@
 #include "SignUpWindow.h"
 #include <string>
 
-SignUpWindow::SignUpWindow(){
+SignUpWindow::SignUpWindow(Netflix* & netflix){
 
-  netflix = NULL;
+  this->netflix = netflix;
   mainLayout = new QVBoxLayout();
   
   welcomeSignIn = new QLabel("Please sign up for 104Flix");
@@ -33,9 +33,8 @@ SignUpWindow::SignUpWindow(){
 
 }
 
-void SignUpWindow::openSignUpWindow(Netflix* &netflix){
+void SignUpWindow::openSignUpWindow(){
 
-  this->netflix = netflix;
   this->show();
 
 }
@@ -53,6 +52,7 @@ void SignUpWindow::createUser(){
     createdMessage.exec();
     QString qstr(usernameText);
     emit userCreated(qstr);
+    this->close();
     
   } else {
     //bad username/name. reprompt
