@@ -43,6 +43,8 @@ class MainWindow : public QWidget{
     void openMainWindow();
 
   private slots:
+    void returnMovieButtonClicked();
+
     void rentMovieButtonClicked();
     void removeFromQueueButtonClicked();
     void moveToBackOfQueueButtonClicked();

@@ -26,6 +26,8 @@ MainWindow::MainWindow(Netflix* & netflix){
   movieVBox->addWidget(returnMovieButton);
   currentMovieGroup->setLayout(movieVBox);
 
+  QObject::connect(returnMovieButton, SIGNAL(clicked()), this, SLOT(returnMovieButtonClicked()));
+
   movieQueueGroup = new QGroupBox("Your Movie Queue");
   topOfQueue = new QLabel("Front of Queue: Modern Times");
   rentMovieButton = new QPushButton("R&ent Movie");
@@ -78,7 +80,13 @@ void MainWindow::openMainWindow(){
   
   this->show();
 }
+void MainWindow::returnMovieButtonClicked(){
 
+  User* currentUser = netflix->getCurrentUser();
+  currentUser->returnMovie();
+  updateCurrentMovie();
+
+}
 void MainWindow::updateTopOfQueue(){
   Movie* topMovie = netflix->getTopOfQueue();
   if(topMovie != NULL){
