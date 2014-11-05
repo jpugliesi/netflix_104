@@ -274,7 +274,7 @@ bool Netflix::parseCommand(std::string line, std::string & command, std::string 
 bool Netflix::loginUser(std::string username){
 
   try{
-    current_user = users.get(username);
+    this->current_user = users.get(username);
   } catch(NoSuchElementException &e){
     std::cout << "Invalid ID." << std::endl;
     current_user = NULL;

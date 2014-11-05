@@ -64,6 +64,17 @@ MainWindow::MainWindow(Netflix* & netflix){
 }
 
 void MainWindow::openMainWindow(){
+  QString name;
+  User* currentUser = netflix->getCurrentUser();
+  if(currentUser != NULL){
+    name = QString::fromStdString(netflix->getCurrentUser()->getName());
+  } else {
+    name = "Nobody";
+  }
+  welcomeLabel = new QLabel("Welcome to CS104-Flix, " + name);
+
+  updateTopOfQueue();
+  
   this->show();
 }
 
