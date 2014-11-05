@@ -39,8 +39,8 @@ SearchResultsWindow::SearchResultsWindow(Set<Movie*>* & searchMovies){
 
 void SearchResultsWindow::returnToMainButtonClicked(){
 
-  emit closeWindow();
   this->close();
+  emit closeWindow();
 
 }
 

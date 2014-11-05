@@ -359,7 +359,7 @@ Set<Movie*>* Netflix::searchMoviesByTitle(std::string movie){
   return result;
 
 }
-Set<Movie*>* Netflix::searchMoviesByKeword(std::string keyword){
+Set<Movie*>* Netflix::searchMoviesByKeyword(std::string keyword){
 
   //search for movies that contain the keyword, or the title of the movie
   bool found_movie_title = false;
