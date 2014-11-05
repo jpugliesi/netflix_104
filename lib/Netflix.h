@@ -32,8 +32,8 @@ class Netflix{
     int getQueueInput();
     int getInput(int start_range, int end_range);
 
-    void searchMoviesPrompt();
-    void searchMoviesByKewordPrompt();
+    Set<Movie*>* searchMoviesByTitle(std::string movie);
+    Set<Movie*>* searchMoviesByKeword(std::string keyword);
     void modifyQueuePrompt();
 
     void printMovie(Movie* movie, bool print_keywords);

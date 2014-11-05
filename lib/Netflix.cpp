@@ -343,46 +343,45 @@ void Netflix::writeUsersToFile(){
 /*************** Movie Functions ****************/
 /************************************************/
 
-void Netflix::searchMoviesPrompt(){
-
-  std::string movie;
-  std::cout << "Enter a movie title: " << std::endl;
+Set<Movie*>* Netflix::searchMoviesByTitle(std::string movie){
 
   //Search for movie in the movies Map
-  std::getline(std::cin, movie);
+  Set<Movie*>* result = NULL;
   try{
     for(int i = 0; movie[i]; i++) movie[i] = tolower(movie[i]); 
     Movie * search_movie = movies.get(movie);
-    printMovie(search_movie, true);
+    Set<Movie*>* result = new Set<Movie*>();
+    result->add(search_movie);
   } catch (NoSuchElementException &e){
     //movie DNE
     std::cout << "Movie Not Found." << std::endl;
   }
+  return result;
 
 }
-void Netflix::searchMoviesByKewordPrompt(){
-
-  std::string keyword;
-  std::cout << "Enter a keyword: " << std::endl;
+Set<Movie*>* Netflix::searchMoviesByKeword(std::string keyword){
 
   //search for movies that contain the keyword, or the title of the movie
-  std::getline(std::cin, keyword);
   bool found_movie_title = false;
+  Set<Movie*>* result = NULL;
   try{
     for(int i = 0; keyword[i]; i++) keyword[i] = tolower(keyword[i]); 
     //Find movies where title == keyword
     try{
       Movie * search_movie = movies.get(keyword);
-      found_movie_title = true;
-      printMovie(search_movie, false);
+      result = new Set<Movie*>();
+      result->add(search_movie);
     } catch (NoSuchElementException &e){
       //keyword is not a title
     }
-
+    
     //Find keywords that match
     Set<Movie*>* search_keyword = movies_by_keyword.get(keyword);
+    Set<Movie*>* merged = new Set<Movie*>(result->setUnion(*search_keyword));
+
+    return merged;
     
-    Set<Movie*>::Iterator keywordIt;
+    /*Set<Movie*>::Iterator keywordIt;
 
       keywordIt = search_keyword->begin();
       std::cout << search_keyword->size() << " matches found" << std::endl;
@@ -437,7 +436,7 @@ void Netflix::searchMoviesByKewordPrompt(){
           }
         } while (choice != 2);
         
-      }
+      }*/
 
       /*do{
         printMovie((*keywordIt), true);
@@ -476,7 +475,7 @@ void Netflix::searchMoviesByKewordPrompt(){
     
   } catch (NoSuchElementException &e){
     //keyword DNE
-    if(!found_movie_title) std::cout << "No Match." << std::endl;
+    if(!found_movie_title) return NULL;
   }
 
 }

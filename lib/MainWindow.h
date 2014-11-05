@@ -4,6 +4,8 @@
 #include <QtGui>
 #include <QObject>
 #include "Netflix.h"
+#include "SearchResultsWindow.h"
+
 class MainWindow : public QWidget{
 
   Q_OBJECT
@@ -39,10 +41,13 @@ class MainWindow : public QWidget{
     QPushButton *searchByKeywordButton;
     QPushButton *logoutButton;
 
+    SearchResultsWindow* searchWindow;
+
   public slots:
     void openMainWindow();
 
   private slots:
+
     void returnMovieButtonClicked();
 
     void rentMovieButtonClicked();
@@ -50,6 +55,11 @@ class MainWindow : public QWidget{
     void moveToBackOfQueueButtonClicked();
     void updateTopOfQueue();
     void updateCurrentMovie();
+
+    void searchByTitleButtonClicked();
+    void searchByKeywordButtonClicked();
+
+    void closeSearchWindow();
 };
 
 #endif

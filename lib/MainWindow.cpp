@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "SearchResultsWindow.h"
 #include "User.h"
 
 MainWindow::MainWindow(Netflix* & netflix){
@@ -53,6 +54,9 @@ MainWindow::MainWindow(Netflix* & netflix){
   searchVBox->addWidget(searchByTitleButton);
   searchVBox->addWidget(searchByKeywordButton);
   searchMovieGroup->setLayout(searchVBox);
+
+  QObject::connect(searchByTitleButton, SIGNAL(clicked()), this, SLOT(searchByTitleButtonClicked()));
+  QObject::connect(searchByKeywordButton, SIGNAL(clicked()), this, SLOT(searchByKeywordButtonClicked()));
 
   logoutButton = new QPushButton("Logout");
 
@@ -150,5 +154,32 @@ void MainWindow::moveToBackOfQueueButtonClicked(){
     noMovies.exec();
   }
   updateTopOfQueue();
+
+}   
+
+void MainWindow::searchByTitleButtonClicked(){
+
+  Set<Movie*>* results = netflix->searchMoviesByTitle(searchText->text().toStdString());
+
+  
+  searchWindow = new SearchResultsWindow(results);
+  QObject::connect(searchWindow, SIGNAL(closed()), this, SLOT(closeSearchWindow()));
+  this->hide();
+
+}
+void MainWindow::searchByKeywordButtonClicked(){
+
+  Set<Movie*>* results = netflix->searchMoviesByTitle(searchText->text().toStdString());
+
+  searchWindow = new SearchResultsWindow(results);
+  QObject::connect(searchWindow, SIGNAL(closeWindow()), this, SLOT(closeSearchWindow()));
+  this->hide();
+}
+
+void MainWindow::closeSearchWindow(){
+
+  delete searchWindow;
+  searchWindow = NULL;
+  this->show();
 
 }
