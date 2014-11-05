@@ -162,7 +162,7 @@ void MainWindow::searchByTitleButtonClicked(){
   Set<Movie*>* results = netflix->searchMoviesByTitle(searchText->text().toStdString());
 
   searchWindow = new SearchResultsWindow(results);
-  QObject::connect(searchWindow, SIGNAL(closedWindow()), this, SLOT(closeSearchWindow()));
+  QObject::connect(searchWindow, SIGNAL(closeWindow()), this, SLOT(closeSearchWindow()));
   this->hide();
 
 }
