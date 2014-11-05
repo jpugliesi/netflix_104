@@ -280,7 +280,6 @@ bool Netflix::loginUser(std::string username){
     current_user = NULL;
     return false;
   }
-  
   return true;
 
 }
@@ -532,6 +531,65 @@ void Netflix::modifyQueuePrompt(){
   
 
 }
+
+int Netflix::orderTopOfQueue(){
+  Queue<Movie*>* users_queue = current_user->movieQueue();
+  if (current_user->currentMovie() == NULL && !(users_queue->isEmpty())){
+    current_user->rentMovie(users_queue->peekFront());
+    users_queue->dequeue();
+    return 1;
+    std::cout << "Ordered " << current_user->currentMovie()->getTitle() << std::endl;
+  } else if(users_queue->isEmpty()){
+    std::cout << "No movies in your Queue" << std::endl;
+    return 0;
+  } else {
+    std::cout << "You cannot order a new movie until you return the current one" << std::endl;
+  }
+  return -1;
+}
+
+int Netflix::removeTopOfQueue(){
+  Queue<Movie*>* users_queue = current_user->movieQueue();
+  try{
+    users_queue->dequeue();
+    return 1;
+  } catch (EmptyQueueException &e){
+    std::cout << "Your queue is empty" << std::endl;
+  }
+  return 0;
+}
+int Netflix::moveToBackOfQueue(){
+
+  Queue<Movie*>* users_queue = current_user->movieQueue();
+
+  if(!users_queue->isEmpty()){
+    Movie* movie = users_queue->peekFront();
+    users_queue->dequeue();
+    users_queue->enqueue(movie);
+    return 1;
+  } else {
+    std::cout << "Your queue is empty" << std::endl;
+  }
+  return 0;
+}
+
+Movie* Netflix::getCurrentMovie(){
+
+  Movie* c_movie = current_user->currentMovie();
+  return c_movie;
+
+}
+
+Movie* Netflix::getTopOfQueue(){
+
+  Queue<Movie*>* users_queue = current_user->movieQueue();
+  if(!users_queue->isEmpty()){
+    return users_queue->peekFront();
+  } else {
+    return NULL;
+  }
+}
+
 
 void Netflix::printMovie(Movie * movie, bool print_keywords){
   //Print the title

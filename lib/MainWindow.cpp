@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "User.h"
 
 MainWindow::MainWindow(Netflix* & netflix){
 
@@ -9,12 +10,19 @@ MainWindow::MainWindow(Netflix* & netflix){
   queueVBox = new QVBoxLayout();
   searchVBox = new QVBoxLayout();
 
-  welcomeLabel = new QLabel("Welcome to CS104-Flix, John");
+  QString name;
+  User* currentUser = netflix->getCurrentUser();
+  if(currentUser != NULL){
+    name = QString::fromStdString(netflix->getCurrentUser()->getName());
+  } else {
+    name = "Nobody";
+  }
+  welcomeLabel = new QLabel("Welcome to CS104-Flix, " + name);
 
   currentMovieGroup = new QGroupBox("Your Current Movie");
-  currentMovie = new QLabel("Citizen Kane");
+  currentMovieLabel = new QLabel("Citizen Kane");
   returnMovieButton = new QPushButton("&Return Movie");
-  movieVBox->addWidget(currentMovie);
+  movieVBox->addWidget(currentMovieLabel);
   movieVBox->addWidget(returnMovieButton);
   currentMovieGroup->setLayout(movieVBox);
 
@@ -28,6 +36,10 @@ MainWindow::MainWindow(Netflix* & netflix){
   queueVBox->addWidget(removeFromQueueButton);
   queueVBox->addWidget(moveToBackOfQueueButton);
   movieQueueGroup->setLayout(queueVBox);
+
+  QObject::connect(rentMovieButton, SIGNAL(clicked()), this, SLOT(rentMovieButtonClicked()));
+  QObject::connect(removeFromQueueButton, SIGNAL(clicked()), this, SLOT(removeFromQueueButtonClicked()));
+  QObject::connect(moveToBackOfQueueButton, SIGNAL(clicked()), this, SLOT(moveToBackOfQueueButtonClicked()));
 
   searchMovieGroup = new QGroupBox("Search for Movies");
   searchForm = new QFormLayout();
@@ -53,4 +65,63 @@ MainWindow::MainWindow(Netflix* & netflix){
 
 void MainWindow::openMainWindow(){
   this->show();
+}
+
+void MainWindow::updateTopOfQueue(){
+  Movie* topMovie = netflix->getTopOfQueue();
+  if(topMovie != NULL){
+    std::string topOfQueueTitle = topMovie->getTitle();
+    QString title = QString::fromStdString(topOfQueueTitle);
+    topOfQueue->setText(title);
+  } else {
+    topOfQueue->setText("Empty");
+  }
+  
+}
+void MainWindow::rentMovieButtonClicked(){
+
+  int result = netflix->orderTopOfQueue();
+  if(result == 1){
+    Movie* top = netflix->getTopOfQueue();
+    if(top != NULL){
+      updateTopOfQueue();
+    } else {
+      QMessageBox noMovies;
+      noMovies.setText("You have no movies in your queue to rent.");
+      noMovies.exec();
+    }
+  } else if(result == 0){
+    QMessageBox noMovies;
+    noMovies.setText("You have no movies in your queue to rent.");
+    noMovies.exec();
+  } else {
+    QMessageBox noMovies;
+    noMovies.setText("You cannot order a new movie until you return the current one.");
+    noMovies.exec();
+  }
+
+}
+
+void MainWindow::removeFromQueueButtonClicked(){
+
+  int result = netflix->removeTopOfQueue();
+  if(result == 0){
+    QMessageBox noMovies;
+    noMovies.setText("You have no movies to remove.");
+    noMovies.exec();
+  }
+  updateTopOfQueue();
+
+}
+
+void MainWindow::moveToBackOfQueueButtonClicked(){
+
+  int result = netflix->moveToBackOfQueue();
+  if(result == 0){
+    QMessageBox noMovies;
+    noMovies.setText("You have no movies to move.");
+    noMovies.exec();
+  }
+  updateTopOfQueue();
+
 }

@@ -20,7 +20,7 @@ class MainWindow : public QWidget{
 
     QVBoxLayout *movieVBox;
     QGroupBox *currentMovieGroup;
-    QLabel *currentMovie;
+    QLabel *currentMovieLabel;
 
     QVBoxLayout *queueVBox;
     QGroupBox *movieQueueGroup;
@@ -41,6 +41,12 @@ class MainWindow : public QWidget{
 
   public slots:
     void openMainWindow();
+
+  private slots:
+    void rentMovieButtonClicked();
+    void removeFromQueueButtonClicked();
+    void moveToBackOfQueueButtonClicked();
+    void updateTopOfQueue();
 };
 
 #endif
