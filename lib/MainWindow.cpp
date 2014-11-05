@@ -89,18 +89,25 @@ void MainWindow::updateTopOfQueue(){
   }
   
 }
+
+void MainWindow::updateCurrentMovie(){
+
+  Movie* c_movie = netflix->getCurrentMovie();
+  if(c_movie != NULL){
+    std::string c_movie_title = c_movie->getTitle();
+    QString title = QString::fromStdString(c_movie_title);
+    currentMovieLabel->setText(title);
+  } else {
+    currentMovieLabel->setText("None");
+  }
+  
+}
 void MainWindow::rentMovieButtonClicked(){
 
   int result = netflix->orderTopOfQueue();
   if(result == 1){
-    Movie* top = netflix->getTopOfQueue();
-    if(top != NULL){
+      updateCurrentMovie();
       updateTopOfQueue();
-    } else {
-      QMessageBox noMovies;
-      noMovies.setText("You have no movies in your queue to rent.");
-      noMovies.exec();
-    }
   } else if(result == 0){
     QMessageBox noMovies;
     noMovies.setText("You have no movies in your queue to rent.");

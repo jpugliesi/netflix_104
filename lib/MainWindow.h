@@ -47,6 +47,7 @@ class MainWindow : public QWidget{
     void removeFromQueueButtonClicked();
     void moveToBackOfQueueButtonClicked();
     void updateTopOfQueue();
+    void updateCurrentMovie();
 };
 
 #endif
