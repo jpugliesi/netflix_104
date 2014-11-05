@@ -71,9 +71,10 @@ void MainWindow::openMainWindow(){
   } else {
     name = "Nobody";
   }
-  welcomeLabel = new QLabel("Welcome to CS104-Flix, " + name);
+  welcomeLabel->setText("Welcome to CS104-Flix, " + name);
 
   updateTopOfQueue();
+  updateCurrentMovie();
   
   this->show();
 }
