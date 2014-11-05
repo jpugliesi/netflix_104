@@ -2,7 +2,9 @@
 #define SEARCH_RESULTS_WINDOW_H
 
 #include <QtGui>
-#include <Netflix.h>
+#include "Netflix.h"
+#include <vector>
+#include <string>
 #include "Set.h"
 #include "Movie.h"
 class SearchResultsWindow : public QWidget{
@@ -26,6 +28,10 @@ class SearchResultsWindow : public QWidget{
 
     Set<Movie*>* searchSet;
 
+    std::vector<QLabel*> labelSet;
+    Set<Movie*>::Iterator movieIt;
+    Set<std::string>::Iterator keywordIt;
+
   private slots:
     void returnToMainButtonClicked();
     void nextMovieButtonClicked();
@@ -33,11 +39,7 @@ class SearchResultsWindow : public QWidget{
 
   signals:
     void closeWindow();
-
     
-    
-    
-
 };
 
 #endif
