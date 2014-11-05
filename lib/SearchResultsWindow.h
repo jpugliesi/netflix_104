@@ -30,7 +30,7 @@ class SearchResultsWindow : public QWidget{
 
     std::vector<QLabel*> labelSet;
     Set<Movie*>::Iterator movieIt;
-    Set<std::string>::Iterator keywordIt;
+    Set<std::string>::Iterator keywordsIt;
 
   private slots:
     void returnToMainButtonClicked();

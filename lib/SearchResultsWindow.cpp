@@ -8,9 +8,8 @@ SearchResultsWindow::SearchResultsWindow(Set<Movie*>* & searchMovies){
   //add keywords to the screen
   movieIt = searchSet->begin();
   if(movieIt != searchSet->end()){
-    Movie* firstMovie = *(movieIt);
+    Movie* firstMovie = *movieIt;
     Set<std::string> keywords = firstMovie->getAllKeywords();
-    Set<std::string>::Iterator keywordsIt;
     for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
       labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
     }

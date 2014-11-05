@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "SearchResultsWindow.h"
 #include "User.h"
+#include <iostream>
 
 MainWindow::MainWindow(Netflix* & netflix){
 
@@ -160,7 +161,7 @@ void MainWindow::moveToBackOfQueueButtonClicked(){
 void MainWindow::searchByTitleButtonClicked(){
 
   Set<Movie*>* results = netflix->searchMoviesByTitle(searchText->text().toStdString());
-
+  std::cerr << results << std::endl;
   searchWindow = new SearchResultsWindow(results);
   QObject::connect(searchWindow, SIGNAL(closeWindow()), this, SLOT(closeSearchWindow()));
   this->hide();
