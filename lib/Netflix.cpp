@@ -363,24 +363,21 @@ Set<Movie*>* Netflix::searchMoviesByKeyword(std::string keyword){
 
   //search for movies that contain the keyword, or the title of the movie
   bool found_movie_title = false;
-  Set<Movie*> result;
+  Movie* search_movie;
   try{
     for(int i = 0; keyword[i]; i++) keyword[i] = tolower(keyword[i]); 
     //Find movies where title == keyword
     try{
-      Movie* search_movie = movies.get(keyword);
-      result.add(search_movie);
+      search_movie = movies.get(keyword);
     } catch (NoSuchElementException &e){
       //keyword is not a title
     }
     
     //Find keywords that match
     Set<Movie*>* search_keyword = movies_by_keyword.get(keyword);
-    
-    Set<Movie*> unionSet = result.setUnion(*search_keyword);
-    Set<Movie*>* merged = new Set<Movie*>(unionSet);
+    search_keyword->add(search_movie);
 
-    return merged;
+    return search_keyword;
     
     /*Set<Movie*>::Iterator keywordIt;
 
