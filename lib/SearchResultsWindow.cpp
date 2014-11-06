@@ -5,6 +5,13 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
 
   this->netflix = netflix;
 
+  
+  mainLayout = new QVBoxLayout();
+  movieTitle = new QLabel("The Princess Bride");
+  
+  keywordsGroup = new QGroupBox("Movie Info");
+  keywordsVBox = new QVBoxLayout();
+  //Add keywords here
   if(title){
     searchSet = netflix->searchMoviesByTitle(search_string);
     std::cerr << "Search Set size in Window: " << searchSet.size() << std::endl;
@@ -14,13 +21,12 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
   }
 
   if(searchSet.size() != 0){
-    //add keywords to the screen
+    //set movie title add keywords to the screen
     movieIt = searchSet.begin();
-    std::cerr << "MovieIT address: " << &movieIt << std::endl;
-    std::cerr << "MovieIT: " << *movieIt << std::endl;
     if(movieIt != searchSet.end()){
       Movie* firstMovie = *movieIt;
-      std::cout << firstMovie->getTitle() << std::endl;
+      //set title
+      movieTitle->setText(QString::fromStdString(firstMovie->getTitle()));
       Set<std::string> keywords = firstMovie->getAllKeywords();
       for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
         labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
@@ -29,19 +35,12 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
   } else {
     labelSet.push_back(new QLabel("0 results found"));
   }
-  
-  mainLayout = new QVBoxLayout();
-  movieTitle = new QLabel("The Princess Bride");
-  
-  keywordsGroup = new QGroupBox("Movie Info");
-  keywordsVBox = new QVBoxLayout();
-  //Add keywords here
+  //for loop to add keywords as QLabel s
   for(int i = 0; i < labelSet.size(); i++){
     keywordsVBox->addWidget(labelSet.at(i));
   }
   keywordsGroup->setLayout(keywordsVBox);
 
-  //for loop to add keywords as QLabel s
   
   buttonLayout = new QHBoxLayout();
   nextMovieButton = new QPushButton("&Next Movie");
