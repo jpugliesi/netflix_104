@@ -178,6 +178,8 @@ void MainWindow::closeSearchWindow(){
 
   delete searchWindow;
   searchWindow = NULL;
+  updateCurrentMovie();
+  updateTopOfQueue();
   this->show();
 
 }
