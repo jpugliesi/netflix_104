@@ -11,6 +11,12 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
   
   keywordsGroup = new QGroupBox("Movie Info");
   keywordsVBox = new QVBoxLayout();
+
+  buttonLayout = new QHBoxLayout();
+  nextMovieButton = new QPushButton("&Next Movie");
+  addToQueueButton = new QPushButton("&Add to my Queue");
+  returnToMainButton = new QPushButton("&Return to Main");
+
   //Add keywords here
   if(title){
     searchSet = netflix->searchMoviesByTitle(search_string);
@@ -31,6 +37,12 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
       for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
         labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
       }
+      Set<Movie*>::Iterator nextMovieIt = movieIt;
+      ++nextMovieIt;
+      if(nextMovieIt == searchSet.end()){
+        //disable buttons if no more movies to iterate through
+	nextMovieButton->setEnabled(false);
+      }
     }
     //need to check if there is another item to iterate, and disable buttons appropriately
   } else {
@@ -45,10 +57,6 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
   keywordsGroup->setLayout(keywordsVBox);
 
   
-  buttonLayout = new QHBoxLayout();
-  nextMovieButton = new QPushButton("&Next Movie");
-  addToQueueButton = new QPushButton("&Add to my Queue");
-  returnToMainButton = new QPushButton("&Return to Main");
 
   QObject::connect(returnToMainButton, SIGNAL(clicked()), this, SLOT(returnToMainButtonClicked()));
   QObject::connect(addToQueueButton, SIGNAL(clicked()), this, SLOT(addToQueueButtonClicked()));
@@ -92,6 +100,12 @@ void SearchResultsWindow::nextMovieButtonClicked(){
     Set<std::string> keywords = firstMovie->getAllKeywords();
     for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
       labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
+    }
+    Set<Movie*>::Iterator nextMovieIt = movieIt;
+    ++nextMovieIt;
+    if(nextMovieIt == searchSet.end()){
+      //disable buttons if no more movies to iterate through
+      nextMovieButton->setEnabled(false);
     }
   }
   //for loop to add keywords as QLabel s
