@@ -177,7 +177,9 @@ void MainWindow::searchByKeywordButtonClicked(){
 
 void MainWindow::logoutButtonClicked(){
 
+  netflix->writeUsersToFile();
   emit logout();
+  this->close();
 
 }
 
