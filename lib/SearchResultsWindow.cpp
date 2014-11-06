@@ -32,8 +32,11 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
         labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
       }
     }
+    //need to check if there is another item to iterate, and disable buttons appropriately
   } else {
     labelSet.push_back(new QLabel("0 results found"));
+    nextMovieButton->setEnabled(false);
+    addToQueueButton->setEnabled(false);
   }
   //for loop to add keywords as QLabel s
   for(int i = 0; i < labelSet.size(); i++){
@@ -75,8 +78,27 @@ void SearchResultsWindow::returnToMainButtonClicked(){
 
 void SearchResultsWindow::nextMovieButtonClicked(){
 
-  
+  for(int i = 0; i < labelSet.size(); i++){
+    keywordsVBox->removeWidget(labelSet.at(i));
+    delete labelSet.at(i);
+  }
+  labelSet.clear();
 
+  if(movieIt != searchSet.end()){
+    ++movieIt;
+    Movie* firstMovie = *movieIt;
+    //set title
+    movieTitle->setText(QString::fromStdString(firstMovie->getTitle()));
+    Set<std::string> keywords = firstMovie->getAllKeywords();
+    for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
+      labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
+    }
+  }
+  //for loop to add keywords as QLabel s
+  for(int i = 0; i < labelSet.size(); i++){
+    keywordsVBox->addWidget(labelSet.at(i));
+  }
+  keywordsGroup->setLayout(keywordsVBox);
 }
 
 void SearchResultsWindow::addToQueueButtonClicked(){
