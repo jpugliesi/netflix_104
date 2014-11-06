@@ -27,7 +27,7 @@ class SearchResultsWindow : public QWidget{
     QPushButton* returnToMainButton;
 
     Netflix* netflix;
-    Set<Movie*>* searchSet;
+    Set<Movie*> searchSet;
 
     std::vector<QLabel*> labelSet;
     Set<Movie*>::Iterator movieIt;

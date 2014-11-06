@@ -7,14 +7,18 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
 
   if(title){
     searchSet = netflix->searchMoviesByTitle(search_string);
+    std::cerr << "Search Set size in Window: " << searchSet.size() << std::endl;
   } else {
     searchSet = netflix->searchMoviesByKeyword(search_string);
+    std::cerr << "Search Set size in Window: " << searchSet.size() << std::endl;
   }
 
-  if(searchSet != NULL && searchSet->size() != 0){
+  if(searchSet.size() != 0){
     //add keywords to the screen
-    movieIt = searchSet->begin();
-    if(movieIt != searchSet->end()){
+    movieIt = searchSet.begin();
+    std::cerr << "MovieIT address: " << &movieIt << std::endl;
+    std::cerr << "MovieIT: " << *movieIt << std::endl;
+    if(movieIt != searchSet.end()){
       Movie* firstMovie = *movieIt;
       std::cout << firstMovie->getTitle() << std::endl;
       Set<std::string> keywords = firstMovie->getAllKeywords();

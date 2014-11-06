@@ -343,15 +343,14 @@ void Netflix::writeUsersToFile(){
 /*************** Movie Functions ****************/
 /************************************************/
 
-Set<Movie*>* Netflix::searchMoviesByTitle(std::string movie){
+Set<Movie*> Netflix::searchMoviesByTitle(std::string movie){
 
   //Search for movie in the movies Map
-  Set<Movie*>* result = NULL;
+  Set<Movie*> result;
   try{
     for(int i = 0; movie[i]; i++) movie[i] = tolower(movie[i]); 
     Movie * search_movie = movies.get(movie);
-    Set<Movie*>* result = new Set<Movie*>();
-    result->add(search_movie);
+    result.add(search_movie);
   } catch (NoSuchElementException &e){
     //movie DNE
     std::cout << "Movie Not Found." << std::endl;
@@ -359,7 +358,7 @@ Set<Movie*>* Netflix::searchMoviesByTitle(std::string movie){
   return result;
 
 }
-Set<Movie*>* Netflix::searchMoviesByKeyword(std::string keyword){
+Set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
 
   //search for movies that contain the keyword, or the title of the movie
   bool found_movie_title = false;
@@ -376,8 +375,16 @@ Set<Movie*>* Netflix::searchMoviesByKeyword(std::string keyword){
     
     //Find keywords that match
     Set<Movie*>* search_keyword = movies_by_keyword.get(keyword);
-    Set<Movie*>* search_keyword_copy = new Set<Movie*>(search_keyword);
-    search_keyword_copy->add(search_movie);
+    Set<Movie*> search_keyword_copy(*search_keyword);
+    search_keyword_copy.add(search_movie);
+
+    std::cerr << "Size: " << search_keyword_copy.size() << std::endl;
+
+    Set<Movie*>::Iterator it = search_keyword_copy.begin();
+    while(it != search_keyword_copy.end()){
+      std::cerr << ((*it)->getTitle()) << std::endl;
+      ++it;
+    }
 
     return search_keyword_copy;
     
@@ -475,13 +482,11 @@ Set<Movie*>* Netflix::searchMoviesByKeyword(std::string keyword){
     
   } catch (NoSuchElementException &e){
     //keyword DNE
-    if(!found_movie_title) return NULL;
-    else {
-      Set<Movie*>* set = new Set<Movie*>();
-      set->add(search_movie);
-      return set;
-
+    Set<Movie*> set;
+    if(found_movie_title){ 
+      set.add(search_movie);
     }
+    return set;
   }
 
 }
