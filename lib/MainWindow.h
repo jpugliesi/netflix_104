@@ -58,8 +58,12 @@ class MainWindow : public QWidget{
 
     void searchByTitleButtonClicked();
     void searchByKeywordButtonClicked();
+    void logoutButtonClicked();
 
     void closeSearchWindow();
+
+  signals:
+    void logout();
 };
 
 #endif

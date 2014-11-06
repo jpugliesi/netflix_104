@@ -39,13 +39,13 @@ class Netflix{
     void printMovie(Movie* movie, bool print_keywords);
 
     User* & getCurrentUser();
+    void logoutCurrentUser();
+
     int orderTopOfQueue();
     int removeTopOfQueue();
     int moveToBackOfQueue();
     Movie* getTopOfQueue();
     Movie* getCurrentMovie();
-    
-
 
     private: 
       std::string _user_data_file;      

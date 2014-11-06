@@ -42,6 +42,10 @@ User* & Netflix::getCurrentUser(){
   return current_user;
 }
 
+void Netflix::logoutCurrentUser(){
+  current_user = NULL;
+}
+
 bool Netflix::initializeData(std::string input_file){
 
   //close it!!

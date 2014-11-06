@@ -44,6 +44,8 @@ int main(int argc, char ** argv){
   QObject::connect(&sw, SIGNAL(cancelSignUp()), &loginWindow, SLOT(openLoginWindow()));
   QObject::connect(&sw, SIGNAL(userCreated(QString)), &loginWindow, SLOT(openLoginWindow(QString)));
 
+  QObject::connect(&mw, SIGNAL(logout()), &loginWindow, SLOT(openLoginWindow()));
+
   loginWindow.show();
 
   return app.exec();

@@ -60,6 +60,7 @@ MainWindow::MainWindow(Netflix* & netflix){
   QObject::connect(searchByKeywordButton, SIGNAL(clicked()), this, SLOT(searchByKeywordButtonClicked()));
 
   logoutButton = new QPushButton("Logout");
+  QObject::connect(logoutButton, SIGNAL(clicked()), this, SLOT(logoutButtonClicked()));
 
   mainLayout->addWidget(welcomeLabel);
   mainLayout->addWidget(currentMovieGroup);
@@ -172,6 +173,12 @@ void MainWindow::searchByKeywordButtonClicked(){
   searchWindow = new SearchResultsWindow(netflix, search_string, false);
   QObject::connect(searchWindow, SIGNAL(closeWindow()), this, SLOT(closeSearchWindow()));
   this->hide();
+}
+
+void MainWindow::logoutButtonClicked(){
+
+  emit logout();
+
 }
 
 void MainWindow::closeSearchWindow(){
