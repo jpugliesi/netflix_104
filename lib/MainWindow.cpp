@@ -160,19 +160,16 @@ void MainWindow::moveToBackOfQueueButtonClicked(){
 
 void MainWindow::searchByTitleButtonClicked(){
 
-  Set<Movie*>* results = netflix->searchMoviesByTitle(searchText->text().toStdString());
-  std::cerr << results << std::endl;
-  
-  searchWindow = new SearchResultsWindow(results);
+  std::string search_string = searchText->text().toStdString();
+  searchWindow = new SearchResultsWindow(netflix, search_string, true);
   QObject::connect(searchWindow, SIGNAL(closeWindow()), this, SLOT(closeSearchWindow()));
   this->hide();
 
 }
 void MainWindow::searchByKeywordButtonClicked(){
 
-  Set<Movie*>* results = netflix->searchMoviesByKeyword(searchText->text().toStdString());
-
-  searchWindow = new SearchResultsWindow(results);
+  std::string search_string = searchText->text().toStdString();
+  searchWindow = new SearchResultsWindow(netflix, search_string, false);
   QObject::connect(searchWindow, SIGNAL(closeWindow()), this, SLOT(closeSearchWindow()));
   this->hide();
 }

@@ -2,9 +2,9 @@
 #define SEARCH_RESULTS_WINDOW_H
 
 #include <QtGui>
-#include "Netflix.h"
 #include <vector>
 #include <string>
+#include "Netflix.h"
 #include "Set.h"
 #include "Movie.h"
 class SearchResultsWindow : public QWidget{
@@ -12,7 +12,7 @@ class SearchResultsWindow : public QWidget{
   Q_OBJECT
 
   public:
-    SearchResultsWindow(Set<Movie*>* & searchMovies);
+    SearchResultsWindow(Netflix* & netflix, std::string search_string, bool title);
 
   private:
     QVBoxLayout *mainLayout;
@@ -26,6 +26,7 @@ class SearchResultsWindow : public QWidget{
     QPushButton* addToQueueButton;
     QPushButton* returnToMainButton;
 
+    Netflix* netflix;
     Set<Movie*>* searchSet;
 
     std::vector<QLabel*> labelSet;

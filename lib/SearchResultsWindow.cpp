@@ -1,15 +1,22 @@
 #include "SearchResultsWindow.h"
 #include <QObject>
 
-SearchResultsWindow::SearchResultsWindow(Set<Movie*>* & searchMovies){
+SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_string, bool title){
 
-  searchSet = searchMovies;
+  this->netflix = netflix;
 
-  if(searchMovies != NULL && searchMovies->size() != 0){
+  if(title){
+    searchSet = netflix->searchMoviesByTitle(search_string);
+  } else {
+    searchSet = netflix->searchMoviesByKeyword(search_string);
+  }
+
+  if(searchSet != NULL && searchSet->size() != 0){
     //add keywords to the screen
     movieIt = searchSet->begin();
     if(movieIt != searchSet->end()){
       Movie* firstMovie = *movieIt;
+      std::cout << firstMovie->getTitle() << std::endl;
       Set<std::string> keywords = firstMovie->getAllKeywords();
       for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
         labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
