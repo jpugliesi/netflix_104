@@ -376,15 +376,10 @@ Set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
     //Find keywords that match
     Set<Movie*>* search_keyword = movies_by_keyword.get(keyword);
     Set<Movie*> search_keyword_copy(*search_keyword);
-    search_keyword_copy.add(search_movie);
-
-    std::cerr << "Size: " << search_keyword_copy.size() << std::endl;
-
-    Set<Movie*>::Iterator it = search_keyword_copy.begin();
-    while(it != search_keyword_copy.end()){
-      std::cerr << ((*it)->getTitle()) << std::endl;
-      ++it;
+    if(found_movie_title){
+      search_keyword_copy.add(search_movie);
     }
+    std::cerr << "Size: " << search_keyword_copy.size() << std::endl;
 
     return search_keyword_copy;
     

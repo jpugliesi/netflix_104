@@ -23,6 +23,11 @@ int main(int argc, char ** argv){
   std::string input_file = argv[1];
 
   netflix->initializeData(input_file);
+  Set<Movie*> set = netflix->searchMoviesByKeyword("comedy");
+  Set<Movie*>::Iterator movieIt = set.begin();
+  if(movieIt != set.end()){
+    std::cerr << (*movieIt)->getTitle() << std::endl;	
+  }	
 
   QApplication app(argc, argv);
 
