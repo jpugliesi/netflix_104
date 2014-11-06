@@ -1,7 +1,12 @@
-BEGIN jpugliesi
-NAME: John Pugliesi
+BEGIN joet
+NAME: Joe Turner
+MOVIE: The Princess Bride
 BEGIN QUEUE 
-The Princess Bride
+END QUEUE 
+END
+BEGIN aaroncot
+NAME: Aaron Cote
+BEGIN QUEUE 
 END QUEUE 
 END
 BEGIN dkempe
@@ -9,8 +14,9 @@ NAME: David Kempe
 BEGIN QUEUE 
 END QUEUE 
 END
-BEGIN aaroncot
-NAME: Aaron Cote
+BEGIN jpugliesi
+NAME: John Pugliesi
+MOVIE: The Princess Bride
 BEGIN QUEUE 
 END QUEUE 
 END

@@ -63,6 +63,7 @@ void LoginWindow::loginButtonClicked(){
 
 void LoginWindow::quitButtonClicked(){
 
+  netflix->writeUsersToFile();
   emit quit();
 
 }
