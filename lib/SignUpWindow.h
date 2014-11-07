@@ -29,6 +29,7 @@ class SignUpWindow : public QWidget{
 
   public slots:
     void openSignUpWindow();
+    void keyPressEvent(QKeyEvent *event);
 
   private slots:
     void createUser();

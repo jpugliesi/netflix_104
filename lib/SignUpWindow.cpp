@@ -69,3 +69,9 @@ void SignUpWindow::cancel(){
   emit cancelSignUp();
 
 }
+
+void SignUpWindow::keyPressEvent(QKeyEvent *event){
+    if(event->key()==Qt::Key_Return){
+        createUser();
+    }
+}

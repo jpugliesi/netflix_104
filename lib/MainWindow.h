@@ -45,6 +45,7 @@ class MainWindow : public QWidget{
 
   public slots:
     void openMainWindow();
+    void keyPressEvent(QKeyEvent *event);
 
   private slots:
 
