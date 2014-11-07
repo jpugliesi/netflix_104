@@ -74,3 +74,9 @@ void LoginWindow::newUserButtonClicked(){
   emit createNewUser();
 
 }
+
+void LoginWindow::keyPressEvent(QKeyEvent *event){
+    if(event->key()==Qt::Key_Return){
+        loginButtonClicked();
+    }
+}
