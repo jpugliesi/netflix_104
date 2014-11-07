@@ -104,14 +104,18 @@ bool Netflix::initializeUserData(std::string user_data_file){
     Queue<Movie*> movies_to_add;
     while(std::getline(user_data, line)){
       //iterate over all lines in the file, tokenizing them
+      std::cerr << line << std::endl;
       std::string command, parameters;
       if(!parseCommand(line, command, parameters)){
         //Something went wrong parsing the command
+	std::cerr << "Command: " << command << std::endl;
+	std::cerr << "parameters: " << parameters << std::endl;
         user_data.close();
         return 0;
       } else {
         //call the appropriate action for the command
-        if(!isQueue){
+        std::cerr << "Command: " << command << std::endl;
+	std::cerr << "parameters: " << parameters << std::endl;
           if(command == "BEGIN"){
             if (parameters == "QUEUE"){
               isQueue = true;
@@ -129,6 +133,8 @@ bool Netflix::initializeUserData(std::string user_data_file){
             }
             users.add(new_user->getID(), new_user);
           }
+
+        if(!isQueue){
         } else {
           
           if (command == "MOVIE:"){
