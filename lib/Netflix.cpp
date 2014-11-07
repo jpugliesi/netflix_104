@@ -70,6 +70,17 @@ bool Netflix::initializeData(std::string input_file){
       _user_data_file = user_data;
       _movie_data_file = movie_data;
 
+      Map<std::string, User*>::Iterator usersIt; 
+      std::cerr << users.size() << " Users loaded" << std::endl;
+      for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){
+	std::cerr << (*usersIt).second->getName() << " loaded" << std::endl;
+	Queue<Movie*>* queue = (*usersIt).second->movieQueue();
+	if(!queue->isEmpty()){
+	std::cerr << queue->peekFront()->getTitle() << " is at the top of the queu"  << std::endl;
+	}
+
+      }
+
     }
     
   } else {
@@ -120,6 +131,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
           if(command == "BEGIN"){
             if (parameters == "QUEUE"){
               isQueue = true;
+	      std::cerr << "It's a queue!" << std::endl;
               continue;
             } else {
               id = parameters;
@@ -129,10 +141,13 @@ bool Netflix::initializeUserData(std::string user_data_file){
           } else if (command == "END"){
             new_user = new User(id, name);
             Queue<Movie*>* queue = new_user->movieQueue();
+	    new_user->rentMovie(currentMovie);
             while(!movies_to_add.isEmpty()){
+	      std::cerr << "adding " << movies_to_add.peekFront()->getTitle() << " to " << name << "'s queue" << std::endl;
               queue->enqueue(movies_to_add.peekFront());
               movies_to_add.dequeue();
             }
+	    std::cerr << "Creating user with id: " << id << " and Name: " << name << std::endl;
             users.add(new_user->getID(), new_user);
           } else if (command == "MOVIE:"){
             try{
@@ -150,6 +165,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
           for(int i = 0; a_movie[i]; i++) a_movie[i] = tolower(a_movie[i]);
           try{
             movies_to_add.enqueue(movies.get(a_movie));
+	    std::cerr << "Movies to add now contains: " << movies.get(a_movie)->getTitle() << std::endl;
           } catch(NoSuchElementException &e){
             std::cout << "That movie doesn't exist" << std::endl;
           }
@@ -313,6 +329,7 @@ void Netflix::writeUsersToFile(){
   
   std::fstream user_file(_user_data_file.c_str(), std::fstream::out);
 
+  std::cerr << "Writing Users to file" << std::endl;
   Map<std::string, User*>::Iterator userIt;
   for(userIt = users.begin(); userIt != users.end(); ++userIt){
   
@@ -339,6 +356,7 @@ void Netflix::writeUsersToFile(){
     while(!queue->isEmpty()){
       queue_movie = queue->peekFront()->getTitle() + "\n";
       queue->dequeue();
+      std::cerr << "Adding " << queue_movie << " to " << name_value << "'s queue" << std::endl;
       user_file << queue_movie;
     }
     user_file << "END QUEUE \n";
@@ -589,6 +607,11 @@ int Netflix::moveToBackOfQueue(){
 
 Movie* Netflix::getCurrentMovie(){
 
+  if(current_user->currentMovie() != NULL){
+  std::cerr << current_user->getName() << " has movie: " << current_user->currentMovie() << std::endl;
+  } else {
+    std::cerr << "In getCurrentMovie(), but the movie is NULL" << std::endl;
+  }
   Movie* c_movie = current_user->currentMovie();
   return c_movie;
 

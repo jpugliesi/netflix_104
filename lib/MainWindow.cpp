@@ -109,10 +109,12 @@ void MainWindow::updateCurrentMovie(){
 
   Movie* c_movie = netflix->getCurrentMovie();
   if(c_movie != NULL){
+    std::cerr << netflix->getCurrentUser()->getName() << " has a movie " << netflix->getCurrentMovie() << std::endl;
     std::string c_movie_title = c_movie->getTitle();
     QString title = QString::fromStdString(c_movie_title);
     currentMovieLabel->setText(title);
   } else {
+    std::cerr << netflix->getCurrentUser()->getName() << " does not have a movie" << std::endl;
     currentMovieLabel->setText("None");
   }
   

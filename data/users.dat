@@ -1,24 +1,25 @@
 BEGIN joet
 NAME: Joe Turner
-MOVIE: The Princess Bride
+MOVIE: City Lights
 BEGIN QUEUE 
 END QUEUE 
 END
 BEGIN aaroncot
 NAME: Aaron Cote
-BEGIN QUEUE 
 MOVIE: City Lights
+BEGIN QUEUE 
 END QUEUE 
 END
 BEGIN dkempe
 NAME: David Kempe
+MOVIE: City Lights
 BEGIN QUEUE 
 END QUEUE 
 END
 BEGIN jpugliesi
 NAME: John Pugliesi
-MOVIE: The Princess Bride
-MOVIE: The Godfather
+MOVIE: City Lights
 BEGIN QUEUE 
+The Princess Bride
 END QUEUE 
 END
