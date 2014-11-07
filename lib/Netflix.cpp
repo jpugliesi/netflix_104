@@ -108,17 +108,19 @@ bool Netflix::initializeUserData(std::string user_data_file){
       std::string command, parameters;
       if(!parseCommand(line, command, parameters)){
         //Something went wrong parsing the command
-	std::cerr << "Command: " << command << std::endl;
-	std::cerr << "parameters: " << parameters << std::endl;
+	      std::cerr << "Command: " << command << std::endl;
+	      std::cerr << "parameters: " << parameters << std::endl;
         user_data.close();
         return 0;
       } else {
         //call the appropriate action for the command
         std::cerr << "Command: " << command << std::endl;
-	std::cerr << "parameters: " << parameters << std::endl;
+	      std::cerr << "parameters: " << parameters << std::endl;
+        if(!isQueue){
           if(command == "BEGIN"){
             if (parameters == "QUEUE"){
               isQueue = true;
+              continue;
             } else {
               id = parameters;
             }
@@ -132,12 +134,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
               movies_to_add.dequeue();
             }
             users.add(new_user->getID(), new_user);
-          }
-
-        if(!isQueue){
-        } else {
-          
-          if (command == "MOVIE:"){
+          } else if (command == "MOVIE:"){
             try{
               std::cout << "Current movie: " << parameters << std::endl;
               for(int i = 0; parameters[i]; i++) parameters[i] = tolower(parameters[i]);
@@ -146,18 +143,20 @@ bool Netflix::initializeUserData(std::string user_data_file){
               std::cout << "That movie doesn't exist" << std::endl;
               return 0;
             }
-          } else if(command != "END"){
-            std::string a_movie;
-            a_movie = command + " " + parameters;
-            for(int i = 0; a_movie[i]; i++) a_movie[i] = tolower(a_movie[i]);
-            try{
-              movies_to_add.enqueue(movies.get(a_movie));
-            } catch(NoSuchElementException &e){
-              std::cout << "That movie doesn't exist" << std::endl;
-            }
-          } else {
-            isQueue = false;
           }
+        } else if(command != "END") {
+          std::string a_movie;
+          a_movie = command + " " + parameters;
+          for(int i = 0; a_movie[i]; i++) a_movie[i] = tolower(a_movie[i]);
+          try{
+            movies_to_add.enqueue(movies.get(a_movie));
+          } catch(NoSuchElementException &e){
+            std::cout << "That movie doesn't exist" << std::endl;
+          }
+        } else if(command == "END" && parameters == "QUEUE"){
+          std::cerr << "End of Queue" << std::endl;
+          isQueue = false;
+          continue;
         }
       }
     }
