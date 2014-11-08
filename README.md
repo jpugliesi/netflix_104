@@ -18,6 +18,7 @@
 
 To compile the project, change into the project's main directory and run:
 ```
+qmake
 make
 ```
 
@@ -25,7 +26,7 @@ make
 
 The executable for the compiled application is located in the bin folder. To run the project, use something like:
 ```
-bin/project data/data.dat
+project_pugliesi data/data.dat
 ```
 where data/data.dat is the main data file parameter upon which to run the movie application
 
