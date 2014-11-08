@@ -1,4 +1,5 @@
 #include "EmptyQueueException.h"
+#include <iostream>
 
 template <class T>
 Queue<T>::Queue(){
@@ -12,6 +13,7 @@ Queue<T>::Queue(const Queue<T> & other){
   head = NULL;
   tail = NULL;
 
+  size = 0;
   Node<T>* tmp = other.head;
   while(tmp != 0){
     this->enqueue(tmp->getItem());
@@ -48,8 +50,6 @@ void Queue<T>::enqueue(const T & item){
   }
   tail = newItem;
   size++;
-
-   
 
 }
 

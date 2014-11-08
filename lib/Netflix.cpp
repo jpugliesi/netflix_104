@@ -50,6 +50,8 @@ bool Netflix::initializeData(std::string input_file){
 
   //close it!!
   //Open the main data file
+  
+  main_data_file = input_file;
   std::ifstream main_data_file(input_file.c_str());
 
   if(main_data_file.is_open()){
@@ -343,7 +345,7 @@ void Netflix::writeUsersToFile(){
       current_movie = "MOVIE: " + a_user.second->currentMovie()->getTitle() + "\n";
     }
 
-    Queue<Movie*>* queue = a_user.second->movieQueue();
+    Queue<Movie*>* queue = new Queue<Movie*>(*(a_user.second->movieQueue()));
     std::string queue_movie;
 
     //Add User to Data file
@@ -615,6 +617,10 @@ Movie* Netflix::getCurrentMovie(){
   Movie* c_movie = current_user->currentMovie();
   return c_movie;
 
+}
+
+std::string Netflix::getMainDataFile(){
+  return main_data_file;
 }
 
 Movie* Netflix::getTopOfQueue(){

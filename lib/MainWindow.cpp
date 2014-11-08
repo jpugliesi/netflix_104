@@ -73,6 +73,7 @@ MainWindow::MainWindow(Netflix* & netflix){
 
 void MainWindow::openMainWindow(){
   QString name;
+  netflix->initializeData(netflix->getMainDataFile());
   User* currentUser = netflix->getCurrentUser();
   if(currentUser != NULL){
     name = QString::fromStdString(netflix->getCurrentUser()->getName());

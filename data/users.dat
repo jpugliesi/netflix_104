@@ -1,11 +1,5 @@
-BEGIN joet
-NAME: Joe Turner
-MOVIE: City Lights
-BEGIN QUEUE 
-END QUEUE 
-END
-BEGIN aaroncot
-NAME: Aaron Cote
+BEGIN jpugliesi
+NAME: John Pugliesi
 MOVIE: City Lights
 BEGIN QUEUE 
 END QUEUE 
@@ -16,10 +10,15 @@ MOVIE: City Lights
 BEGIN QUEUE 
 END QUEUE 
 END
-BEGIN jpugliesi
-NAME: John Pugliesi
+BEGIN aaroncot
+NAME: Aaron Cote
 MOVIE: City Lights
 BEGIN QUEUE 
-The Princess Bride
+END QUEUE 
+END
+BEGIN joet
+NAME: Joe Turner
+MOVIE: City Lights
+BEGIN QUEUE 
 END QUEUE 
 END

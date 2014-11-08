@@ -47,7 +47,10 @@ class Netflix{
     Movie* getTopOfQueue();
     Movie* getCurrentMovie();
 
+    std::string getMainDataFile();
+
     private: 
+      std::string main_data_file;
       std::string _user_data_file;      
       std::string _movie_data_file;
       
