@@ -7,7 +7,7 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
 
   
   mainLayout = new QVBoxLayout();
-  movieTitle = new QLabel("The Princess Bride");
+  movieTitle = new QLabel("No results");
   
   keywordsGroup = new QGroupBox("Movie Info");
   keywordsVBox = new QVBoxLayout();
