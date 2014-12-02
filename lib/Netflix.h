@@ -2,6 +2,8 @@
 #define NETFLIX_H
 
 #include <string>
+#include <set>
+#include <map>
 #include "Map.h"
 #include "Movie.h"
 #include "User.h"
@@ -32,8 +34,8 @@ class Netflix{
     int getQueueInput();
     int getInput(int start_range, int end_range);
 
-    Set<Movie*> searchMoviesByTitle(std::string movie);
-    Set<Movie*> searchMoviesByKeyword(std::string keyword);
+    std::set<Movie*> searchMoviesByTitle(std::string movie);
+    std::set<Movie*> searchMoviesByKeyword(std::string keyword);
     void modifyQueuePrompt();
 
     void printMovie(Movie* movie, bool print_keywords);
@@ -66,7 +68,7 @@ class Netflix{
       Map<std::string, Movie*> movies;
 
       // Keywords for all movies in the application
-      Map<std::string, Set<Movie*>* > movies_by_keyword;
+      Map<std::string, std::set<Movie*>* > movies_by_keyword;
 
 };
 

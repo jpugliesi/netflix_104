@@ -34,11 +34,11 @@ std::string Movie::getLowerTitle() const{
      If the exact same keyword (up to capitalization) was already
      associated with the movie, then the keyword is not added again. */
 void Movie::addKeyword(std::string keyword){
-  keywords.add(keyword);
+  keywords.insert(keyword);
 }
 
 /* Returns a set of all keywords associated with the movie. */
-Set<std::string> Movie::getAllKeywords() const{
+std::set<std::string> Movie::getAllKeywords() const{
 
   return keywords;
   

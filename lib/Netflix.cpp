@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <set>
 #include "Set.h"
 #include "Queue.h"
 #include "Pair.h"
@@ -30,7 +31,7 @@ Netflix::~Netflix(){
     delete (*moviesIt).second;
   }
 
-  Map<std::string, Set<Movie*>* >::Iterator keywordsIt;
+  Map<std::string, std::set<Movie*>* >::Iterator keywordsIt;
   for(keywordsIt = movies_by_keyword.begin(); keywordsIt != movies_by_keyword.end(); ++keywordsIt)  {
     delete (*keywordsIt).second;
   }
@@ -250,19 +251,19 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
             
             try{
               //will throw NoSuchElementException if word DNE
-              Set<Movie*>* existing_movies_set = movies_by_keyword.get(word);
+              std::set<Movie*>* existing_movies_set = movies_by_keyword.get(word);
               //keyword already exists. Merge new movie set with old one and store back in keywords map
               //Set<Movie*>* combined_movies = existing_movies_set->setUnion(*word_movie_set);
-              Set<Movie*>* combined_movies = new Set<Movie*>(*existing_movies_set);
+              std::set<Movie*>* combined_movies = new std::set<Movie*>(*existing_movies_set);
               delete existing_movies_set;
-              combined_movies->add(new_movie);
+              combined_movies->insert(new_movie);
               movies_by_keyword.remove(word);
               movies_by_keyword.add(word, combined_movies);
             } catch (NoSuchElementException &e){
               //keyword Doesn't exist in the map. Add word/Movie association to the map
               //Add movies to keywords (in the movies_by_keywords set)
-              Set<Movie*>* word_movie_set = new Set<Movie*>();
-              word_movie_set->add(new_movie);
+              std::set<Movie*>* word_movie_set = new std::set<Movie*>();
+              word_movie_set->insert(new_movie);
               movies_by_keyword.add(word, word_movie_set);
             }
           }          
@@ -388,14 +389,14 @@ void Netflix::writeUsersToFile(){
 /*************** Movie Functions ****************/
 /************************************************/
 
-Set<Movie*> Netflix::searchMoviesByTitle(std::string movie){
+std::set<Movie*> Netflix::searchMoviesByTitle(std::string movie){
 
   //Search for movie in the movies Map
-  Set<Movie*> result;
+  std:std::set<Movie*> result;
   try{
     for(int i = 0; movie[i]; i++) movie[i] = tolower(movie[i]); 
     Movie * search_movie = movies.get(movie);
-    result.add(search_movie);
+    result.insert(search_movie);
   } catch (NoSuchElementException &e){
     //movie DNE
     std::cout << "Movie Not Found." << std::endl;
@@ -403,7 +404,7 @@ Set<Movie*> Netflix::searchMoviesByTitle(std::string movie){
   return result;
 
 }
-Set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
+std::set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
 
   //search for movies that contain the keyword, or the title of the movie
   bool found_movie_title = false;
@@ -419,10 +420,10 @@ Set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
     }
     
     //Find keywords that match
-    Set<Movie*>* search_keyword = movies_by_keyword.get(keyword);
-    Set<Movie*> search_keyword_copy(*search_keyword);
+    std::set<Movie*>* search_keyword = movies_by_keyword.get(keyword);
+    std::set<Movie*> search_keyword_copy(*search_keyword);
     if(found_movie_title){
-      search_keyword_copy.add(search_movie);
+      search_keyword_copy.insert(search_movie);
     }
     std::cerr << "Size: " << search_keyword_copy.size() << std::endl;
 
@@ -522,9 +523,9 @@ Set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
     
   } catch (NoSuchElementException &e){
     //keyword DNE
-    Set<Movie*> set;
+    std::set<Movie*> set;
     if(found_movie_title){ 
-      set.add(search_movie);
+      set.insert(search_movie);
     }
     return set;
   }
@@ -656,11 +657,9 @@ void Netflix::printMovie(Movie * movie, bool print_keywords){
 
   //if we are printing keywords, iterate through then and do so.
   if(print_keywords){
-    Set<std::string> keywords = movie->getAllKeywords();
-    Set<std::string>::Iterator keywordsIt;
-    for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
-      std::cout << (*keywordsIt) << std::endl;
-    }
+    std::set<std::string> keywords = movie->getAllKeywords();
+    for (std::set<std::string>::iterator it=keywords.begin(); it!=keywords.end(); ++it)
+      std::cout << *it << std::endl;
   }
 }
     

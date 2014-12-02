@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <vector>
 #include <string>
+#include <set>
 #include "Netflix.h"
 #include "Set.h"
 #include "Movie.h"
@@ -27,11 +28,11 @@ class SearchResultsWindow : public QWidget{
     QPushButton* returnToMainButton;
 
     Netflix* netflix;
-    Set<Movie*> searchSet;
+    std::set<Movie*> searchSet;
 
     std::vector<QLabel*> labelSet;
-    Set<Movie*>::Iterator movieIt;
-    Set<std::string>::Iterator keywordsIt;
+    std::set<Movie*>::iterator movieIt;
+    std::set<std::string>::iterator keywordsIt;
 
   private slots:
     void returnToMainButtonClicked();

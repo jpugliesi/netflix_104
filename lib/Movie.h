@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Set.h"
+#include <set>
 
 class Movie {
   public: 
@@ -21,11 +22,11 @@ class Movie {
          If the exact same keyword (up to capitalization) was already
          associated with the movie, then the keyword is not added again. */
 
-    Set<std::string> getAllKeywords () const;
+    std::set<std::string> getAllKeywords () const;
       /* Returns a set of all keywords associated with the movie. */
 
   private:
-    Set<std::string> keywords;
+    std::set<std::string> keywords;
     std::string title;
     std::string title_lower;
 };

@@ -33,11 +33,11 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
       Movie* firstMovie = *movieIt;
       //set title
       movieTitle->setText(QString::fromStdString(firstMovie->getTitle()));
-      Set<std::string> keywords = firstMovie->getAllKeywords();
+      std::set<std::string> keywords = firstMovie->getAllKeywords();
       for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
         labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
       }
-      Set<Movie*>::Iterator nextMovieIt = movieIt;
+      std::set<Movie*>::iterator nextMovieIt = movieIt;
       ++nextMovieIt;
       if(nextMovieIt == searchSet.end()){
         //disable buttons if no more movies to iterate through
@@ -97,11 +97,11 @@ void SearchResultsWindow::nextMovieButtonClicked(){
     Movie* firstMovie = *movieIt;
     //set title
     movieTitle->setText(QString::fromStdString(firstMovie->getTitle()));
-    Set<std::string> keywords = firstMovie->getAllKeywords();
+    std::set<std::string> keywords = firstMovie->getAllKeywords();
     for(keywordsIt = keywords.begin(); keywordsIt != keywords.end(); ++keywordsIt){
       labelSet.push_back(new QLabel(QString::fromStdString((*keywordsIt))));
     }
-    Set<Movie*>::Iterator nextMovieIt = movieIt;
+    std::set<Movie*>::iterator nextMovieIt = movieIt;
     ++nextMovieIt;
     if(nextMovieIt == searchSet.end()){
       //disable buttons if no more movies to iterate through
