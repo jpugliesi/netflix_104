@@ -92,6 +92,7 @@ void MainWindow::returnMovieButtonClicked(){
   User* currentUser = netflix->getCurrentUser();
   currentUser->returnMovie();
   updateCurrentMovie();
+  //Ratings
 
 }
 void MainWindow::updateTopOfQueue(){

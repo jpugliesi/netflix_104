@@ -114,6 +114,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
     Movie* currentMovie;
     std::string id, name;
     bool isQueue = false;
+    bool isRatings = false;
     Queue<Movie*> movies_to_add;
     while(std::getline(user_data, line)){
       //iterate over all lines in the file, tokenizing them
@@ -130,36 +131,45 @@ bool Netflix::initializeUserData(std::string user_data_file){
         std::cerr << "Command: " << command << std::endl;
 	      std::cerr << "parameters: " << parameters << std::endl;
         if(!isQueue){
-          if(command == "BEGIN"){
-            if (parameters == "QUEUE"){
-              isQueue = true;
-	      std::cerr << "It's a queue!" << std::endl;
-              continue;
-            } else {
-              id = parameters;
+          if(!isRatings){
+            if(command == "BEGIN"){
+              if (parameters == "QUEUE"){
+                isQueue = true;
+                std::cerr << "It's a queue!" << std::endl;
+                continue;
+              } else if(parameters == "RATINGS"){
+                isRatings = true;
+                std::cerr << "RATINGS!" << std::endl;
+                continue;
+              } else {
+                id = parameters;
+              }
+            } else if (command == "NAME:"){
+              name = parameters;
+            } else if (command == "END"){
+              new_user = new User(id, name);
+              Queue<Movie*>* queue = new_user->movieQueue();
+              new_user->rentMovie(currentMovie);
+              while(!movies_to_add.isEmpty()){
+              std::cerr << "adding " << movies_to_add.peekFront()->getTitle() << " to " << name << "'s queue" << std::endl;
+                queue->enqueue(movies_to_add.peekFront());
+                movies_to_add.dequeue();
+              }
+              std::cerr << "Creating user with id: " << id << " and Name: " << name << std::endl;
+              users.add(new_user->getID(), new_user);
+            } else if (command == "MOVIE:"){
+              try{
+                std::cout << "Current movie: " << parameters << std::endl;
+                for(int i = 0; parameters[i]; i++) parameters[i] = tolower(parameters[i]);
+                currentMovie = movies.get(parameters);
+              } catch(NoSuchElementException &e){
+                std::cout << "That movie doesn't exist" << std::endl;
+                return 0;
+              }
             }
-          } else if (command == "NAME:"){
-            name = parameters;
-          } else if (command == "END"){
-            new_user = new User(id, name);
-            Queue<Movie*>* queue = new_user->movieQueue();
-	    new_user->rentMovie(currentMovie);
-            while(!movies_to_add.isEmpty()){
-	      std::cerr << "adding " << movies_to_add.peekFront()->getTitle() << " to " << name << "'s queue" << std::endl;
-              queue->enqueue(movies_to_add.peekFront());
-              movies_to_add.dequeue();
-            }
-	    std::cerr << "Creating user with id: " << id << " and Name: " << name << std::endl;
-            users.add(new_user->getID(), new_user);
-          } else if (command == "MOVIE:"){
-            try{
-              std::cout << "Current movie: " << parameters << std::endl;
-              for(int i = 0; parameters[i]; i++) parameters[i] = tolower(parameters[i]);
-              currentMovie = movies.get(parameters);
-            } catch(NoSuchElementException &e){
-              std::cout << "That movie doesn't exist" << std::endl;
-              return 0;
-            }
+          } else if(command!= "END"){
+            std::cout << "RATINGS COMMAND: " << command << std::endl;
+            std::cout << "PARAMS: " << parameters << std::endl;
           }
         } else if(command != "END") {
           std::string a_movie;
@@ -167,7 +177,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
           for(int i = 0; a_movie[i]; i++) a_movie[i] = tolower(a_movie[i]);
           try{
             movies_to_add.enqueue(movies.get(a_movie));
-	    std::cerr << "Movies to add now contains: " << movies.get(a_movie)->getTitle() << std::endl;
+	          std::cerr << "Movies to add now contains: " << movies.get(a_movie)->getTitle() << std::endl;
           } catch(NoSuchElementException &e){
             std::cout << "That movie doesn't exist" << std::endl;
           }
