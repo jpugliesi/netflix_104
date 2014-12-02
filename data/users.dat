@@ -1,8 +1,20 @@
+BEGIN asdf
+NAME: ASDF
+MOVIE: The Princess Bride
+BEGIN QUEUE 
+The Princess Bride
+END QUEUE 
+END
 BEGIN jpugliesi
 NAME: John Pugliesi
 MOVIE: City Lights
 BEGIN QUEUE 
+The Princess Bride
 END QUEUE 
+BEGIN RATINGS
+4 The Princess Bride
+2 The Desolation of Smaug
+END RATINGS
 END
 BEGIN dkempe
 NAME: David Kempe

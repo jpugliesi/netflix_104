@@ -131,7 +131,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
         std::cerr << "Command: " << command << std::endl;
 	      std::cerr << "parameters: " << parameters << std::endl;
         if(!isQueue){
-          if(!isRatings){
+          if(!isRatings && !isQueue){
             if(command == "BEGIN"){
               if (parameters == "QUEUE"){
                 isQueue = true;
@@ -170,7 +170,13 @@ bool Netflix::initializeUserData(std::string user_data_file){
           } else if(command!= "END"){
             std::cout << "RATINGS COMMAND: " << command << std::endl;
             std::cout << "PARAMS: " << parameters << std::endl;
-          }
+
+          } else if(command == "END" && parameters == "RATINGS"){
+	    std::cerr << "End of Ratings" << std::endl;
+	    isRatings = false;
+	    continue;
+	  }
+
         } else if(command != "END") {
           std::string a_movie;
           a_movie = command + " " + parameters;
