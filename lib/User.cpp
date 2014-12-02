@@ -6,7 +6,7 @@ User::User(std::string ID, std::string name){
   this->name = name;
   this->id = ID;
   this->current_movie = NULL;
-  this->movie_queue = new Queue<Movie*>();
+  this->movie_queue = new std::queue<Movie*>();
 }
 
 // copy constructor  
@@ -14,7 +14,7 @@ User::User(const User & other){
   this->name = other.getName();
   this->id = other.getID();
   this->current_movie = NULL;
-  this->movie_queue = new Queue<Movie*>();
+  this->movie_queue = new std::queue<Movie*>();
 }
 
 //destructor
@@ -32,7 +32,7 @@ std::string User::getName() const{
   return name;
 }
 
-Queue<Movie*> * User::movieQueue () {
+std::queue<Movie*> * User::movieQueue () {
 
   return movie_queue;
 

@@ -117,7 +117,7 @@ void SearchResultsWindow::nextMovieButtonClicked(){
 
 void SearchResultsWindow::addToQueueButtonClicked(){
 
-  Queue<Movie*>* users_queue = netflix->getCurrentUser()->movieQueue();
-  users_queue->enqueue((*movieIt));
+  std::queue<Movie*>* users_queue = netflix->getCurrentUser()->movieQueue();
+  users_queue->push((*movieIt));
 
 }

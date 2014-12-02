@@ -2,6 +2,7 @@
 #define USER_H
 
 #include <string>
+#include <queue>
 #include "Queue.h"
 #include "Movie.h"
 
@@ -20,7 +21,7 @@ class User {
 
     std::string getName () const;  // returns the name associated with this user
     
-    Queue<Movie*> * movieQueue (); 
+    std::queue<Movie*> * movieQueue (); 
       /* returns a pointer to the user's movie queue.
          This is the easiest way to ensure that you can modify the queue.
          (If you return by reference, that's also possible, but you'd need
@@ -41,7 +42,7 @@ class User {
          Returns NULL if the user has no movie checked out. */
 
   private:
-    Queue<Movie*>* movie_queue;
+    std::queue<Movie*>* movie_queue;
     Movie* current_movie;
     std::string name;
     std::string id;

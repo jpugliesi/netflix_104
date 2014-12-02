@@ -6,6 +6,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <queue>
 #include <utility>
 #include "Set.h"
 #include "Queue.h"
@@ -79,9 +80,9 @@ bool Netflix::initializeData(std::string input_file){
       std::cerr << users.size() << " Users loaded" << std::endl;
       for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){
         std::cerr << (*usersIt).second->getName() << " loaded" << std::endl;
-        Queue<Movie*>* queue = (*usersIt).second->movieQueue();
-        if(!queue->isEmpty()){
-        std::cerr << queue->peekFront()->getTitle() << " is at the top of the queu"  << std::endl;
+        std::queue<Movie*>* queue = (*usersIt).second->movieQueue();
+        if(!queue->empty()){
+        std::cerr << queue->front()->getTitle() << " is at the top of the queu"  << std::endl;
         }
       }
     }
@@ -116,7 +117,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
     std::string id, name;
     bool isQueue = false;
     bool isRatings = false;
-    Queue<Movie*> movies_to_add;
+    std::queue<Movie*> movies_to_add;
     while(std::getline(user_data, line)){
       //iterate over all lines in the file, tokenizing them
       std::cerr << line << std::endl;
@@ -149,12 +150,12 @@ bool Netflix::initializeUserData(std::string user_data_file){
               name = parameters;
             } else if (command == "END"){
               new_user = new User(id, name);
-              Queue<Movie*>* queue = new_user->movieQueue();
+              std::queue<Movie*>* queue = new_user->movieQueue();
               new_user->rentMovie(currentMovie);
-              while(!movies_to_add.isEmpty()){
-              std::cerr << "adding " << movies_to_add.peekFront()->getTitle() << " to " << name << "'s queue" << std::endl;
-                queue->enqueue(movies_to_add.peekFront());
-                movies_to_add.dequeue();
+              while(!movies_to_add.empty()){
+              std::cerr << "adding " << movies_to_add.front()->getTitle() << " to " << name << "'s queue" << std::endl;
+                queue->push(movies_to_add.front());
+                movies_to_add.pop();
               }
               std::cerr << "Creating user with id: " << id << " and Name: " << name << std::endl;
               std::pair<std::string, User*> toAdd;
@@ -179,10 +180,10 @@ bool Netflix::initializeUserData(std::string user_data_file){
             std::cout << "PARAMS: " << parameters << std::endl;
 
           } else if(command == "END" && parameters == "RATINGS"){
-	    std::cerr << "End of Ratings" << std::endl;
-	    isRatings = false;
-	    continue;
-	  }
+            std::cerr << "End of Ratings" << std::endl;
+            isRatings = false;
+            continue;
+          }
 
         } else if(command != "END") {
           std::string a_movie;
@@ -193,7 +194,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
 
           it = movies.find(a_movie);
           if(it != movies.end()){
-            movies_to_add.enqueue(it->second);
+            movies_to_add.push(it->second);
             std::cerr << "Movies to add now contains: " << it->second->getTitle() << std::endl;
           } else {
             std::cout << "That movie doesn't exist" << std::endl;
@@ -407,7 +408,7 @@ void Netflix::writeUsersToFile(){
       current_movie = "MOVIE: " + a_user.second->currentMovie()->getTitle() + "\n";
     }
 
-    Queue<Movie*>* queue = new Queue<Movie*>(*(a_user.second->movieQueue()));
+    std::queue<Movie*>* queue = new std::queue<Movie*>(*(a_user.second->movieQueue()));
     std::string queue_movie;
 
     //Add User to Data file
@@ -417,9 +418,9 @@ void Netflix::writeUsersToFile(){
       user_file << current_movie;
     }
     user_file << "BEGIN QUEUE \n";
-    while(!queue->isEmpty()){
-      queue_movie = queue->peekFront()->getTitle() + "\n";
-      queue->dequeue();
+    while(!queue->empty()){
+      queue_movie = queue->front()->getTitle() + "\n";
+      queue->pop();
       std::cerr << "Adding " << queue_movie << " to " << name_value << "'s queue" << std::endl;
       user_file << queue_movie;
     }
@@ -606,11 +607,11 @@ std::set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
   }*/
 
 }
-
+//******** DEPRECATED *******************
 //Prompt for working with the user's queue
-void Netflix::modifyQueuePrompt(){
+/*void Netflix::modifyQueuePrompt(){
 
-  Queue<Movie*>* users_queue = current_user->movieQueue();
+  std::queue<Movie*>* users_queue = current_user->movieQueue();
     
   int choice = 0;
   while (choice != 4){
@@ -656,16 +657,16 @@ void Netflix::modifyQueuePrompt(){
   }
   
 
-}
+}*/
 
 int Netflix::orderTopOfQueue(){
-  Queue<Movie*>* users_queue = current_user->movieQueue();
-  if (current_user->currentMovie() == NULL && !(users_queue->isEmpty())){
-    current_user->rentMovie(users_queue->peekFront());
-    users_queue->dequeue();
+  std::queue<Movie*>* users_queue = current_user->movieQueue();
+  if (current_user->currentMovie() == NULL && !(users_queue->empty())){
+    current_user->rentMovie(users_queue->front());
+    users_queue->pop();
     return 1;
     std::cout << "Ordered " << current_user->currentMovie()->getTitle() << std::endl;
-  } else if(users_queue->isEmpty()){
+  } else if(users_queue->empty()){
     std::cout << "No movies in your Queue" << std::endl;
     return 0;
   } else {
@@ -675,23 +676,21 @@ int Netflix::orderTopOfQueue(){
 }
 
 int Netflix::removeTopOfQueue(){
-  Queue<Movie*>* users_queue = current_user->movieQueue();
-  try{
-    users_queue->dequeue();
+  std::queue<Movie*>* users_queue = current_user->movieQueue();
+  if(!users_queue->empty()){
+    users_queue->pop();
     return 1;
-  } catch (EmptyQueueException &e){
-    std::cout << "Your queue is empty" << std::endl;
   }
   return 0;
 }
 int Netflix::moveToBackOfQueue(){
 
-  Queue<Movie*>* users_queue = current_user->movieQueue();
+  std::queue<Movie*>* users_queue = current_user->movieQueue();
 
-  if(!users_queue->isEmpty()){
-    Movie* movie = users_queue->peekFront();
-    users_queue->dequeue();
-    users_queue->enqueue(movie);
+  if(!users_queue->empty()){
+    Movie* movie = users_queue->front();
+    users_queue->pop();
+    users_queue->push(movie);
     return 1;
   } else {
     std::cout << "Your queue is empty" << std::endl;
@@ -717,9 +716,9 @@ std::string Netflix::getMainDataFile(){
 
 Movie* Netflix::getTopOfQueue(){
 
-  Queue<Movie*>* users_queue = current_user->movieQueue();
-  if(!users_queue->isEmpty()){
-    return users_queue->peekFront();
+  std::queue<Movie*>* users_queue = current_user->movieQueue();
+  if(!users_queue->empty()){
+    return users_queue->front();
   } else {
     return NULL;
   }
