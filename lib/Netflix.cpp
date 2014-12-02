@@ -5,6 +5,8 @@
 #include <fstream>
 #include <vector>
 #include <set>
+#include <map>
+#include <utility>
 #include "Set.h"
 #include "Queue.h"
 #include "Pair.h"
@@ -20,18 +22,18 @@ Netflix::~Netflix(){
   writeUsersToFile();
   /******* clean up! *******/
   //delete all of the allocated User objects
-  Map<std::string, User*>::Iterator usersIt;
+  std::map<std::string, User*>::iterator usersIt;
   for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){
     delete (*usersIt).second;
   }
 
   //delete all of the allocated Movie objects
-  Map<std::string, Movie*>::Iterator moviesIt;
+  std::map<std::string, Movie*>::iterator moviesIt;
   for(moviesIt = movies.begin(); moviesIt != movies.end(); ++moviesIt){
     delete (*moviesIt).second;
   }
 
-  Map<std::string, std::set<Movie*>* >::Iterator keywordsIt;
+  std::map<std::string, std::set<Movie*>* >::iterator keywordsIt;
   for(keywordsIt = movies_by_keyword.begin(); keywordsIt != movies_by_keyword.end(); ++keywordsIt)  {
     delete (*keywordsIt).second;
   }
@@ -73,17 +75,15 @@ bool Netflix::initializeData(std::string input_file){
       _user_data_file = user_data;
       _movie_data_file = movie_data;
 
-      Map<std::string, User*>::Iterator usersIt; 
+      std::map<std::string, User*>::iterator usersIt; 
       std::cerr << users.size() << " Users loaded" << std::endl;
       for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){
-	std::cerr << (*usersIt).second->getName() << " loaded" << std::endl;
-	Queue<Movie*>* queue = (*usersIt).second->movieQueue();
-	if(!queue->isEmpty()){
-	std::cerr << queue->peekFront()->getTitle() << " is at the top of the queu"  << std::endl;
-	}
-
+        std::cerr << (*usersIt).second->getName() << " loaded" << std::endl;
+        Queue<Movie*>* queue = (*usersIt).second->movieQueue();
+        if(!queue->isEmpty()){
+        std::cerr << queue->peekFront()->getTitle() << " is at the top of the queu"  << std::endl;
+        }
       }
-
     }
     
   } else {
@@ -157,13 +157,19 @@ bool Netflix::initializeUserData(std::string user_data_file){
                 movies_to_add.dequeue();
               }
               std::cerr << "Creating user with id: " << id << " and Name: " << name << std::endl;
-              users.add(new_user->getID(), new_user);
+              std::pair<std::string, User*> toAdd;
+              toAdd.first = new_user->getID();
+              toAdd.second = new_user;
+              users.insert(toAdd);
             } else if (command == "MOVIE:"){
-              try{
-                std::cout << "Current movie: " << parameters << std::endl;
-                for(int i = 0; parameters[i]; i++) parameters[i] = tolower(parameters[i]);
-                currentMovie = movies.get(parameters);
-              } catch(NoSuchElementException &e){
+              std::map<std::string, Movie*>::iterator it;
+              
+              std::cout << "Current movie: " << parameters << std::endl;
+              for(int i = 0; parameters[i]; i++) parameters[i] = tolower(parameters[i]);
+              it = movies.find(parameters);
+              if(it != movies.end()){
+                currentMovie = it->second;
+              } else {
                 std::cout << "That movie doesn't exist" << std::endl;
                 return 0;
               }
@@ -182,10 +188,14 @@ bool Netflix::initializeUserData(std::string user_data_file){
           std::string a_movie;
           a_movie = command + " " + parameters;
           for(int i = 0; a_movie[i]; i++) a_movie[i] = tolower(a_movie[i]);
-          try{
-            movies_to_add.enqueue(movies.get(a_movie));
-	          std::cerr << "Movies to add now contains: " << movies.get(a_movie)->getTitle() << std::endl;
-          } catch(NoSuchElementException &e){
+
+          std::map<std::string, Movie*>::iterator it;
+
+          it = movies.find(a_movie);
+          if(it != movies.end()){
+            movies_to_add.enqueue(it->second);
+            std::cerr << "Movies to add now contains: " << it->second->getTitle() << std::endl;
+          } else {
             std::cout << "That movie doesn't exist" << std::endl;
           }
         } else if(command == "END" && parameters == "QUEUE"){
@@ -241,7 +251,10 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
           keywords.push_back(parameters);
         } else if (command == "END"){
           new_movie = new Movie(name);
-          movies.add(new_movie->getLowerTitle(), new_movie);
+          std::pair<std::string, Movie*> movieToAdd;
+          movieToAdd.first = new_movie->getLowerTitle();
+          movieToAdd.second = new_movie;
+          movies.insert(movieToAdd);
           for(int i = 0; i < keywords.size(); i++){
             std::string word = keywords[i];
             //Transform keyword to lowercase for easy comparison
@@ -249,7 +262,7 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
             //Add keyword to a movie
             new_movie->addKeyword(word);
             
-            try{
+            /*try{
               //will throw NoSuchElementException if word DNE
               std::set<Movie*>* existing_movies_set = movies_by_keyword.get(word);
               //keyword already exists. Merge new movie set with old one and store back in keywords map
@@ -265,6 +278,34 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
               std::set<Movie*>* word_movie_set = new std::set<Movie*>();
               word_movie_set->insert(new_movie);
               movies_by_keyword.add(word, word_movie_set);
+            }*/
+
+            std::map<std::string, std::set<Movie*>* >::iterator it;
+
+            it = movies_by_keyword.find(word);
+            if(it != movies_by_keyword.end()){
+              std::set<Movie*>* existing_movies_set = it->second;
+              std::set<Movie*>* combined_movies = new std::set<Movie*>(*existing_movies_set);
+
+              delete existing_movies_set;
+              combined_movies->insert(new_movie);
+              movies_by_keyword.erase(word);
+
+              std::pair<std::string, std::set<Movie*>* > toAdd;
+              toAdd.first = word;
+              toAdd.second = combined_movies;
+              movies_by_keyword.insert(toAdd);
+              
+            } else {
+              //keyword Doesn't exist in the map. Add word/Movie association to the map
+              //Add movies to keywords (in the movies_by_keywords set)
+              std::set<Movie*>* word_movie_set = new std::set<Movie*>();
+              word_movie_set->insert(new_movie);
+
+              std::pair<std::string, std::set<Movie*>* > toAdd;
+              toAdd.first = word;
+              toAdd.second = word_movie_set;
+              movies_by_keyword.insert(toAdd);
             }
           }          
           //clear the keywords vector to not add duplicate keywords
@@ -317,9 +358,11 @@ bool Netflix::parseCommand(std::string line, std::string & command, std::string 
 
 bool Netflix::loginUser(std::string username){
 
-  try{
-    this->current_user = users.get(username);
-  } catch(NoSuchElementException &e){
+  std::map<std::string, User*>::iterator it;
+  it = users.find(username);
+  if(it != users.end()){
+    this->current_user = it->second;
+  } else {
     std::cout << "Invalid ID." << std::endl;
     current_user = NULL;
     return false;
@@ -330,16 +373,18 @@ bool Netflix::loginUser(std::string username){
 
 bool Netflix::createNewUser(std::string username, std::string name){
 
-  try{
-    users.get(username);
-  } catch (NoSuchElementException &e){
+  std::map<std::string, User*>::iterator it;
+  it = users.find(username);
+  if(it == users.end()){
     //Add New User
     User * newUser = new User(username, name);
-    users.add(username, newUser);
+    std::pair<std::string, User*> toAdd;
+    toAdd.first = username;
+    toAdd.second = newUser;
+    users.insert(toAdd);
 
     return true;
   }
-
   return false;
 
 }
@@ -349,10 +394,10 @@ void Netflix::writeUsersToFile(){
   std::fstream user_file(_user_data_file.c_str(), std::fstream::out);
 
   std::cerr << "Writing Users to file" << std::endl;
-  Map<std::string, User*>::Iterator userIt;
+  std::map<std::string, User*>::iterator userIt;
   for(userIt = users.begin(); userIt != users.end(); ++userIt){
   
-    Pair<std::string, User*> a_user = (*userIt);
+    std::pair<std::string, User*> a_user = (*userIt);
     std::string username = a_user.first;
     std::string name = a_user.second->getName();
     std::string id_header = "BEGIN " + username + "\n";
@@ -392,10 +437,10 @@ void Netflix::writeUsersToFile(){
 std::set<Movie*> Netflix::searchMoviesByTitle(std::string movie){
 
   //Search for movie in the movies Map
-  std:std::set<Movie*> result;
+  std::set<Movie*> result;
   try{
     for(int i = 0; movie[i]; i++) movie[i] = tolower(movie[i]); 
-    Movie * search_movie = movies.get(movie);
+    Movie * search_movie = movies.find(movie)->second;
     result.insert(search_movie);
   } catch (NoSuchElementException &e){
     //movie DNE
@@ -409,11 +454,37 @@ std::set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
   //search for movies that contain the keyword, or the title of the movie
   bool found_movie_title = false;
   Movie* search_movie;
-  try{
+
+  std::set<Movie*> result;
+
+  std::map<std::string, Movie*>::iterator movieIt;
+  std::map<std::string, std::set<Movie*>* >::iterator movieKeywordIt;
+  
+  for(int i = 0; keyword[i]; i++) keyword[i] = tolower(keyword[i]);
+
+  //check titles first
+  movieIt = movies.find(keyword);
+  if(movieIt != movies.end()){
+    //found a title
+    result.insert(movieIt->second);
+  }
+
+  movieKeywordIt = movies_by_keyword.find(keyword);
+  if(movieKeywordIt != movies_by_keyword.end()){
+    //found movies with the associated keyword
+    std::set<Movie*>* movies_to_add = movieKeywordIt->second;
+    result.insert(movies_to_add->begin(), movies_to_add->end());
+  }
+  
+  std::cerr << "Size: " << result.size() << std::endl;
+  
+  return result;
+
+  /*try{
     for(int i = 0; keyword[i]; i++) keyword[i] = tolower(keyword[i]); 
     //Find movies where title == keyword
     try{
-      search_movie = movies.get(keyword);
+      search_movie = movies.find(keyword)->second;
       found_movie_title = true;
     } catch (NoSuchElementException &e){
       //keyword is not a title
@@ -429,7 +500,7 @@ std::set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
 
     return search_keyword_copy;
     
-    /*Set<Movie*>::Iterator keywordIt;
+    Set<Movie*>::Iterator keywordIt;
 
       keywordIt = search_keyword->begin();
       std::cout << search_keyword->size() << " matches found" << std::endl;
@@ -519,7 +590,7 @@ std::set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
           Queue<Movie*>* users_queue = current_user->movieQueue();
           users_queue->enqueue((*keywordIt));
         }
-      } while (choice != 2);*/
+      } while (choice != 2);
     
   } catch (NoSuchElementException &e){
     //keyword DNE
@@ -528,7 +599,7 @@ std::set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
       set.insert(search_movie);
     }
     return set;
-  }
+  }*/
 
 }
 

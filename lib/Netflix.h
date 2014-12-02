@@ -60,15 +60,15 @@ class Netflix{
       // A Map of all of the application's users
       //  It will be filled on each run of the program, by reading through the appropriate 
       //  users data file
-      Map<std::string, User*> users;
+      std::map<std::string, User*> users;
       User* current_user;  
       // A Map of all of the application's movies
       //  It will be filled on each run of the program, by reading through the appropriate 
       //  users data file
-      Map<std::string, Movie*> movies;
+      std::map<std::string, Movie*> movies;
 
       // Keywords for all movies in the application
-      Map<std::string, std::set<Movie*>* > movies_by_keyword;
+      std::map<std::string, std::set<Movie*>* > movies_by_keyword;
 
 };
 
