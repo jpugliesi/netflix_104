@@ -438,14 +438,18 @@ std::set<Movie*> Netflix::searchMoviesByTitle(std::string movie){
 
   //Search for movie in the movies Map
   std::set<Movie*> result;
-  try{
-    for(int i = 0; movie[i]; i++) movie[i] = tolower(movie[i]); 
-    Movie * search_movie = movies.find(movie)->second;
+  std::map<std::string, Movie*>::iterator movieIt;
+
+  for(int i = 0; movie[i]; i++) movie[i] = tolower(movie[i]);
+
+  movieIt = movies.find(movie);
+  if(movieIt != movies.end()){
+    Movie* search_movie = movieIt->second;
     result.insert(search_movie);
-  } catch (NoSuchElementException &e){
-    //movie DNE
-    std::cout << "Movie Not Found." << std::endl;
+  } else {
+    std::cerr << "Movie Not Found" << std::endl;
   }
+
   return result;
 
 }
