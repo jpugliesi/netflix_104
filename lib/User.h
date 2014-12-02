@@ -3,6 +3,7 @@
 
 #include <string>
 #include <queue>
+#include <map>
 #include "Queue.h"
 #include "Movie.h"
 
@@ -27,6 +28,9 @@ class User {
          (If you return by reference, that's also possible, but you'd need
          to be very careful not to invoke any deep copy constructors or
          assignments. A pointer is thus safer.) */
+         
+    //returns movie ratings map
+    std::map<Movie*, int> * movieRatings();
 
     void rentMovie (Movie *m);
       /* sets the user's currently rented movie to m.
@@ -43,6 +47,7 @@ class User {
 
   private:
     std::queue<Movie*>* movie_queue;
+    std::map<Movie*, int>* movie_ratings;
     Movie* current_movie;
     std::string name;
     std::string id;

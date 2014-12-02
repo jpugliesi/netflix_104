@@ -37,6 +37,10 @@ std::queue<Movie*> * User::movieQueue () {
   return movie_queue;
 
 }
+
+std::map<Movie*, int> * User::movieRatings(){
+  return movie_ratings;
+}
 /* returns a pointer to the user's movie queue.
    This is the easiest way to ensure that you can modify the queue.
    (If you return by reference, that's also possible, but you'd need
