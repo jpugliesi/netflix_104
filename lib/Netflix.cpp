@@ -163,6 +163,9 @@ bool Netflix::initializeUserData(std::string user_data_file){
               //add ratings
               std::map<Movie*, int>* users_ratings = new_user->movieRatings();
               users_ratings->insert(ratings_to_add.begin(), ratings_to_add.end());
+              for(std::map<Movie*, int>::iterator i = users_ratings->begin(); i != users_ratings->end(); ++i){
+                std::cout << i->first->getTitle() << " has a rating of " << i->second << std::endl;
+              }
 
               ratings_to_add.clear();
 
