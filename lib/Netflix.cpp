@@ -461,11 +461,13 @@ void Netflix::writeUsersToFile(){
     user_file << "END QUEUE \n";
     
     user_file << "BEGIN RATINGS \n";
-    std::map<Movie*, int>::iterator ratingsIt = a_user.second->movieRatings()->begin();
-    for(; ratingsIt != a_user.second->movieRatings()->end(); ++ratingsIt){
+    std::map<Movie*, int>::iterator ratingsIt;
+    for(ratingsIt = a_user.second->movieRatings()->begin(); ratingsIt != a_user.second->movieRatings()->end(); ++ratingsIt){
       std::string title = ratingsIt->first->getTitle();
       int rating_val = ratingsIt->second;
-      user_file << rating_val + " " + title + "\n";
+      std::string rating_line = rating_val + " " + title + "\n";
+      std::cerr << rating_line << std::endl;
+      user_file << rating_line;
     }
     user_file << "END RATINGS \n";
     user_file << "END" << "\n";
