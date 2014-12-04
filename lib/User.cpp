@@ -7,7 +7,7 @@ User::User(std::string ID, std::string name){
   this->id = ID;
   this->current_movie = NULL;
   this->movie_queue = new std::queue<Movie*>();
-  this->movie_ratings = new std::map<Movie*, int>();
+  this->movie_ratings = new std::map<Movie*, std::string>();
 }
 
 // copy constructor  
@@ -16,7 +16,7 @@ User::User(const User & other){
   this->id = other.getID();
   this->current_movie = NULL;
   this->movie_queue = new std::queue<Movie*>();
-  this->movie_ratings = new std::map<Movie*, int>();
+  this->movie_ratings = new std::map<Movie*, std::string>();
 }
 
 //destructor
@@ -40,7 +40,7 @@ std::queue<Movie*> * User::movieQueue () {
 
 }
 
-std::map<Movie*, int> * User::movieRatings(){
+std::map<Movie*, std::string> *& User::movieRatings(){
   return movie_ratings;
 }
 /* returns a pointer to the user's movie queue.

@@ -72,19 +72,8 @@ bool Netflix::initializeData(std::string input_file){
     bool usersInitialized = initializeUserData(user_data);
     if(moviesInitialized && usersInitialized){
 
-      //Both files are properly set up, so return true
-      _user_data_file = user_data;
-      _movie_data_file = movie_data;
-
-      std::map<std::string, User*>::iterator usersIt; 
-      std::cerr << users.size() << " Users loaded" << std::endl;
-      for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){
-        std::cerr << (*usersIt).second->getName() << " loaded" << std::endl;
-        std::queue<Movie*>* queue = (*usersIt).second->movieQueue();
-        if(!queue->empty()){
-        std::cerr << queue->front()->getTitle() << " is at the top of the queu"  << std::endl;
-        }
-      }
+      //Both files are properly set up, so return true _user_data_file = user_data; _movie_data_file = movie_data; std::map<std::string, User*>::iterator usersIt; std::cerr << users.size() << " Users loaded" << std::endl; for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){ std::cerr << (*usersIt).second->getName() << " loaded" << std::endl;
+      
     }
     
   } else {
@@ -118,7 +107,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
     bool isQueue = false;
     bool isRatings = false;
     std::queue<Movie*> movies_to_add;
-    std::map<Movie*, int> ratings_to_add;
+    std::map<Movie*, std::string> ratings_to_add;
     while(std::getline(user_data, line)){
       //iterate over all lines in the file, tokenizing them
       std::cerr << line << std::endl;
@@ -153,21 +142,24 @@ bool Netflix::initializeUserData(std::string user_data_file){
               //create the user with all of their appropriate data
               new_user = new User(id, name);
               std::queue<Movie*>* queue = new_user->movieQueue();
-              new_user->rentMovie(currentMovie);
+	      if(currentMovie != NULL){
+              	new_user->rentMovie(currentMovie);
+	      }	
               while(!movies_to_add.empty()){
-              std::cerr << "adding " << movies_to_add.front()->getTitle() << " to " << name << "'s queue" << std::endl;
+                std::cerr << "adding " << movies_to_add.front()->getTitle() << " to " << name << "'s queue" << std::endl;
                 queue->push(movies_to_add.front());
                 movies_to_add.pop();
               }
-
+	      
               //add ratings
-              std::map<Movie*, int>* users_ratings = new_user->movieRatings();
+              std::map<Movie*, std::string>* users_ratings = new_user->movieRatings();
               users_ratings->insert(ratings_to_add.begin(), ratings_to_add.end());
-              for(std::map<Movie*, int>::iterator i = users_ratings->begin(); i != users_ratings->end(); ++i){
+              for(std::map<Movie*, std::string>::iterator i = users_ratings->begin(); i != users_ratings->end(); ++i){
                 std::cout << i->first->getTitle() << " has a rating of " << i->second << std::endl;
+
               }
 
-              ratings_to_add.clear();
+	      ratings_to_add.clear();
 
               std::cerr << "Creating user with id: " << id << " and Name: " << name << std::endl;
               std::pair<std::string, User*> toAdd;
@@ -192,7 +184,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
             std::cout << "RATINGS COMMAND: " << command << std::endl;
             std::cout << "PARAMS: " << parameters << std::endl;
             std::stringstream ss;
-            int rating_val;
+            std::string rating_val;
             ss << command;
             ss >> rating_val; 
             
@@ -208,7 +200,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
               return 0;
             }
             
-            std::pair<Movie*, int> toAdd;
+            std::pair<Movie*, std::string> toAdd;
             toAdd.first = rated_movie;
             toAdd.second = rating_val;
             
@@ -461,11 +453,13 @@ void Netflix::writeUsersToFile(){
     user_file << "END QUEUE \n";
     
     user_file << "BEGIN RATINGS \n";
-    std::map<Movie*, int>::iterator ratingsIt;
+    std::map<Movie*, std::string>::iterator ratingsIt;
+
     for(ratingsIt = a_user.second->movieRatings()->begin(); ratingsIt != a_user.second->movieRatings()->end(); ++ratingsIt){
       std::string title = ratingsIt->first->getTitle();
-      int rating_val = ratingsIt->second;
-      std::string rating_line = rating_val + " " + title + "\n";
+      std::string  rating_s = ratingsIt->second;
+      std::cout << "Rating_s: " << rating_s << std::endl;
+      std::string rating_line = rating_s + " " + title + "\n";
       std::cerr << rating_line << std::endl;
       user_file << rating_line;
     }
@@ -502,8 +496,6 @@ std::set<Movie*> Netflix::searchMoviesByTitle(std::string movie){
 std::set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
 
   //search for movies that contain the keyword, or the title of the movie
-  bool found_movie_title = false;
-  Movie* search_movie;
 
   std::set<Movie*> result;
 

@@ -1,35 +1,9 @@
-BEGIN aaroncot
-NAME: Aaron Cote
-MOVIE: City Lights
-BEGIN QUEUE 
-END QUEUE 
-BEGIN RATINGS 
-END RATINGS 
-END
 BEGIN asdf
 NAME: ASDF
 MOVIE: The Princess Bride
 BEGIN QUEUE 
 The Princess Bride
 END QUEUE 
-BEGIN RATINGS 
-END RATINGS 
-END
-BEGIN dkempe
-NAME: David Kempe
-MOVIE: City Lights
-BEGIN QUEUE 
-END QUEUE 
-BEGIN RATINGS 
-END RATINGS 
-END
-BEGIN joet
-NAME: Joe Turner
-MOVIE: City Lights
-BEGIN QUEUE 
-END QUEUE 
-BEGIN RATINGS 
-END RATINGS 
 END
 BEGIN jpugliesi
 NAME: John Pugliesi
@@ -37,8 +11,26 @@ MOVIE: City Lights
 BEGIN QUEUE 
 The Princess Bride
 END QUEUE 
-BEGIN RATINGS 
-ur Current MovieThe Princess Bride
-Your Current MovieCity Lights
-END RATINGS 
+BEGIN RATINGS
+4 The Princess Bride
+2 City Lights 
+END RATINGS
+END
+BEGIN dkempe
+NAME: David Kempe
+MOVIE: City Lights
+BEGIN QUEUE 
+END QUEUE 
+END
+BEGIN aaroncot
+NAME: Aaron Cote
+MOVIE: City Lights
+BEGIN QUEUE 
+END QUEUE 
+END
+BEGIN joet
+NAME: Joe Turner
+MOVIE: City Lights
+BEGIN QUEUE 
+END QUEUE 
 END
