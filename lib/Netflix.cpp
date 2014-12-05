@@ -49,13 +49,15 @@ User* & Netflix::getCurrentUser(){
 }
 
 void Netflix::logoutCurrentUser(){
+  writeUsersToFile();
+  initializeData(main_data_file);
   current_user = NULL;
   unique_id = 0;
 }
 
 bool Netflix::initializeData(std::string input_file){
 
-  //close it!!
+  unique_id = 0;
   //Open the main data file
   
   main_data_file = input_file;
@@ -78,7 +80,6 @@ bool Netflix::initializeData(std::string input_file){
       //Both files are properly set up, so return true _user_data_file = user_data; _movie_data_file = movie_data; std::map<std::string, User*>::iterator usersIt; std::cerr << users.size() << " Users loaded" << std::endl; for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){ std::cerr << (*usersIt).second->getName() << " loaded" << std::endl;
       _user_data_file = user_data;
       _movie_data_file = movie_data;
-      createSimilarityGraph();
       
     }
     
@@ -393,6 +394,7 @@ bool Netflix::loginUser(std::string username){
   it = users.find(username);
   if(it != users.end()){
     this->current_user = it->second;
+    createSimilarityGraph();
   } else {
     std::cout << "Invalid ID." << std::endl;
     current_user = NULL;
@@ -791,32 +793,35 @@ void Netflix::createSimilarityGraph(){
   std::map<std::string, User*>::iterator users_it;
   std::map<std::string, User*>::iterator users_comp_it;
 
+  User* user_a = current_user;
   for(users_it = users.begin(); users_it != users.end(); ++users_it){
     //For each user, add an adjacency edge in their list
-    User* user_a = users_it->second;
-    for(users_comp_it = users.begin(); users_comp_it != users.end(); ++users_comp_it){
-      User* user_b = users_comp_it->second;
-      double s_value = 0;
-      if(user_b == user_a){
-        s_value = 1 / movies.size();
-        std::pair<int, double> to_add;
-        to_add.first = user_b->getIndexID();
-        to_add.second = s_value;
-	std::cerr << "Check User index: " << user_a->getIndexID() << std::endl;
-        s_graph->at(user_a->getIndexID()).push_back(to_add);
-	std::cerr << "Adding same user similarity edge" << std::endl;
-      } else {
-        s_value = calculateSimularity(user_a, user_b);
-        std::cerr << user_a->getID() << " and " << user_b->getID() << " have a similarity value of: " << s_value << std::endl;
+    User* user_b = users_it->second;
+    double s_value = 0;
+    if(user_b == user_a){
+      s_value = 1 / movies.size();
+      std::pair<int, double> to_add;
+      to_add.first = user_b->getIndexID();
+      to_add.second = s_value;
+      std::cerr << "Check User index: " << user_a->getIndexID() << std::endl;
+      s_graph->at(user_a->getIndexID()).push_back(to_add);
+      std::cerr << "Adding same user similarity edge" << std::endl;
+    } else {
+      s_value = calculateSimularity(user_a, user_b);
+      std::cerr << user_a->getID() << " and " << user_b->getID() << " have a similarity value of: " << s_value << std::endl;
 
-        std::pair<int, double> to_add;
-        to_add.first = user_b->getIndexID();
-        to_add.second = s_value;
-        s_graph->at(user_a->getIndexID()).push_back(to_add);
-      }
-
+      std::pair<int, double> to_add_a;
+      to_add_a.first = user_b->getIndexID();
+      to_add_a.second = s_value;
+      std::pair<int, double> to_add_b;
+      to_add_b.first = user_a->getIndexID();
+      to_add_b.second = s_value;
+      s_graph->at(user_a->getIndexID()).push_back(to_add_a);
+      s_graph->at(user_b->getIndexID()).push_back(to_add_b);
     }
   }
+
+
 }
 
 double Netflix::calculateSimularity(User* user_a, User* user_b){

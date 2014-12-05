@@ -37,7 +37,6 @@ LoginWindow::~LoginWindow(){
 }
 
 void LoginWindow::openLoginWindow(){
-  netflix->logoutCurrentUser();
   this->show();
 }
 
