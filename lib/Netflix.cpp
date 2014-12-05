@@ -788,7 +788,34 @@ void Netflix::printMovie(Movie * movie, bool print_keywords){
   }
 }
     
+void Netflix::createSimilarityGraph(){
+  //create enough indexes in the vector to store all user adjacency lists
+  s_graph.reserve(users->size()); 
 
+  std::map<std::string, User*>::iterator users_it;
+  std::map<std::string, User*>::iterator users_comp_it;
+  for(users_it = users->begin(); users_it != users->end(); ++users_it;){
+    //For each user, add an adjacency edge in their list
+    User* user_a = users_it->second;
+    for(users_comp_it = users->begin(); users_comp_it != users->end(); ++users_comp_it){
+      User* user_b = users_comp_it->second;
+      double s_value;
+      if(user_b == user_a){
+        s_value = 1;
+	std::pair<int, double> to_add;
+	to_add.first = user_b->getIndexID();
+	to_add.second = s_value;
+	s_graph.at(use_a->getIndexID()).push_back(to_add);
+      } else {
+        std::map<Movie*, int>* user_a_ratings = user_a->movieRatings();
+        std::map<Movie*, int>* user_b_ratings = user_b->movieRatings();
+	std::map<Movie*> intersect
+
+      }
+
+    }
+  }
+}
 
 /*************** Utility Functions **************/
 /************************************************/
