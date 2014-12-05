@@ -76,7 +76,7 @@ class Netflix{
 
       //Adjacency list for Similiarity Graph
       double calculateSimularity(User* user_a, User* user_b);
-      std::vector< std::vector< std::pair<int, double> > > s_graph;
+      std::vector< std::vector< std::pair<int, double> > >* s_graph;
 
 };
 

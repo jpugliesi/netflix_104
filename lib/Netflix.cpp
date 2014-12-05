@@ -1,5 +1,6 @@
 #include "Netflix.h"
 #include <iostream>
+#include <cmath>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -77,6 +78,7 @@ bool Netflix::initializeData(std::string input_file){
       //Both files are properly set up, so return true _user_data_file = user_data; _movie_data_file = movie_data; std::map<std::string, User*>::iterator usersIt; std::cerr << users.size() << " Users loaded" << std::endl; for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){ std::cerr << (*usersIt).second->getName() << " loaded" << std::endl;
       _user_data_file = user_data;
       _movie_data_file = movie_data;
+      createSimilarityGraph();
       
     }
     
@@ -119,24 +121,18 @@ bool Netflix::initializeUserData(std::string user_data_file){
       std::string command, parameters;
       if(!parseCommand(line, command, parameters)){
         //Something went wrong parsing the command
-	      std::cerr << "Command: " << command << std::endl;
-	      std::cerr << "parameters: " << parameters << std::endl;
         user_data.close();
         return 0;
       } else {
         //call the appropriate action for the command
-        std::cerr << "Command: " << command << std::endl;
-	      std::cerr << "parameters: " << parameters << std::endl;
         if(!isQueue){
           if(!isRatings && !isQueue){
             if(command == "BEGIN"){
               if (parameters == "QUEUE"){
                 isQueue = true;
-                std::cerr << "It's a queue!" << std::endl;
                 continue;
               } else if(parameters == "RATINGS"){
                 isRatings = true;
-                std::cerr << "RATINGS!" << std::endl;
                 continue;
               } else {
                 id = parameters;
@@ -790,22 +786,25 @@ void Netflix::printMovie(Movie * movie, bool print_keywords){
     
 void Netflix::createSimilarityGraph(){
   //create enough indexes in the vector to store all user adjacency lists
-  s_graph.reserve(users.size()); 
+  s_graph = new std::vector< std::vector< std::pair<int, double> > >(users.size());
 
   std::map<std::string, User*>::iterator users_it;
   std::map<std::string, User*>::iterator users_comp_it;
+
   for(users_it = users.begin(); users_it != users.end(); ++users_it){
     //For each user, add an adjacency edge in their list
     User* user_a = users_it->second;
     for(users_comp_it = users.begin(); users_comp_it != users.end(); ++users_comp_it){
       User* user_b = users_comp_it->second;
-      double s_value;
+      double s_value = 0;
       if(user_b == user_a){
-        s_value = 1;
+        s_value = 1 / movies.size();
         std::pair<int, double> to_add;
         to_add.first = user_b->getIndexID();
         to_add.second = s_value;
-        s_graph.at(user_a->getIndexID()).push_back(to_add);
+	std::cerr << "Check User index: " << user_a->getIndexID() << std::endl;
+        s_graph->at(user_a->getIndexID()).push_back(to_add);
+	std::cerr << "Adding same user similarity edge" << std::endl;
       } else {
         s_value = calculateSimularity(user_a, user_b);
         std::cerr << user_a->getID() << " and " << user_b->getID() << " have a similarity value of: " << s_value << std::endl;
@@ -813,7 +812,7 @@ void Netflix::createSimilarityGraph(){
         std::pair<int, double> to_add;
         to_add.first = user_b->getIndexID();
         to_add.second = s_value;
-        s_graph.at(user_a->getIndexID()).push_back(to_add);
+        s_graph->at(user_a->getIndexID()).push_back(to_add);
       }
 
     }
@@ -857,19 +856,19 @@ double Netflix::calculateSimularity(User* user_a, User* user_b){
   std::map<Movie*, std::pair<int, int> >::iterator i_i = intersect.begin();
   if(i_i == intersect.end()){
     //no same movies rated...
-    double temp_similarity = 1;
-    similarity = temp_similarity/movies.size();
+    std::cerr << user_a->getID() << " and " << user_b->getID() << " do not have any commonly rated movies..." << std::endl;
+    similarity = 1;
 
   } else {
     double similarity_sum = 0;
     for(; i_i != intersect.end(); ++i_i){
       int r_a = i_i->second.first;
       int r_b = i_i->second.second;
-      double s_v = (r_a-r_b)/4.0;
+      double s_v = std::abs((r_a-r_b))/4.0;
 
       similarity_sum += s_v;
     }
-    similarity = similarity_sum / movies.size();
+    similarity = similarity_sum / intersect.size();
   }
 
   return similarity;
