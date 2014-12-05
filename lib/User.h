@@ -30,7 +30,7 @@ class User {
          assignments. A pointer is thus safer.) */
          
     //returns movie ratings map
-    std::map<Movie*, std::string> *& movieRatings();
+    std::map<Movie*, int> *& movieRatings();
 
     void rentMovie (Movie *m);
       /* sets the user's currently rented movie to m.
@@ -47,7 +47,7 @@ class User {
 
   private:
     std::queue<Movie*>* movie_queue;
-    std::map<Movie*, std::string>* movie_ratings;
+    std::map<Movie*, int>* movie_ratings;
     Movie* current_movie;
     std::string name;
     std::string id;
