@@ -110,6 +110,8 @@ bool Netflix::initializeUserData(std::string user_data_file){
     bool isRatings = false;
     std::queue<Movie*> movies_to_add;
     std::map<Movie*, int> ratings_to_add;
+
+    int unique_id = 0;
     while(std::getline(user_data, line)){
       //iterate over all lines in the file, tokenizing them
       std::cerr << line << std::endl;
@@ -142,7 +144,10 @@ bool Netflix::initializeUserData(std::string user_data_file){
               name = parameters;
             } else if (command == "END"){
               //create the user with all of their appropriate data
-              new_user = new User(id, name);
+              new_user = new User(id, name, unique_id++);
+
+              std::cerr << "New user with id: " << new_user->getIndexID() << std::endl;
+
               std::queue<Movie*>* queue = new_user->movieQueue();
               if(currentMovie != NULL){
                       new_user->rentMovie(currentMovie);

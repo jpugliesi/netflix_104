@@ -70,6 +70,9 @@ class Netflix{
       // Keywords for all movies in the application
       std::map<std::string, std::set<Movie*>* > movies_by_keyword;
 
+      //Adjacency list for Similiarity Graph
+      std::vector< std::vector< std::pair<int, double> > > s_graph;
+
 };
 
 #endif
