@@ -38,10 +38,10 @@ RatingWindow::RatingWindow(User* & user){
   buttonLayout->addWidget(submit);
   buttonLayout->addWidget(skip);
 
-  mainLayout->addLayout(radioLayout);
+  mainLayout->addWidget(ratingGroup);
   mainLayout->addLayout(buttonLayout);
 
-  setLayout(mainLayout);
+  this->setLayout(mainLayout);
 
   //select radio button if rating exists
   std::map<Movie*, int>* movie_ratings = user->movieRatings();
