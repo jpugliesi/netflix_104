@@ -9,9 +9,9 @@ RatingWindow::RatingWindow(User* & user){
   Movie* current_movie = user->currentMovie();
   QString title = QString::fromStdString(current_movie->getTitle());
   
-  mainLayout = new QVBoxLayout(this);
-  radioLayout = new QVBoxLayout(this);
-  buttonLayout = new QHBoxLayout(this);
+  mainLayout = new QVBoxLayout();
+  radioLayout = new QVBoxLayout();
+  buttonLayout = new QHBoxLayout();
   
   ratingGroup = new QGroupBox(title);
 
