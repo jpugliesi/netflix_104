@@ -14,6 +14,7 @@ MainWindow::MainWindow(Netflix* & netflix){
 
   searchWindow = NULL;
   ratingWindow = NULL;
+  QObject::connect(ratingWindow, SIGNAL(closeWindow()), this, SLOT(closeRatingWindow()));
 
   QString name;
   User* currentUser = netflix->getCurrentUser();
@@ -94,8 +95,12 @@ void MainWindow::returnMovieButtonClicked(){
 
   User* currentUser = netflix->getCurrentUser();
   //Ratings
-  
-  ratingWindow = new RatingWindow(currentUser);
+  if(currentUser->currentMovie() != NULL){
+    this->hide();
+    std::map<Movie*, int>* users_ratings = currentUser->movieRatings();
+
+    ratingWindow = new RatingWindow(currentUser);
+  }
 
   currentUser->returnMovie();
   updateCurrentMovie();
@@ -201,6 +206,13 @@ void MainWindow::closeSearchWindow(){
   updateTopOfQueue();
   this->show();
 
+}
+
+void MainWindow::closeRatingWindow(){
+
+  delete ratingWindow;
+  ratingWindow = NULL;
+  this->show();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event){

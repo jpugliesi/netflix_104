@@ -64,6 +64,7 @@ class MainWindow : public QWidget{
     void logoutButtonClicked();
 
     void closeSearchWindow();
+    void closeRatingWindow();
 
   signals:
     void logout();
