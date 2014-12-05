@@ -12,6 +12,9 @@ MainWindow::MainWindow(Netflix* & netflix){
   queueVBox = new QVBoxLayout();
   searchVBox = new QVBoxLayout();
 
+  searchWindow = NULL;
+  ratingWindow = NULL;
+
   QString name;
   User* currentUser = netflix->getCurrentUser();
   if(currentUser != NULL){
@@ -90,9 +93,12 @@ void MainWindow::openMainWindow(){
 void MainWindow::returnMovieButtonClicked(){
 
   User* currentUser = netflix->getCurrentUser();
+  //Ratings
+  
+  ratingWindow = new RatingWindow(currentUser);
+
   currentUser->returnMovie();
   updateCurrentMovie();
-  //Ratings
 
 }
 void MainWindow::updateTopOfQueue(){

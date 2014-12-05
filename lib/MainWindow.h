@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QObject>
 #include "Netflix.h"
+#include "RatingWindow.h"
 #include "SearchResultsWindow.h"
 
 class MainWindow : public QWidget{
@@ -42,6 +43,7 @@ class MainWindow : public QWidget{
     QPushButton *logoutButton;
 
     SearchResultsWindow* searchWindow;
+    RatingWindow* ratingWindow;
 
   public slots:
     void openMainWindow();
