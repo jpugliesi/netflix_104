@@ -790,31 +790,90 @@ void Netflix::printMovie(Movie * movie, bool print_keywords){
     
 void Netflix::createSimilarityGraph(){
   //create enough indexes in the vector to store all user adjacency lists
-  s_graph.reserve(users->size()); 
+  s_graph.reserve(users.size()); 
 
   std::map<std::string, User*>::iterator users_it;
   std::map<std::string, User*>::iterator users_comp_it;
-  for(users_it = users->begin(); users_it != users->end(); ++users_it;){
+  for(users_it = users.begin(); users_it != users.end(); ++users_it){
     //For each user, add an adjacency edge in their list
     User* user_a = users_it->second;
-    for(users_comp_it = users->begin(); users_comp_it != users->end(); ++users_comp_it){
+    for(users_comp_it = users.begin(); users_comp_it != users.end(); ++users_comp_it){
       User* user_b = users_comp_it->second;
       double s_value;
       if(user_b == user_a){
         s_value = 1;
-	std::pair<int, double> to_add;
-	to_add.first = user_b->getIndexID();
-	to_add.second = s_value;
-	s_graph.at(use_a->getIndexID()).push_back(to_add);
+        std::pair<int, double> to_add;
+        to_add.first = user_b->getIndexID();
+        to_add.second = s_value;
+        s_graph.at(user_a->getIndexID()).push_back(to_add);
       } else {
-        std::map<Movie*, int>* user_a_ratings = user_a->movieRatings();
-        std::map<Movie*, int>* user_b_ratings = user_b->movieRatings();
-	std::map<Movie*> intersect
+        s_value = calculateSimularity(user_a, user_b);
+        std::cerr << user_a->getID() << " and " << user_b->getID() << " have a similarity value of: " << s_value << std::endl;
 
+        std::pair<int, double> to_add;
+        to_add.first = user_b->getIndexID();
+        to_add.second = s_value;
+        s_graph.at(user_a->getIndexID()).push_back(to_add);
       }
 
     }
   }
+}
+
+double Netflix::calculateSimularity(User* user_a, User* user_b){
+  std::map<Movie*, int>* user_a_ratings = user_a->movieRatings();
+  std::map<Movie*, int>* user_b_ratings = user_b->movieRatings();
+
+  double similarity = 1;
+  
+
+  //Creates intersect map of pairs <Movie*, std::pair<A's rating, B's rating>>
+  std::map<Movie*, std::pair<int, int> > intersect;
+  std::map<Movie*, int>::iterator i_a = user_a_ratings->begin();
+  std::map<Movie*, int>::iterator i_b = user_b_ratings->begin();
+
+  while (i_a != user_a_ratings->end() && i_b != user_b_ratings->end()){
+      if(i_a->first->getTitle() < i_b->first->getTitle()){
+        ++i_a;
+      }
+      else if(i_b->first->getTitle()  < i_a->first->getTitle()){
+        ++i_b;
+      } else {
+        std::pair<Movie*, std::pair<int, int> > movie_to_add;
+        std::pair<int, int> rating_vals;
+        rating_vals.first = i_a->second;
+        rating_vals.second = i_b->second;
+        movie_to_add.first = i_a->first;
+        movie_to_add.second = rating_vals;
+        
+        intersect.insert(movie_to_add);
+        ++i_a;
+        ++i_b;
+      }
+  }
+
+  //we now have the intersection of the two users' rated movies.
+  //Calculate the forumla...
+  std::map<Movie*, std::pair<int, int> >::iterator i_i = intersect.begin();
+  if(i_i == intersect.end()){
+    //no same movies rated...
+    double temp_similarity = 1;
+    similarity = temp_similarity/movies.size();
+
+  } else {
+    double similarity_sum = 0;
+    for(; i_i != intersect.end(); ++i_i){
+      int r_a = i_i->second.first;
+      int r_b = i_i->second.second;
+      double s_v = (r_a-r_b)/4.0;
+
+      similarity_sum += s_v;
+    }
+    similarity = similarity_sum / movies.size();
+  }
+
+  return similarity;
+
 }
 
 /*************** Utility Functions **************/

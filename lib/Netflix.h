@@ -21,6 +21,8 @@ class Netflix{
 
     bool initializeMovieData(std::string);
 
+    void createSimilarityGraph();
+
     bool tokenizeLine(std::string line, std::vector<std::string> & words);
     bool parseCommand(std::string line, std::string & command, std::string & parameter);
 
@@ -73,6 +75,7 @@ class Netflix{
       std::map<std::string, std::set<Movie*>* > movies_by_keyword;
 
       //Adjacency list for Similiarity Graph
+      double calculateSimularity(User* user_a, User* user_b);
       std::vector< std::vector< std::pair<int, double> > > s_graph;
 
 };
