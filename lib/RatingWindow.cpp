@@ -1,12 +1,13 @@
 #include "RatingWindow.h"
 #include "Movie.h"
 #include <QObject>
+#include <iostream>
+#include <sstream>
 
-RatingWindow::RatingWindow(User* & user){
+RatingWindow::RatingWindow(User* & user, Movie* current_movie){
 
   this->user = user;
-
-  Movie* current_movie = user->currentMovie();
+  this->current_movie = current_movie;
   QString title = QString::fromStdString(current_movie->getTitle());
   
   mainLayout = new QVBoxLayout();
@@ -86,19 +87,25 @@ int RatingWindow::getRating(){
 
 void RatingWindow::submitButtonClicked(){
   int rating_val = getRating();
+  std::cerr << "RATING VAL IS: " << rating_val << std::endl;
   if(rating_val != 0){
     //user supplied rating
-    Movie* current_movie = user->currentMovie();
     if(current_movie != NULL){
       //update the rating value
       std::map<Movie*, int>* movie_ratings = user->movieRatings();
       std::map<Movie*, int>::iterator ratings_it = movie_ratings->find(current_movie);
+      std::cerr << "Rating exists for Current movie: " << current_movie << " (" << current_movie->getTitle() << std::endl;
       if(ratings_it != movie_ratings->end()){
         movie_ratings->at(current_movie) = rating_val;
       } else {
         std::pair<Movie*, int> new_rating;
         new_rating.first = current_movie;
         new_rating.second = rating_val;
+	std::stringstream ss;
+	std::string r;
+	ss << rating_val;
+	ss >> r;
+	std::cerr << "Adding rating for " << current_movie << " (" << current_movie->getTitle() << ") of " << r << std::endl; 
         movie_ratings->insert(new_rating);
       }
     }

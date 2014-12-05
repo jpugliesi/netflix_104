@@ -3,17 +3,18 @@
 
 #include <QtGui>
 #include "User.h"
+#include "Movie.h"
 
 class RatingWindow : public QWidget{
 
   Q_OBJECT
   
   public:
-    RatingWindow(User* & user);
+    RatingWindow(User* & user, Movie* current_movie);
   private:
 
     User* user;
-    
+    Movie* current_movie; 
     QVBoxLayout* mainLayout;
     QVBoxLayout* radioLayout;
     QGroupBox* ratingGroup;

@@ -73,6 +73,8 @@ bool Netflix::initializeData(std::string input_file){
     if(moviesInitialized && usersInitialized){
 
       //Both files are properly set up, so return true _user_data_file = user_data; _movie_data_file = movie_data; std::map<std::string, User*>::iterator usersIt; std::cerr << users.size() << " Users loaded" << std::endl; for(usersIt = users.begin(); usersIt != users.end(); ++usersIt){ std::cerr << (*usersIt).second->getName() << " loaded" << std::endl;
+      _user_data_file = user_data;
+      _movie_data_file = movie_data;
       
     }
     
@@ -418,9 +420,9 @@ bool Netflix::createNewUser(std::string username, std::string name){
 
 void Netflix::writeUsersToFile(){
   
-  std::fstream user_file(_user_data_file.c_str(), std::fstream::out);
+  std::ofstream user_file(_user_data_file.c_str(), std::fstream::out);
 
-  std::cerr << "Writing Users to file" << std::endl;
+  std::cerr << "Writing Users to file" << _user_data_file << std::endl;
   std::map<std::string, User*>::iterator userIt;
   for(userIt = users.begin(); userIt != users.end(); ++userIt){
   
@@ -431,6 +433,7 @@ void Netflix::writeUsersToFile(){
     std::string name_value = "NAME: " + name + "\n";
     std::string current_movie;
     if(a_user.second->currentMovie() != NULL){
+      std::cout << a_user.first << " has a current movie: " << a_user.second->currentMovie()->getTitle() << std::endl;
       current_movie = "MOVIE: " + a_user.second->currentMovie()->getTitle() + "\n";
     }
 
@@ -465,6 +468,8 @@ void Netflix::writeUsersToFile(){
       std::string rating_line = rating_s + " " + title + "\n";
       std::cerr << rating_line << std::endl;
       user_file << rating_line;
+      ss.clear();
+      ss.str("");
     }
     user_file << "END RATINGS \n";
     user_file << "END" << "\n";
