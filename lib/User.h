@@ -9,7 +9,7 @@
 
 class User {
   public:
-    User (std::string ID, std::string name);  
+    User (std::string ID, std::string name, int index_id);  
     /* constructor that generates a user with the given name and ID.
        While multiple users may have the same name, the ID should be unique
        (e.g., an e-mail address), so that users can log in with it. */
@@ -21,6 +21,8 @@ class User {
     std::string getID () const;    // returns the ID associated with this user
 
     std::string getName () const;  // returns the name associated with this user
+
+    int getIndexID() const;
     
     std::queue<Movie*> * movieQueue (); 
       /* returns a pointer to the user's movie queue.
@@ -51,6 +53,8 @@ class User {
     Movie* current_movie;
     std::string name;
     std::string id;
+
+    int index_id;
     
 };
 

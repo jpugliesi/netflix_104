@@ -2,9 +2,10 @@
 /* constructor that generates a user with the given name and ID.
 While multiple users may have the same name, the ID should be unique
 (e.g., an e-mail address), so that users can log in with it. */
-User::User(std::string ID, std::string name){
+User::User(std::string ID, std::string name, int index_id){
   this->name = name;
   this->id = ID;
+  this->index_id = index_id;
   this->current_movie = NULL;
   this->movie_queue = new std::queue<Movie*>();
   this->movie_ratings = new std::map<Movie*, int>();
@@ -32,6 +33,10 @@ std::string User::getID() const{
 // returns the name associated with this user
 std::string User::getName() const{
   return name;
+}
+
+int User::getIndexID() const{
+  return index_id;
 }
 
 std::queue<Movie*> * User::movieQueue () {
