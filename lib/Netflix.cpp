@@ -16,6 +16,7 @@
 Netflix::Netflix(){
 
   current_user = NULL;
+  unique_id = 0;
 }
 
 Netflix::~Netflix(){
@@ -48,6 +49,7 @@ User* & Netflix::getCurrentUser(){
 
 void Netflix::logoutCurrentUser(){
   current_user = NULL;
+  unique_id = 0;
 }
 
 bool Netflix::initializeData(std::string input_file){
@@ -111,7 +113,6 @@ bool Netflix::initializeUserData(std::string user_data_file){
     std::queue<Movie*> movies_to_add;
     std::map<Movie*, int> ratings_to_add;
 
-    int unique_id = 0;
     while(std::getline(user_data, line)){
       //iterate over all lines in the file, tokenizing them
       std::cerr << line << std::endl;
@@ -411,7 +412,7 @@ bool Netflix::createNewUser(std::string username, std::string name){
   it = users.find(username);
   if(it == users.end()){
     //Add New User
-    User * newUser = new User(username, name);
+    User * newUser = new User(username, name, this->unique_id++);
     std::pair<std::string, User*> toAdd;
     toAdd.first = username;
     toAdd.second = newUser;

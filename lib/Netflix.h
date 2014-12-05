@@ -55,6 +55,8 @@ class Netflix{
       std::string main_data_file;
       std::string _user_data_file;      
       std::string _movie_data_file;
+
+      int unique_id;
       
       //Important Variables
       // A Map of all of the application's users
