@@ -78,6 +78,10 @@ class Netflix{
 
       //Adjacency list for Similiarity Graph
       double calculateSimilarity(User* user_a, User* user_b);
+      Movie* getMostInterestingMovie();
+      double calculateMovieInterestingness(Movie* m);
+
+      Movie* most_interesting_movie;
       std::vector<double> calculateRefinedSimilarity(User* user);
       std::vector< std::vector< std::pair<int, double> > >* s_graph;
       std::vector<double> refined_sim;

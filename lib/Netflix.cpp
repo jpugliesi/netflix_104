@@ -407,6 +407,7 @@ bool Netflix::loginUser(std::string username){
     this->current_user = it->second;
     createSimilarityGraph();
     refined_sim = calculateRefinedSimilarity(current_user);
+    most_interesting_movie = getMostInterestingMovie();
   } else {
     std::cout << "Invalid ID." << std::endl;
     current_user = NULL;
@@ -946,6 +947,63 @@ std::vector<double> Netflix::calculateRefinedSimilarity(User* user){
   return d;
 }
 
+Movie* Netflix::getMostInterestingMovie(){
+
+  Movie* most_interesting = NULL;
+  double max_interestingness = 0;
+  //for each movie, calculate its interestingness
+  std::map<std::string, Movie*>::iterator movies_it;
+  for(movies_it = movies.begin(); movies_it != movies.end(); ++movies_it){
+    std::map<Movie*, int>::iterator user_ratings_it = current_user->movieRatings()->find(movies_it->second);
+    if(user_ratings_it == current_user->movieRatings()->end()){
+      //haven't  rated this movie, so calculate its interestingness
+      double i = calculateMovieInterestingness(movies_it->second);
+      if(i >= max_interestingness){
+        max_interestingness = i;
+	most_interesting = movies_it->second;
+      }
+    }
+  }
+  if(most_interesting != NULL){
+    std::cerr << "Most interesting movie is: " << most_interesting->getTitle() << std::endl;
+  }  
+
+  return most_interesting;
+
+}
+
+double Netflix::calculateMovieInterestingness(Movie* movie){
+
+  std::set<User*> s;
+  std::map<std::string, User*>::iterator user_it;
+  for(user_it = users.begin(); user_it != users.end(); ++user_it){
+    std::map<Movie*, int>::iterator ratings_it = user_it->second->movieRatings()->find(movie);
+    if(ratings_it != user_it->second->movieRatings()->end()){
+      //user rated the movie, so add them to set s
+      s.insert(user_it->second);
+    }
+  }
+
+  std::set<User*>::iterator s_i;
+  double rm = 0;
+  double w = 0;
+  for(s_i = s.begin(); s_i != s.end(); ++s_i){
+  
+    double sim = refined_sim[(*s_i)->getIndexID()];
+    int rating = (*s_i)->movieRatings()->find(movie)->second;
+
+    rm += (1-sim)*(rating);
+    w += (1-sim);
+
+  }
+  if(rm == 0 || w ==0){
+    return 0;
+  }
+
+  return rm/w;
+
+  
+}
 
 /*************** Utility Functions **************/
 /************************************************/
