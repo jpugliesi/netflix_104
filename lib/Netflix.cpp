@@ -406,7 +406,7 @@ bool Netflix::loginUser(std::string username){
   if(it != users.end()){
     this->current_user = it->second;
     createSimilarityGraph();
-    calculateRefinedSimilarity(current_user);
+    refined_sim = calculateRefinedSimilarity(current_user);
   } else {
     std::cout << "Invalid ID." << std::endl;
     current_user = NULL;
@@ -897,7 +897,7 @@ double Netflix::calculateSimilarity(User* user_a, User* user_b){
 }
 
 /* Refined Similarity */
-void Netflix::calculateRefinedSimilarity(User* user){
+std::vector<double> Netflix::calculateRefinedSimilarity(User* user){
 
   int n = s_graph->size();
   std::vector<double> d(n);
@@ -943,6 +943,7 @@ void Netflix::calculateRefinedSimilarity(User* user){
     std::cerr << getUserByID(i)->getName() <<  " has similarity " << d[i] << std::endl;
 
   }
+  return d;
 }
 
 
