@@ -1,5 +1,6 @@
 #include "SearchResultsWindow.h"
 #include <QObject>
+#include <iostream>
 
 SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_string, bool title){
 

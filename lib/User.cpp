@@ -1,4 +1,5 @@
 #include "User.h"
+#include <iostream>
 /* constructor that generates a user with the given name and ID.
 While multiple users may have the same name, the ID should be unique
 (e.g., an e-mail address), so that users can log in with it. */

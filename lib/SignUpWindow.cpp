@@ -1,5 +1,6 @@
 #include "SignUpWindow.h"
 #include <string>
+#include <iostream>
 
 SignUpWindow::SignUpWindow(Netflix* & netflix){
 

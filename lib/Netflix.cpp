@@ -9,9 +9,6 @@
 #include <map>
 #include <queue>
 #include <utility>
-#include "Set.h"
-#include "Queue.h"
-#include "Pair.h"
 #include "NoSuchElementException.h"
 
 Netflix::Netflix(){

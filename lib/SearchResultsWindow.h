@@ -6,7 +6,6 @@
 #include <string>
 #include <set>
 #include "Netflix.h"
-#include "Set.h"
 #include "Movie.h"
 class SearchResultsWindow : public QWidget{
 
