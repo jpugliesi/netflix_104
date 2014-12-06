@@ -4,6 +4,8 @@ MOVIE: City Lights
 BEGIN QUEUE 
 END QUEUE 
 BEGIN RATINGS 
+2 City Lights
+3 The Shawshank Redemption
 END RATINGS 
 END
 BEGIN asdf
@@ -39,15 +41,15 @@ MOVIE: City Lights
 BEGIN QUEUE 
 END QUEUE 
 BEGIN RATINGS 
+3 The Shawshank Redemption
 END RATINGS 
 END
 BEGIN jpugliesi
 NAME: John Pugliesi
-MOVIE: City Lights
 BEGIN QUEUE 
 END QUEUE 
 BEGIN RATINGS 
 4 The Princess Bride
-1 City Lights
+3 City Lights
 END RATINGS 
 END

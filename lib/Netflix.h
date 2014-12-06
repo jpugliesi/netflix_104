@@ -27,6 +27,7 @@ class Netflix{
 
     bool loginUser(std::string username);
     bool createNewUser(std::string username, std::string name);
+    User* getUserByID(int id);
 
     void writeUsersToFile();
 
@@ -64,6 +65,8 @@ class Netflix{
       //  It will be filled on each run of the program, by reading through the appropriate 
       //  users data file
       std::map<std::string, User*> users;
+      std::vector<User*> users_by_id;
+
       User* current_user;  
       // A Map of all of the application's movies
       //  It will be filled on each run of the program, by reading through the appropriate 
@@ -74,9 +77,9 @@ class Netflix{
       std::map<std::string, std::set<Movie*>* > movies_by_keyword;
 
       //Adjacency list for Similiarity Graph
-      double calculateSimularity(User* user_a, User* user_b);
+      double calculateSimilarity(User* user_a, User* user_b);
+      void calculateRefinedSimilarity(User* user);
       std::vector< std::vector< std::pair<int, double> > >* s_graph;
-
 };
 
 #endif

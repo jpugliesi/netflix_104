@@ -4,12 +4,15 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <algorithm>
+#include <iterator>
 #include <vector>
 #include <set>
 #include <map>
 #include <queue>
 #include <utility>
 #include "NoSuchElementException.h"
+#include "PairPrioritize.h"
 
 Netflix::Netflix(){
 
@@ -50,6 +53,16 @@ void Netflix::logoutCurrentUser(){
   initializeData(main_data_file);
   current_user = NULL;
   unique_id = 0;
+}
+
+User* Netflix::getUserByID(int id){
+  
+  //if id doesn't exist, return NULL
+  if(id > users_by_id.size()){
+    return NULL;
+  }
+  return users_by_id.at(id);
+
 }
 
 bool Netflix::initializeData(std::string input_file){
@@ -140,6 +153,7 @@ bool Netflix::initializeUserData(std::string user_data_file){
             } else if (command == "END"){
               //create the user with all of their appropriate data
               new_user = new User(id, name, unique_id++);
+	      users_by_id.push_back(new_user);
 
               std::cerr << "New user with id: " << new_user->getIndexID() << std::endl;
 
@@ -392,6 +406,7 @@ bool Netflix::loginUser(std::string username){
   if(it != users.end()){
     this->current_user = it->second;
     createSimilarityGraph();
+    calculateRefinedSimilarity(current_user);
   } else {
     std::cout << "Invalid ID." << std::endl;
     current_user = NULL;
@@ -790,10 +805,11 @@ void Netflix::createSimilarityGraph(){
   std::map<std::string, User*>::iterator users_it;
   std::map<std::string, User*>::iterator users_comp_it;
 
-  User* user_a = current_user;
   for(users_it = users.begin(); users_it != users.end(); ++users_it){
+    User* user_a = users_it->second;
+    for(users_comp_it = users.begin(); users_comp_it != users.end(); ++users_comp_it){
     //For each user, add an adjacency edge in their list
-    User* user_b = users_it->second;
+    User* user_b = users_comp_it->second;
     double s_value = 0;
     if(user_b == user_a){
       s_value = 1 / movies.size();
@@ -804,53 +820,57 @@ void Netflix::createSimilarityGraph(){
       s_graph->at(user_a->getIndexID()).push_back(to_add);
       std::cerr << "Adding same user similarity edge" << std::endl;
     } else {
-      s_value = calculateSimularity(user_a, user_b);
+      s_value = calculateSimilarity(user_a, user_b);
       std::cerr << user_a->getID() << " and " << user_b->getID() << " have a similarity value of: " << s_value << std::endl;
 
       std::pair<int, double> to_add_a;
       to_add_a.first = user_b->getIndexID();
       to_add_a.second = s_value;
-      std::pair<int, double> to_add_b;
-      to_add_b.first = user_a->getIndexID();
-      to_add_b.second = s_value;
       s_graph->at(user_a->getIndexID()).push_back(to_add_a);
-      s_graph->at(user_b->getIndexID()).push_back(to_add_b);
+    }
     }
   }
 
 
 }
 
-double Netflix::calculateSimularity(User* user_a, User* user_b){
+/*
+Calculates the basic simularity between two users using the provided formula
+user_a and user_b are two user pointers
+returns a double value indicating user_a and user_b's similarity
+*/
+double Netflix::calculateSimilarity(User* user_a, User* user_b){
   std::map<Movie*, int>* user_a_ratings = user_a->movieRatings();
   std::map<Movie*, int>* user_b_ratings = user_b->movieRatings();
+  std::map<Movie*, int>::iterator i_a = user_a_ratings->begin();
+  std::map<Movie*, int>::iterator i_b = user_b_ratings->begin();
+  std::set<Movie*> a_ms;
+  std::set<Movie*> b_ms;
+
+  for(; i_a != user_a_ratings->end(); ++i_a){
+    a_ms.insert(i_a->first);
+  }
+  for(; i_b != user_b_ratings->end(); ++i_b){
+    b_ms.insert(i_b->first);
+  }
 
   double similarity = 1;
   
 
   //Creates intersect map of pairs <Movie*, std::pair<A's rating, B's rating>>
-  std::map<Movie*, std::pair<int, int> > intersect;
-  std::map<Movie*, int>::iterator i_a = user_a_ratings->begin();
-  std::map<Movie*, int>::iterator i_b = user_b_ratings->begin();
+  std::set<Movie*> same_movies;
 
-  while (i_a != user_a_ratings->end() && i_b != user_b_ratings->end()){
-      if(i_a->first->getTitle() < i_b->first->getTitle()){
-        ++i_a;
-      }
-      else if(i_b->first->getTitle()  < i_a->first->getTitle()){
-        ++i_b;
-      } else {
-        std::pair<Movie*, std::pair<int, int> > movie_to_add;
-        std::pair<int, int> rating_vals;
-        rating_vals.first = i_a->second;
-        rating_vals.second = i_b->second;
-        movie_to_add.first = i_a->first;
-        movie_to_add.second = rating_vals;
-        
-        intersect.insert(movie_to_add);
-        ++i_a;
-        ++i_b;
-      }
+  std::set_intersection(a_ms.begin(), a_ms.end(),
+  			b_ms.begin(), b_ms.end(),
+			std::inserter(same_movies, same_movies.begin()));  
+
+  //create intersection map of movies and ratings
+  std::map<Movie*, std::pair<int, int> > intersect;
+  for(std::set<Movie*>::iterator s_i = same_movies.begin(); s_i != same_movies.end(); ++s_i){
+    int as_rating = user_a_ratings->find(*s_i)->second;
+    int bs_rating = user_b_ratings->find(*s_i)->second;
+    std::pair<int, int> ratings(as_rating, bs_rating);
+    intersect.insert(std::pair<Movie*, std::pair<int, int> >(*s_i, ratings)); 
   }
 
   //we now have the intersection of the two users' rated movies.
@@ -874,8 +894,57 @@ double Netflix::calculateSimularity(User* user_a, User* user_b){
   }
 
   return similarity;
-
 }
+
+/* Refined Similarity */
+void Netflix::calculateRefinedSimilarity(User* user){
+
+  int n = s_graph->size();
+  std::vector<double> d(n);
+  std::vector<bool> visited(n);
+  //s_graph provides edge costs
+
+  //initialize values to high number (to place as infinity)
+  for(int i = 0; i < n; i++){
+    d.at(i) = 999999;
+  }
+
+  int u = user->getIndexID();
+  d[u] = 0;
+
+  std::priority_queue<std::pair<int, double>, std::vector<std::pair<int, double> >, PairPrioritize > pq;
+  std::pair<int, double> to_add(u, d[u]);
+  pq.push(to_add);
+
+  while(!pq.empty()){
+    std::pair<int, double> v_node = pq.top();
+    int v = v_node.first;
+    pq.pop();
+
+    //for all nodes adjacent to v
+    std::vector< std::pair<int, double> >::iterator edge_it;
+    for(edge_it = s_graph->at(v).begin(); edge_it != s_graph->at(v).end(); ++edge_it){
+      
+      int w = edge_it->first;
+      double w_sim = edge_it->second;
+
+      if(d[w] > d[v] + w_sim){
+
+        d[w] = d[v] + w_sim;
+
+	std::pair<int, double> to_add(w, d[w]);
+	pq.push(to_add);
+
+      }
+    }
+  }
+  for(int i = 0; i<n; i++){
+
+    std::cerr << getUserByID(i)->getName() <<  " has similarity " << d[i] << std::endl;
+
+  }
+}
+
 
 /*************** Utility Functions **************/
 /************************************************/
