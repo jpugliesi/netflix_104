@@ -38,6 +38,7 @@ class Netflix{
 
     std::set<Movie*> searchMoviesByTitle(std::string movie);
     std::set<Movie*> searchMoviesByKeyword(std::string keyword);
+    std::set<Movie*> searchMoviesByActor(std::string actor);
     void modifyQueuePrompt();
 
     void printMovie(Movie* movie, bool print_keywords);

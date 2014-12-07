@@ -54,13 +54,16 @@ MainWindow::MainWindow(Netflix* & netflix){
   searchForm->addRow("&Search:", searchText);
   searchByTitleButton = new QPushButton("Search by Title");
   searchByKeywordButton = new QPushButton("Search by Keyword");
+  searchByActorButton = new QPushButton("Search by Actor");
   searchVBox->addLayout(searchForm);
   searchVBox->addWidget(searchByTitleButton);
   searchVBox->addWidget(searchByKeywordButton);
+  searchVBox->addWidget(searchByActorButton);
   searchMovieGroup->setLayout(searchVBox);
 
   QObject::connect(searchByTitleButton, SIGNAL(clicked()), this, SLOT(searchByTitleButtonClicked()));
   QObject::connect(searchByKeywordButton, SIGNAL(clicked()), this, SLOT(searchByKeywordButtonClicked()));
+  QObject::connect(searchByActorButton, SIGNAL(clicked()), this, SLOT(searchByActorButtonClicked()));
 
   logoutButton = new QPushButton("Logout");
   QObject::connect(logoutButton, SIGNAL(clicked()), this, SLOT(logoutButtonClicked()));
@@ -180,7 +183,8 @@ void MainWindow::moveToBackOfQueueButtonClicked(){
 void MainWindow::searchByTitleButtonClicked(){
 
   std::string search_string = searchText->text().toStdString();
-  searchWindow = new SearchResultsWindow(netflix, search_string, true);
+  std::set<Movie*> searchSet = netflix->searchMoviesByTitle(search_string);
+  searchWindow = new SearchResultsWindow(netflix, searchSet);
   QObject::connect(searchWindow, SIGNAL(closeWindow()), this, SLOT(closeSearchWindow()));
   this->hide();
 
@@ -188,9 +192,20 @@ void MainWindow::searchByTitleButtonClicked(){
 void MainWindow::searchByKeywordButtonClicked(){
 
   std::string search_string = searchText->text().toStdString();
-  searchWindow = new SearchResultsWindow(netflix, search_string, false);
+  std::set<Movie*> searchSet = netflix->searchMoviesByKeyword(search_string);
+  searchWindow = new SearchResultsWindow(netflix, searchSet);
   QObject::connect(searchWindow, SIGNAL(closeWindow()), this, SLOT(closeSearchWindow()));
   this->hide();
+}
+
+void MainWindow::searchByActorButtonClicked(){
+
+  std::string search_string = searchText->text().toStdString();
+  std::set<Movie*> searchSet = netflix->searchMoviesByActor(search_string);
+  searchWindow = new SearchResultsWindow(netflix, searchSet);
+  QObject::connect(searchWindow, SIGNAL(closeWindow()), this, SLOT(closeSearchWindow()));
+  this->hide();
+
 }
 
 void MainWindow::logoutButtonClicked(){

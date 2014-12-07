@@ -12,7 +12,7 @@ class SearchResultsWindow : public QWidget{
   Q_OBJECT
 
   public:
-    SearchResultsWindow(Netflix* & netflix, std::string search_string, bool title);
+    SearchResultsWindow(Netflix* & netflix, std::set<Movie*> & movie_set);
 
   private:
     QVBoxLayout *mainLayout;

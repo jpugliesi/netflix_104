@@ -2,7 +2,7 @@
 #include <QObject>
 #include <iostream>
 
-SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_string, bool title){
+SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::set<Movie*> & s_set){
 
   this->netflix = netflix;
 
@@ -19,13 +19,7 @@ SearchResultsWindow::SearchResultsWindow(Netflix* & netflix, std::string search_
   returnToMainButton = new QPushButton("&Return to Main");
 
   //Add keywords here
-  if(title){
-    searchSet = netflix->searchMoviesByTitle(search_string);
-    std::cerr << "Search Set size in Window: " << searchSet.size() << std::endl;
-  } else {
-    searchSet = netflix->searchMoviesByKeyword(search_string);
-    std::cerr << "Search Set size in Window: " << searchSet.size() << std::endl;
-  }
+  searchSet = s_set;
 
   if(searchSet.size() != 0){
     //set movie title add keywords to the screen

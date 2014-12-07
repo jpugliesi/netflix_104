@@ -41,6 +41,7 @@ class MainWindow : public QWidget{
     QPushButton *moveToBackOfQueueButton;
     QPushButton *searchByTitleButton;
     QPushButton *searchByKeywordButton;
+    QPushButton *searchByActorButton;
     QPushButton *logoutButton;
 
     SearchResultsWindow* searchWindow;
@@ -63,6 +64,7 @@ class MainWindow : public QWidget{
 
     void searchByTitleButtonClicked();
     void searchByKeywordButtonClicked();
+    void searchByActorButtonClicked();
     void logoutButtonClicked();
 
     void closeSearchWindow();

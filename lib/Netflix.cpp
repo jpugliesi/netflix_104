@@ -537,6 +537,23 @@ std::set<Movie*> Netflix::searchMoviesByTitle(std::string movie){
   return result;
 
 }
+
+std::set<Movie*> Netflix::searchMoviesByActor(std::string actor){
+ 
+  std::set<Movie*> result;
+  for(int i = 0; actor[i]; i++) actor[i] = tolower(actor[i]);
+
+  std::map<std::string, std::set<Movie*> >::iterator actors_it = actors.find(actor);
+
+  if(actors_it != actors.end()){
+    result = actors_it->second;
+  } else {
+    std::cerr << "Movie not found" << std::endl;
+  }
+
+  return result;
+
+}
 std::set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
 
   //search for movies that contain the keyword, or the title of the movie
