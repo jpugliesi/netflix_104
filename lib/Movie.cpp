@@ -43,5 +43,16 @@ std::set<std::string> Movie::getAllKeywords() const{
   return keywords;
   
 }
+
+/* Returns set of actors */
+std::set<std::string> Movie::getActors() const{
+  return actors;
+}
+
+void Movie::addActor(std::string actor){
+
+  actors.insert(actor);
+
+}
   
 

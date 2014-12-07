@@ -280,6 +280,7 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
     Movie * new_movie;
     std::string name;
     std::vector<std::string> keywords;
+    std::vector<std::string> new_actors;
     while(std::getline(movie_data, line)){
       //iterate over all lines in the file, tokenizing them
       std::string command, parameters;
@@ -291,6 +292,8 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
         //call the appropriate action for the command
         if(command == "BEGIN"){
           name = parameters;
+	} else if (command == "ACTOR:"){
+	  new_actors.push_back(parameters);
         } else if (command == "KEYWORD:"){
           keywords.push_back(parameters);
         } else if (command == "END"){
@@ -305,24 +308,6 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
             for(int i = 0; word[i]; i++) word[i] = tolower(word[i]);
             //Add keyword to a movie
             new_movie->addKeyword(word);
-            
-            /*try{
-              //will throw NoSuchElementException if word DNE
-              std::set<Movie*>* existing_movies_set = movies_by_keyword.get(word);
-              //keyword already exists. Merge new movie set with old one and store back in keywords map
-              //Set<Movie*>* combined_movies = existing_movies_set->setUnion(*word_movie_set);
-              std::set<Movie*>* combined_movies = new std::set<Movie*>(*existing_movies_set);
-              delete existing_movies_set;
-              combined_movies->insert(new_movie);
-              movies_by_keyword.remove(word);
-              movies_by_keyword.add(word, combined_movies);
-            } catch (NoSuchElementException &e){
-              //keyword Doesn't exist in the map. Add word/Movie association to the map
-              //Add movies to keywords (in the movies_by_keywords set)
-              std::set<Movie*>* word_movie_set = new std::set<Movie*>();
-              word_movie_set->insert(new_movie);
-              movies_by_keyword.add(word, word_movie_set);
-            }*/
 
             std::map<std::string, std::set<Movie*>* >::iterator it;
 
@@ -352,8 +337,43 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
               movies_by_keyword.insert(toAdd);
             }
           }          
+
+	  //add the actors to the movie, and to the actors map  
+	  for(int i = 0; i < new_actors.size(); i++){
+ 	    new_movie->addActor(new_actors.at(i));
+	    std::map<std::string, std::set<Movie*> >::iterator actors_it = actors.find(new_actors.at(i));
+	    if(actors_it == actors.end()){
+	      
+	      std::string actor_name = new_actors.at(i);
+  	      for(int i = 0; actor_name[i]; i++) actor_name[i] = tolower(actor_name[i]);
+
+	      std::set<Movie*> movie_set;
+	      movie_set.insert(new_movie);
+
+	      std::pair<std::string, std::set<Movie*> > to_add;
+	      to_add.first = actor_name;
+	      to_add.second = movie_set;
+	      actors.insert(to_add);
+
+	    } else {
+	      std::set<Movie*> movie_set = actors_it->second;
+	      if(movie_set.find(new_movie) == movie_set.end()){
+	        movie_set.insert(new_movie);
+	        actors_it->second = movie_set;
+	      }
+
+	    }
+	    
+	  }
+
+	  std::cout << new_movie->getTitle() << " has the following actors: " << std::endl;
+	  for(std::set<std::string>::iterator a = new_movie->getActors().begin(); a != new_movie->getActors().end(); ++a){
+	    std::cout << *a << std::endl;
+	  }
+
           //clear the keywords vector to not add duplicate keywords
           keywords.clear();
+	  new_actors.clear();
         }
       }
     }

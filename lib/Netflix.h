@@ -77,6 +77,9 @@ class Netflix{
       // Keywords for all movies in the application
       std::map<std::string, std::set<Movie*>* > movies_by_keyword;
 
+      //set for actors
+      std::map<std::string, std::set<Movie*> > actors;
+
       //Adjacency list for Similiarity Graph
       double calculateSimilarity(User* user_a, User* user_b);
       double calculateMovieInterestingness(Movie* m);

@@ -99,7 +99,7 @@ void MainWindow::returnMovieButtonClicked(){
   //Ratings
   if(currentUser->currentMovie() != NULL){
     this->hide();
-    std::map<Movie*, int>* users_ratings = currentUser->movieRatings();
+    //std::map<Movie*, int>* users_ratings = currentUser->movieRatings();
 
     ratingWindow = new RatingWindow(currentUser, currentUser->currentMovie());
     QObject::connect(ratingWindow, SIGNAL(closeWindow()), this, SLOT(closeRatingWindow()));

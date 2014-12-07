@@ -1,15 +1,19 @@
 BEGIN The Princess Bride
+ACTOR: Robin Wright
+ACTOR: Inigo Montoya
 KEYWORD: comedy
 KEYWORD: Inigo Montoya
 KEYWORD: Robin Wright
 END
 BEGIN City Lights
+ACTOR: Charlie Chaplin
 KEYWORD: comedy
 KEYWORD: romance
 KEYWORD: Charlie Chaplin
 KEYWORD: social criticism
 END
 BEGIN The Shawshank Redemption
+ACTOR: Morgan Freeman
 KEYWORD: drama
 KEYWORD: Morgan Freeman
 KEYWORD: awesome

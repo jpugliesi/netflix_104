@@ -24,8 +24,13 @@ class Movie {
     std::set<std::string> getAllKeywords () const;
       /* Returns a set of all keywords associated with the movie. */
 
+    std::set<std::string> getActors() const;  
+    
+    void addActor(std::string actor);
+
   private:
     std::set<std::string> keywords;
+    std::set<std::string> actors;
     std::string title;
     std::string title_lower;
 };
