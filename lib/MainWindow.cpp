@@ -84,10 +84,14 @@ void MainWindow::openMainWindow(){
   }
   welcomeLabel->setText("Welcome to CS104-Flix, " + name);
 
+  this->show();
+
+  recommendationWindow = new RecommendationWindow(netflix, netflix->getMostInterestingMovie());
+  QObject::connect(recommendationWindow, SIGNAL(closedWindow()), this, SLOT(closeRecommendationWindow()));
+
   updateTopOfQueue();
   updateCurrentMovie();
-  
-  this->show();
+
 }
 void MainWindow::returnMovieButtonClicked(){
 
@@ -211,6 +215,13 @@ void MainWindow::closeRatingWindow(){
   delete ratingWindow;
   ratingWindow = NULL;
   this->show();
+}
+
+void MainWindow::closeRecommendationWindow(){
+  delete recommendationWindow;
+  recommendationWindow = NULL;
+  updateCurrentMovie();
+  updateTopOfQueue();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event){

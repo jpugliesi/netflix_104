@@ -50,6 +50,7 @@ class Netflix{
     int moveToBackOfQueue();
     Movie* getTopOfQueue();
     Movie* getCurrentMovie();
+    Movie* getMostInterestingMovie();
 
     std::string getMainDataFile();
 
@@ -78,7 +79,6 @@ class Netflix{
 
       //Adjacency list for Similiarity Graph
       double calculateSimilarity(User* user_a, User* user_b);
-      Movie* getMostInterestingMovie();
       double calculateMovieInterestingness(Movie* m);
 
       Movie* most_interesting_movie;

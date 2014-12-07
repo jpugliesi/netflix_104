@@ -6,6 +6,7 @@
 #include "Netflix.h"
 #include "RatingWindow.h"
 #include "SearchResultsWindow.h"
+#include "RecommendationWindow.h"
 
 class MainWindow : public QWidget{
 
@@ -44,6 +45,7 @@ class MainWindow : public QWidget{
 
     SearchResultsWindow* searchWindow;
     RatingWindow* ratingWindow;
+    RecommendationWindow* recommendationWindow;
 
   public slots:
     void openMainWindow();
@@ -65,7 +67,7 @@ class MainWindow : public QWidget{
 
     void closeSearchWindow();
     void closeRatingWindow();
-
+    void closeRecommendationWindow();
   signals:
     void logout();
 };

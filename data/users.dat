@@ -19,12 +19,12 @@ END RATINGS
 END
 BEGIN dkempe
 NAME: David Kempe
-MOVIE: The Princess Bride
 BEGIN QUEUE 
 END QUEUE 
 BEGIN RATINGS 
 5 The Princess Bride
 1 City Lights
+4 The Shawshank Redemption
 END RATINGS 
 END
 BEGIN harryl
@@ -46,11 +46,11 @@ END RATINGS
 END
 BEGIN jpugliesi
 NAME: John Pugliesi
-MOVIE: City Lights
 BEGIN QUEUE 
 END QUEUE 
 BEGIN RATINGS 
 4 The Princess Bride
 3 City Lights
+4 The Shawshank Redemption
 END RATINGS 
 END

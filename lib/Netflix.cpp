@@ -407,7 +407,6 @@ bool Netflix::loginUser(std::string username){
     this->current_user = it->second;
     createSimilarityGraph();
     refined_sim = calculateRefinedSimilarity(current_user);
-    most_interesting_movie = getMostInterestingMovie();
   } else {
     std::cout << "Invalid ID." << std::endl;
     current_user = NULL;
