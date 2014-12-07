@@ -7,6 +7,7 @@ KEYWORD: Robin Wright
 END
 BEGIN City Lights
 ACTOR: Charlie Chaplin
+ACTOR: Robin Wright
 KEYWORD: comedy
 KEYWORD: romance
 KEYWORD: Charlie Chaplin
@@ -14,6 +15,7 @@ KEYWORD: social criticism
 END
 BEGIN The Shawshank Redemption
 ACTOR: Morgan Freeman
+ACTOR: Charlie Chaplin
 KEYWORD: drama
 KEYWORD: Morgan Freeman
 KEYWORD: awesome

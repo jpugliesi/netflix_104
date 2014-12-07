@@ -65,6 +65,9 @@ MainWindow::MainWindow(Netflix* & netflix){
   QObject::connect(searchByKeywordButton, SIGNAL(clicked()), this, SLOT(searchByKeywordButtonClicked()));
   QObject::connect(searchByActorButton, SIGNAL(clicked()), this, SLOT(searchByActorButtonClicked()));
 
+  baconGameButton = new QPushButton("Play the Bacon Game");
+  QObject::connect(baconGameButton, SIGNAL(clicked()), this, SLOT(baconGameButtonClicked()));
+
   logoutButton = new QPushButton("Logout");
   QObject::connect(logoutButton, SIGNAL(clicked()), this, SLOT(logoutButtonClicked()));
 
@@ -72,6 +75,7 @@ MainWindow::MainWindow(Netflix* & netflix){
   mainLayout->addWidget(currentMovieGroup);
   mainLayout->addWidget(movieQueueGroup);
   mainLayout->addWidget(searchMovieGroup);
+  mainLayout->addWidget(baconGameButton);
   mainLayout->addWidget(logoutButton);
 
   setLayout(mainLayout);
@@ -94,6 +98,12 @@ void MainWindow::openMainWindow(){
 
   updateTopOfQueue();
   updateCurrentMovie();
+
+}
+
+void MainWindow::baconGameButtonClicked(){
+
+ baconGameWindow = new BaconGameWindow(netflix); 
 
 }
 void MainWindow::returnMovieButtonClicked(){

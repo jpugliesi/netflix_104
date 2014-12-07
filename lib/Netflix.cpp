@@ -273,6 +273,7 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
 
   std::ifstream movie_data(movie_data_file.c_str());
 
+  int actor_id = 0;
   if(movie_data.is_open()){
     std::string line = "";
 
@@ -340,12 +341,27 @@ bool Netflix::initializeMovieData(std::string movie_data_file){
 
 	  //add the actors to the movie, and to the actors map  
 	  for(int i = 0; i < new_actors.size(); i++){
+	    std::cout << "Adding actor " << new_actors.at(i);
  	    new_movie->addActor(new_actors.at(i));
-	    std::map<std::string, std::set<Movie*> >::iterator actors_it = actors.find(new_actors.at(i));
+	    std::string actor_name_tmp = new_actors.at(i);
+  	    for(int j = 0; actor_name_tmp[j]; j++) actor_name_tmp[j] = tolower(actor_name_tmp[j]);
+
+	    std::map<std::string, std::set<Movie*> >::iterator actors_it = actors.find(actor_name_tmp);
 	    if(actors_it == actors.end()){
+
 	      
 	      std::string actor_name = new_actors.at(i);
-  	      for(int i = 0; actor_name[i]; i++) actor_name[i] = tolower(actor_name[i]);
+  	      for(int j = 0; actor_name[j]; j++) actor_name[j] = tolower(actor_name[j]);
+
+	      //create a new actor object to store in the actorObjects map
+	      Actor* new_actor = new Actor(new_actors.at(i), actor_id);
+	      actors_by_index.push_back(new_actor);
+	      std::pair<std::string, Actor*> actor_add;
+	      actor_add.first = actor_name;
+	      actor_add.second = new_actor;
+	      _actor_objects.insert(actor_add);
+	      actor_id++;
+	      std::cout << new_actor->getName() << " has an ID of " << new_actor->getIndex() << std::endl;
 
 	      std::set<Movie*> movie_set;
 	      movie_set.insert(new_movie);
@@ -426,6 +442,7 @@ bool Netflix::loginUser(std::string username){
   if(it != users.end()){
     this->current_user = it->second;
     createSimilarityGraph();
+    createBaconGraph();
     refined_sim = calculateRefinedSimilarity(current_user);
   } else {
     std::cout << "Invalid ID." << std::endl;
@@ -552,6 +569,21 @@ std::set<Movie*> Netflix::searchMoviesByActor(std::string actor){
   }
 
   return result;
+
+}
+
+Actor* Netflix::searchActors(std::string actor){
+
+  std::map<std::string, Actor*>::iterator actor_it = _actor_objects.find(actor);
+  if(actor_it == _actor_objects.end()){
+
+    return NULL;
+
+  } else {
+
+    return actor_it->second;
+
+  }
 
 }
 std::set<Movie*> Netflix::searchMoviesByKeyword(std::string keyword){
@@ -1038,7 +1070,99 @@ double Netflix::calculateMovieInterestingness(Movie* movie){
 
   return rm/w;
 
+}
+
+void Netflix::createBaconGraph(){
+
+  //for each movie, create association between actors
+  std::cerr << "ACTOR OBJECTS SIZE: " << _actor_objects.size() << std::endl;
+  bacon_graph = new std::vector< std::vector<int> >(_actor_objects.size());
   
+  std::map<std::string, Movie*>::iterator movies_it;
+  for(movies_it = movies.begin(); movies_it != movies.end(); ++movies_it){
+
+    std::cerr << "Starting actor connections in " << movies_it->first << std::endl;
+    //search through all movies, creating appropriate actor relations in the bacon_graph adjacency list
+    std::set<std::string> movie_actors = movies_it->second->getActors();
+    std::cerr << "Actors in this movie: " << movie_actors.size() << std::endl;
+
+    //for each actor in the movie, add a relation to the other actors
+    for(std::set<std::string>::iterator a_it = movie_actors.begin(); a_it != movie_actors.end(); ++a_it){
+      
+      //get an actor's name and id and object
+      std::string actor_lower = *a_it;
+      for(int i = 0; actor_lower[i]; i++) actor_lower[i] = tolower(actor_lower[i]);
+      
+      Actor* the_actor = _actor_objects.find(actor_lower)->second;
+      std::cerr << "Actor: " << the_actor->getName() << std::endl;
+      int actor_id = the_actor->getIndex();
+      std::cerr << "Actor1's id: " << actor_id << std::endl;
+      for(std::set<std::string>::iterator a_it_2 = movie_actors.begin(); a_it_2 != movie_actors.end(); ++a_it_2){
+      
+        //for each actor (that isnt thereself) add a relation between the actors
+	if(*a_it_2 != *a_it){
+	  std::string actor_2_lower = *a_it_2;
+          for(int i = 0; actor_2_lower[i]; i++) actor_2_lower[i] = tolower(actor_2_lower[i]);
+	  
+	  Actor* second_actor = _actor_objects.find(actor_2_lower)->second;
+          std::cerr << "Actor 2: " << second_actor->getName() << std::endl;
+	  //find if the relation already exists in the bacon graph);
+	  bool found = false;
+	  for(int i = 0; i < bacon_graph->at(actor_id).size(); i++){
+	    if(bacon_graph->at(actor_id).at(i) == second_actor->getIndex()){
+	      found = true;
+	      break;
+	    }
+	  }
+	  if(!found){ 
+	    bacon_graph->at(actor_id).push_back(second_actor->getIndex());
+ 	  }
+	}
+      }
+    }
+  }
+}
+
+int Netflix::calculateBaconDistance(Actor* the_actor, Actor* second_actor){
+
+  int n = _actor_objects.size();
+  std::vector<int> d(n); 
+
+  std::vector<int> p(n);
+
+  std::vector<bool> visited(n);
+  for(int i =0; i < visited.size(); i++) visited[i] = false;
+
+  std::queue<int> q;
+
+  int u = the_actor->getIndex();
+  visited[u] = true;
+
+  d[u] = 0;
+
+  q.push(u);
+  
+  while(!q.empty()){
+
+    int v = q.front();
+    q.pop();
+
+    std::vector<int>::iterator adjacency_it = bacon_graph->at(v).begin();
+    for(; adjacency_it != bacon_graph->at(v).end(); ++adjacency_it){
+
+      int w = *adjacency_it;
+      if(!visited[w]){
+        visited[w] = true;
+	d[w] = d[v] + 1;
+	p[w] = v;
+	q.push(w);
+      }
+    }
+  }
+
+  int bacon_distance = d[second_actor->getIndex()];
+  return bacon_distance;
+
 }
 
 /*************** Utility Functions **************/

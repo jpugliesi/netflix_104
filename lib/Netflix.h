@@ -6,6 +6,7 @@
 #include <map>
 #include "Movie.h"
 #include "User.h"
+#include "Actor.h"
 
 class Netflix{
 
@@ -20,7 +21,7 @@ class Netflix{
 
     bool initializeMovieData(std::string);
 
-    void createSimilarityGraph();
+    int calculateBaconDistance(Actor* the_actor, Actor* second_actor);
 
     bool tokenizeLine(std::string line, std::vector<std::string> & words);
     bool parseCommand(std::string line, std::string & command, std::string & parameter);
@@ -39,6 +40,7 @@ class Netflix{
     std::set<Movie*> searchMoviesByTitle(std::string movie);
     std::set<Movie*> searchMoviesByKeyword(std::string keyword);
     std::set<Movie*> searchMoviesByActor(std::string actor);
+    Actor* searchActors(std::string actor);
     void modifyQueuePrompt();
 
     void printMovie(Movie* movie, bool print_keywords);
@@ -87,8 +89,16 @@ class Netflix{
 
       Movie* most_interesting_movie;
       std::vector<double> calculateRefinedSimilarity(User* user);
+      void createSimilarityGraph();
+
       std::vector< std::vector< std::pair<int, double> > >* s_graph;
       std::vector<double> refined_sim;
+      
+      std::map<std::string, Actor*> _actor_objects;
+      std::vector<Actor*> actors_by_index;
+
+      void createBaconGraph();
+      std::vector< std::vector<int> >* bacon_graph;
 };
 
 #endif

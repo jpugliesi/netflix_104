@@ -5,6 +5,7 @@
 #include <QObject>
 #include "Netflix.h"
 #include "RatingWindow.h"
+#include "BaconGameWindow.h"
 #include "SearchResultsWindow.h"
 #include "RecommendationWindow.h"
 
@@ -42,11 +43,15 @@ class MainWindow : public QWidget{
     QPushButton *searchByTitleButton;
     QPushButton *searchByKeywordButton;
     QPushButton *searchByActorButton;
+
+    QPushButton *baconGameButton;
+
     QPushButton *logoutButton;
 
     SearchResultsWindow* searchWindow;
     RatingWindow* ratingWindow;
     RecommendationWindow* recommendationWindow;
+    BaconGameWindow* baconGameWindow;
 
   public slots:
     void openMainWindow();
@@ -65,6 +70,7 @@ class MainWindow : public QWidget{
     void searchByTitleButtonClicked();
     void searchByKeywordButtonClicked();
     void searchByActorButtonClicked();
+    void baconGameButtonClicked();
     void logoutButtonClicked();
 
     void closeSearchWindow();
